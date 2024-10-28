@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import './bottom_control.dart'; // Import the BottomControlBar
+import 'dart:math';
 
 class CameraPreviewWidget extends StatelessWidget {
   final CameraController controller;
@@ -28,7 +29,8 @@ class CameraPreviewWidget extends StatelessWidget {
             ),
             child: AspectRatio(
               aspectRatio: controller.value.aspectRatio,
-              child: CameraPreview(controller), // Camera preview
+              child:
+                  _buildCameraPreview(), // Use a method to build the camera preview
             ),
           ),
           // Gradient overlay for better visibility of controls
@@ -79,5 +81,23 @@ class CameraPreviewWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildCameraPreview() {
+    // Check the camera lens direction to determine whether to mirror the preview
+    final lensDirection = controller.description.lensDirection;
+
+    if (lensDirection == CameraLensDirection.front) {
+      // For front camera, apply the mirror effect
+      return Transform(
+        alignment: Alignment.center,
+        transform:
+            Matrix4.rotationY(pi), // Flip the camera preview for front camera
+        child: CameraPreview(controller), // Camera preview
+      );
+    } else {
+      // For back camera, no transformation needed
+      return CameraPreview(controller); // Camera preview
+    }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import './screens/home_screen.dart'; // Import HomeScreen
-import './screens/camera_screen.dart'; // Import CameraScreen
-import './widgets/home/bottom_navigation.dart'; // Import CameraScreen
+import './screens/home_screen.dart';
+import './screens/camera_screen.dart';
+import './widgets/home/bottom_navigation.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,11 +17,11 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xFF1a5fab),
         scaffoldBackgroundColor: Colors.white,
       ),
-      initialRoute: '/', // Set the initial route
+      initialRoute: '/',
       routes: {
-        '/': (context) => MainScreen(), // Main screen with bottom navigation
-        '/home': (context) => HomeScreen(), // Home route
-        '/scan': (context) => CameraScreen(), // Scan route
+        '/': (context) => MainScreen(),
+        '/home': (context) => HomeScreen(),
+        '/scan': (context) => CameraScreen(),
       },
       onUnknownRoute: (settings) => MaterialPageRoute(
         builder: (context) => const Scaffold(
@@ -32,37 +32,33 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainScreen extends StatefulWidget {
-  @override
-  _MainScreenState createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0; // Track the current tab
-
-  // Define the screens for each tab
+class MainScreen extends StatelessWidget {
   final List<Widget> _screens = [
     HomeScreen(),
-    Center(child: Text('Schedule')), // Temporary placeholder
+    Center(child: Text('Schedule')), // route
     CameraScreen(),
-    Center(child: Text('Community')), // Temporary placeholder
-    Center(child: Text('Profile')), // Temporary placeholder
+    Center(child: Text('Community')),
+    Center(child: Text('Profile')),
   ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index; // Update the selected index
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_selectedIndex], // Display the selected screen
-      bottomNavigationBar: BottomNavigation(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
+    int _selectedIndex = 0; // Track the tab index locally
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Scaffold(
+          body: _screens[_selectedIndex],
+          bottomNavigationBar: BottomNavigation(
+            selectedIndex: _selectedIndex,
+            onItemTapped: (index) {
+              setState(() {
+                _selectedIndex = index; // Update index using StatefulBuilder
+              });
+            },
+          ),
+        );
+      },
     );
   }
 }
