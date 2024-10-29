@@ -33,52 +33,46 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () => _checkProgress(context),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 50),
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
-                    _buildMenuItem('Saved', context),
-                    _buildMenuItem('Setting', context),
-                    _buildMenuItem('Support', context),
-                    _buildMenuItem('About us', context),
-                    _buildMenuItem('Logout', context, isLogout: true),
+                    MenuItem(
+                      title: 'Saved',
+                      onTap: () {
+                        // Handle saved items
+                      },
+                    ),
+                    MenuItem(
+                      title: 'Setting',
+                      onTap: () {
+                        // Handle settings
+                      },
+                    ),
+                    MenuItem(
+                      title: 'Support',
+                      onTap: () {
+                        // Handle support
+                      },
+                    ),
+                    MenuItem(
+                      title: 'About us',
+                      onTap: () {
+                        // Handle about
+                      },
+                    ),
+                    MenuItem(
+                      title: 'Logout',
+                      isLogout: true,
+                      onTap: () => _handleLogout(context),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildMenuItem(String title, BuildContext context,
-      {bool isLogout = false}) {
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.only(bottom: 10), // Jarak antar item
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: isLogout
-                ? Colors.red
-                : Colors.black87, // Warna berbeda untuk Logout
-          ),
-        ),
-        onTap: () {
-          if (isLogout) {
-            _handleLogout(context);
-          } else {
-            // Handle other menu items
-          }
-        },
       ),
     );
   }
