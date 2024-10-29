@@ -13,7 +13,9 @@ class TopBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: onClose,
+            onTap: () {
+              onClose(); // Memanggil fungsi onClose saat ikon diklik
+            },
             child: const Icon(Icons.close, color: Colors.blue),
           ),
         ],

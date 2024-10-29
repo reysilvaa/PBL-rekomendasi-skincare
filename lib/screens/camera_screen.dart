@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import '../widgets/camera/bottom_control.dart'; // Update the import
+import '../widgets/camera/bottom_control.dart';
 import '../widgets/camera/camera_preview.dart';
 import '../widgets/camera/center_frame.dart';
 import '../widgets/camera/instruction_text.dart';
@@ -17,7 +17,7 @@ class _CameraScreenState extends State<CameraScreen> {
   CameraController? _controller;
   List<CameraDescription> cameras = [];
   bool _isCameraInitialized = false;
-  int _currentCameraIndex = 0; // Track the current camera index
+  int _currentCameraIndex = 0;
 
   @override
   void initState() {
@@ -26,50 +26,66 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future<void> _initializeCamera() async {
-    cameras = await availableCameras();
+    try {
+      cameras = await availableCameras();
 
-    // Check if cameras are available
-    if (cameras.isNotEmpty) {
-      _controller = CameraController(
-        cameras[_currentCameraIndex], // Use the current camera index
-        ResolutionPreset.medium,
-      );
+      if (cameras.isNotEmpty) {
+        _controller = CameraController(
+          cameras[_currentCameraIndex],
+          ResolutionPreset.medium,
+        );
 
-      await _controller!.initialize();
-      if (!mounted) return;
-      setState(() => _isCameraInitialized = true);
-    } else {
-      // Handle the case where no camera is available
-      print('No cameras available');
+        await _controller!.initialize();
+        if (!mounted) return; // Pastikan widget masih terpasang
+
+        setState(() {
+          _isCameraInitialized = true;
+        });
+      } else {
+        print('No cameras available');
+      }
+    } catch (e) {
+      print('Error initializing camera: $e');
     }
   }
 
   void _onClose() {
-    Navigator.pop(context);
+    _disposeCamera();
+    Navigator.pop(context); // Kembali ke halaman sebelumnya
   }
 
   void _onFlipCamera() {
-    // Flip the camera by changing the camera index
+    _disposeCamera(); // Membuang controller kamera saat ini sebelum beralih
     setState(() {
-      _currentCameraIndex =
-          _currentCameraIndex == 0 ? 1 : 0; // Toggle between 0 and 1
-      _initializeCamera(); // Re-initialize the camera with the new index
+      _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
+      _initializeCamera(); // Menginisialisasi ulang kamera dengan indeks baru
     });
   }
 
   Future<void> _onCapture() async {
+    if (_controller == null || !_isCameraInitialized)
+      return; // Memastikan controller tidak null dan kamera terinisialisasi
     try {
       final image = await _controller!.takePicture();
-      // Save or use the captured image
       print('Captured image path: ${image.path}');
     } catch (e) {
       print('Error capturing image: $e');
     }
   }
 
+  void _disposeCamera() {
+    _controller?.dispose(); // Membuang controller kamera
+    _controller = null; // Menghapus referensi controller
+    if (mounted) {
+      setState(() {
+        _isCameraInitialized = false; // Mengatur ulang status inisialisasi
+      });
+    }
+  }
+
   @override
   void dispose() {
-    _controller?.dispose();
+    _disposeCamera(); // Pastikan kamera dibuang ketika widget dihancurkan
     super.dispose();
   }
 
@@ -79,24 +95,16 @@ class _CameraScreenState extends State<CameraScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Camera Preview
-            if (_isCameraInitialized)
+            if (_isCameraInitialized &&
+                _controller != null) // Pastikan controller tidak null
               CameraPreviewWidget(
                 controller: _controller!,
-                onFlipCamera: _onFlipCamera, // Pass the callback
-                onCapture: _onCapture, // Pass the callback
+                onFlipCamera: _onFlipCamera,
+                onCapture: _onCapture,
               ),
-
-            // Top Bar
-            TopBar(onClose: _onClose),
-
-            // Center Frame Guide
+            TopBar(onClose: _onClose), // Tombol close
             const CenterFrame(),
-
-            // Instruction Text
             const InstructionText(),
-
-            // Bottom Control Bar
             BottomControl(
               onFlipCamera: _onFlipCamera,
               onCapture: _onCapture,

@@ -1,7 +1,8 @@
+import 'package:deteksi_jerawat/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import './screens/home_screen.dart';
 import './screens/camera_screen.dart';
-import './widgets/home/bottom_navigation.dart';
+import 'widgets/bottom_navigation.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,9 +20,10 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => MainScreen(),
+        '/': (context) => MainScreen(), // Entry point of the app
         '/home': (context) => HomeScreen(),
-        '/scan': (context) => CameraScreen(),
+        '/scan': (context) => CameraScreen(), // Route untuk CameraScreen
+        '/profile': (context) => ProfileScreen(), // Route untuk CameraScreen
       },
       onUnknownRoute: (settings) => MaterialPageRoute(
         builder: (context) => const Scaffold(
@@ -32,33 +34,43 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0; // Track the tab index
+
   final List<Widget> _screens = [
-    HomeScreen(),
-    Center(child: Text('Schedule')), // route
-    CameraScreen(),
-    Center(child: Text('Community')),
-    Center(child: Text('Profile')),
+    HomeScreen(), // Home screen
+    Center(child: Text('Schedule')), // Placeholder for Schedule screen
+    CameraScreen(), // Home screen
+    Center(child: Text('Community')), // Placeholder for Community screen
+    ProfileScreen(), // Home screen
   ];
+
+  void _onItemTapped(int index) {
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CameraScreen()),
+      );
+    } else {
+      setState(() {
+        _selectedIndex = index; // Update index
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    int _selectedIndex = 0; // Track the tab index locally
-
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return Scaffold(
-          body: _screens[_selectedIndex],
-          bottomNavigationBar: BottomNavigation(
-            selectedIndex: _selectedIndex,
-            onItemTapped: (index) {
-              setState(() {
-                _selectedIndex = index; // Update index using StatefulBuilder
-              });
-            },
-          ),
-        );
-      },
+    return Scaffold(
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: BottomNavigation(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
     );
   }
 }

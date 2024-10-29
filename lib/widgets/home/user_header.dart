@@ -24,6 +24,7 @@ class UserHeader extends StatelessWidget {
           bottomRight: Radius.circular(30),
         ),
         child: SafeArea(
+          top: false, // Tidak menggunakan padding SafeArea di atas
           child: Stack(
             children: [
               // Decorative pattern on the right
@@ -36,7 +37,7 @@ class UserHeader extends StatelessWidget {
                   child: Transform.scale(
                     scaleX: -1, // Flip the image horizontally
                     child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
+                      colorFilter: const ColorFilter.mode(
                         Colors.white,
                         BlendMode.srcIn,
                       ),
@@ -66,8 +67,8 @@ class UserHeader extends StatelessWidget {
                               'Hello, Satria Fattan',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 24, // Increased font size
-                                fontWeight: FontWeight.bold, // Changed to bold
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
                                 letterSpacing: 0.2,
                               ),
                             ),
@@ -76,35 +77,26 @@ class UserHeader extends StatelessWidget {
                               "How's your face condition?",
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.9),
-                                fontSize: 16, // Increased font size
+                                fontSize: 16,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
                           ],
                         ),
-                        // Notification icon
-                        Icon(
-                          Icons.notifications,
-                          color: Colors.white,
-                          size: 24,
-                        ),
                       ],
                     ),
-                    const SizedBox(
-                        height: 120), // Increased space below the texts
+                    const SizedBox(height: 120),
                     // Search Bar
                     Container(
-                      height: 50, // Increased height for better touch
+                      height: 50,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black
-                                .withOpacity(0.1), // Slightly darker shadow
+                            color: Colors.black.withOpacity(0.1),
                             blurRadius: 10,
-                            offset: const Offset(
-                                0, 4), // Lower shadow offset for depth
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
@@ -117,13 +109,13 @@ class UserHeader extends StatelessWidget {
                           ),
                           prefixIcon: Icon(
                             Icons.search_rounded,
-                            color: Colors.grey[600], // Darker icon color
-                            size: 24, // Slightly larger icon size
+                            color: Colors.grey[600],
+                            size: 24,
                           ),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
-                            vertical: 12, // Increased vertical padding
+                            vertical: 12,
                           ),
                         ),
                       ),

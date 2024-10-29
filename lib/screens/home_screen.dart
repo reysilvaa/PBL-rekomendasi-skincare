@@ -16,22 +16,49 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            children: [
-              const UserHeader(),
-              // const CustomSearchBar(), // Uncomment if you need the search bar
-              const SizedBox(height: 20),
-              const GreetingCard(),
-              const SizedBox(height: 20),
-              const SectionTitle(title: 'Brands'),
-              const SizedBox(height: 10),
-              const BrandList(),
-              const SizedBox(height: 20),
-              const SectionTitle(title: 'Products'),
-              const SizedBox(height: 10),
-              const ProductList(),
+        child: Container(
+          color: Colors.grey[50], // Background halus
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: const UserHeader(), // Header di paling atas
+              ),
+              const SliverPadding(padding: EdgeInsets.only(top: 20)),
+              SliverToBoxAdapter(
+                child: Card(
+                  elevation: 2,
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: GreetingCard(), // Kartu sapaan
+                  ),
+                ),
+              ),
+              const SliverPadding(padding: EdgeInsets.only(top: 20)),
+              SliverToBoxAdapter(
+                child: const SectionTitle(title: 'Brands'),
+              ),
+              const SliverPadding(padding: EdgeInsets.only(top: 10)),
+              SliverToBoxAdapter(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  child: const BrandList(),
+                ),
+              ),
+              const SliverPadding(padding: EdgeInsets.only(top: 20)),
+              SliverToBoxAdapter(
+                child: const SectionTitle(title: 'Products'),
+              ),
+              const SliverPadding(padding: EdgeInsets.only(top: 10)),
+              SliverToBoxAdapter(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  child: const ProductList(),
+                ),
+              ),
             ],
           ),
         ),
@@ -47,11 +74,15 @@ class SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.black87,
+        ),
       ),
     );
   }
