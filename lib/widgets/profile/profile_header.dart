@@ -91,9 +91,57 @@ class ProfileHeader extends StatelessWidget {
                             ),
                           ],
                         ),
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: AssetImage(imageUrl),
+                        Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundImage: AssetImage(imageUrl),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                        height: 20), // Space between greeting and button
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.end, // Align button to the right
+                      children: [
+                        const SizedBox(
+                            width: 20), // Space to push the button right
+                        ElevatedButton(
+                          onPressed: () {
+                            // Define your edit action here
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Colors.white, // Button background color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize
+                                .min, // Makes the button size fit the content
+                            mainAxisAlignment:
+                                MainAxisAlignment.center, // Center the content
+                            children: const [
+                              Icon(
+                                Icons.edit, // Pencil icon
+                                color: Color(0xFF1257AA), // Icon color
+                                size: 24, // Adjust icon size as needed
+                              ),
+                              SizedBox(width: 8), // Space between icon and text
+                              Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                  color: Color(0xFF1257AA), // Button text color
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
