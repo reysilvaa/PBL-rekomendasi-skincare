@@ -11,7 +11,7 @@ class UserHeader extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFF1a5fab), Color(0xFF1257aa)],
+          colors: [Color(0xFF1A4BBA), Color(0xFF1257aa)],
         ),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30),
