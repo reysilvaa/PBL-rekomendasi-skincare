@@ -15,15 +15,22 @@ class MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        title,
-        style: TextStyle(
-          color: isLogout ? Colors.red : Colors.black87,
-          fontSize: 16,
-        ),
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.only(bottom: 30), // Jarak antar item
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
       ),
-      onTap: onTap,
+      child: ListTile(
+        title: Text(
+          title,
+          style: TextStyle(
+            color: isLogout ? Colors.red : Colors.black87,
+            fontSize: 16,
+          ),
+        ),
+        onTap: onTap,
+      ),
     );
   }
 }
