@@ -12,7 +12,7 @@ class ProgressButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-          const EdgeInsets.symmetric(horizontal: 20), // Padding di luar tombol
+          const EdgeInsets.symmetric(horizontal: 10), // Padding di luar tombol
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

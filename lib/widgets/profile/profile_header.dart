@@ -60,7 +60,7 @@ class ProfileHeader extends StatelessWidget {
               // Main content
               Padding(
                 padding: const EdgeInsets.fromLTRB(
-                    50, 30, 50, 80), // Adjust bottom padding
+                    50, 30, 50, 30), // Adjust bottom padding
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
