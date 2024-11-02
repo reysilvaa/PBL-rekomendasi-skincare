@@ -87,7 +87,7 @@ class HistoryHeader extends StatelessWidget {
                       height: 150,
                     ),
                   ),
-                ),
+                ),  
               ),
             ],
 
