@@ -46,14 +46,14 @@ class BottomNavigation extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.event_note_outlined),
             activeIcon: Icon(Icons.event_note),
-            label: 'Schedule',
+            label: 'History',
           ),
           BottomNavigationBarItem(
             icon: CircleAvatar(
               backgroundColor: Color(0xFF0046BE),
               radius: 25,
               child: Icon(
-                Icons.timer_outlined,
+                Icons.document_scanner_outlined,
                 color: Colors.white,
                 size: 24,
               ),

@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import '../widgets/profile/menu_item.dart';
 import '../widgets/profile/profile_header.dart';
 import '../widgets/profile/progress_button.dart';
+import '../model/profile_model.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final ProfileModel profile = ProfileModel(
+    name: 'Abima Fadricha',
+    imageUrl: 'assets/profile_image.jpg',
+  );
+
+  ProfileScreen({Key? key}) : super(key: key);
 
   void _handleLogout(BuildContext context) {
     print('Logging out...');
@@ -22,9 +28,9 @@ class ProfileScreen extends StatelessWidget {
           color: Colors.grey[50], // Warna latar belakang yang lembut
           child: Column(
             children: [
-              const ProfileHeader(
-                name: 'Abima Fadricha',
-                imageUrl: 'assets/profile_image.jpg',
+              ProfileHeader(
+                name: profile.name,
+                imageUrl: profile.imageUrl,
               ),
               const SizedBox(height: 20),
               Padding(

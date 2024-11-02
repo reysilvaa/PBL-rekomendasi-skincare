@@ -1,3 +1,4 @@
+import 'package:deteksi_jerawat/screens/history_screen.dart';
 import 'package:deteksi_jerawat/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import './screens/home_screen.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomeScreen(),
         '/scan': (context) => CameraScreen(), // Route untuk CameraScreen
         '/profile': (context) => ProfileScreen(), // Route untuk CameraScreen
+        '/history': (context) => HistoryScreen(), // Route untuk CameraScreen
       },
       onUnknownRoute: (settings) => MaterialPageRoute(
         builder: (context) => const Scaffold(
@@ -44,7 +46,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = [
     HomeScreen(), // Home screen
-    Center(child: Text('Schedule')), // Placeholder for Schedule screen
+    HistoryScreen(), // Home screen
     CameraScreen(), // Home screen
     Center(child: Text('Community')), // Placeholder for Community screen
     ProfileScreen(), // Home screen
