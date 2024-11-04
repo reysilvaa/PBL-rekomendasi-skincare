@@ -40,7 +40,7 @@ class HistoryScreen extends StatelessWidget {
                     // Navigate to the Recommendation screen when tapped
                     Navigator.pushNamed(
                       context,
-                      '/history/recommendation', // Navigate to RecommendationScreen
+                      '/history/rekomendasi', // Navigate to RecommendationScreen
                     );
                   },
                   child: HistoryCard(

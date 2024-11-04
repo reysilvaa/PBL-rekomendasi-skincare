@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/scan': (context) => CameraScreen(),
         '/profile': (context) => ProfileScreen(),
         '/history': (context) => HistoryScreen(),
+        '/history/rekomendasi': (context) => RecommendationScreen(),
       },
       onUnknownRoute: (settings) => MaterialPageRoute(
         builder: (context) => const Scaffold(
