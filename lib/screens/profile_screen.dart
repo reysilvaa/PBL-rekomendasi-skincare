@@ -7,7 +7,7 @@ import '../model/profile_model.dart';
 class ProfileScreen extends StatelessWidget {
   final ProfileModel profile = ProfileModel(
     name: 'Abima Fadricha',
-    imageUrl: 'assets/profile_image.jpg',
+    imageUrl: 'assets/profile/wajah.png',
   );
 
   ProfileScreen({Key? key}) : super(key: key);

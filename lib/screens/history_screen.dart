@@ -15,14 +15,14 @@ class HistoryScreen extends StatelessWidget {
         title: "Kondisi Kulit",
         subtitle: "berjerawat parah",
         description: "Lorem ipsum dolor sit amet",
-        imagePath: "assets/profile_image.jpg",
+        imagePath: "assets/profile/wajah.png",
       ),
       HistoryItem(
         date: "27, Okt 2024",
         title: "Kondisi Kulit",
         subtitle: "berjerawat parah",
         description: "Lorem ipsum dolor sit amet",
-        imagePath: "assets/profile_image.jpg",
+        imagePath: "assets/profile/wajah.png",
       ),
     ];
 
