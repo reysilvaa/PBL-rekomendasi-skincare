@@ -30,10 +30,13 @@ class ProductRecommendationSection extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
-                  child: Image.asset(
-                    'assets/product_image.jpg',
-                    height: 200,
-                    fit: BoxFit.cover,
+                  child: Container(
+                    height: 150,
+                    width: 150,
+                    child: Image.asset(
+                      'assets/produk/skintific.jpg',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Padding(
@@ -42,7 +45,7 @@ class ProductRecommendationSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'SKII NK-II Salicylic Acid Anti Acne Serum 30ML',
+                        'Skintific 2% Salicylic Acid Anti Acne Serum 20ml',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -62,28 +65,6 @@ class ProductRecommendationSection extends StatelessWidget {
                         ],
                       ),
                     ],
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    // Handle click to buy
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        top: BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'click to buy',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ],

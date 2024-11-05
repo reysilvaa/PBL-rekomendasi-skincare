@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../model/history_item.dart';
 import '../widgets/history/history_card.dart';
 import '../widgets/history/history_header.dart';
-import '../screens/history/recommendation_screen.dart'; // Import your Recommendation screen
+
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../screens/editProfile_screen.dart';
 
 class ProfileHeader extends StatelessWidget {
   final String name;
@@ -110,7 +111,12 @@ class ProfileHeader extends StatelessWidget {
                             width: 20), // Space to push the button right
                         ElevatedButton(
                           onPressed: () {
-                            // Define your edit action here
+                             Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const EditProfileScreen(),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:

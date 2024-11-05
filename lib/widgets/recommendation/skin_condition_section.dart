@@ -11,6 +11,21 @@ class SkinConditionSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
+            'Kondisi Kulit',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const Text(
+            'berjerawat parah',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 16), // Memberi jarak antara teks baru dan teks "Solusi"
+          const Text(
             'Solusi',
             style: TextStyle(
               fontSize: 16,
