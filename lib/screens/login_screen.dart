@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:deteksi_jerawat/widgets/bottom_navigation.dart'; // Import bottom navigation
 import 'package:deteksi_jerawat/services/login.dart'; // Import login service
 import 'package:deteksi_jerawat/widgets/login/logo.dart'; // Import Logo widget
+import 'package:deteksi_jerawat/widgets/login/login_button.dart'; // Import LoginButton widget
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -78,9 +79,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     _handlePasswordChanged, // Use the defined method
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _login,
-                child: const Text("Login"),
+
+              // Replaced ElevatedButton with LoginButton
+              LoginButton(
+                onPressed:
+                    _login, // Pass the _login function as onPressed callback
               ),
               const SizedBox(height: 20),
             ],
