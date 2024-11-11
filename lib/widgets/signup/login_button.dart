@@ -1,5 +1,5 @@
+import 'package:deteksi_jerawat/widgets/bottom_navigation.dart';
 import 'package:flutter/material.dart';
-import '../../screens/home_screen.dart'; // Pastikan untuk mengimpor HomeScreen
 
 class LoginButton extends StatelessWidget {
   const LoginButton({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class LoginButton extends StatelessWidget {
           // Navigasi ke HomeScreen
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => MainScreen()),
           );
         },
         style: ElevatedButton.styleFrom(

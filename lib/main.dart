@@ -22,7 +22,9 @@ class MyApp extends StatelessWidget {
       ),
       // Hapus home: MainScreen(), karena kita sudah menentukan initialRoute
       home: MainScreen(),
+      // initialRoute: '/',
       routes: {
+        // '/': (context) => MainScreen(),
         '/home': (context) => HomeScreen(),
         '/scan': (context) => CameraScreen(),
         '/profile': (context) => ProfileScreen(),
