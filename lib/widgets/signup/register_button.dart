@@ -1,21 +1,19 @@
-import 'package:deteksi_jerawat/widgets/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
-class LoginButton extends StatelessWidget {
-  const LoginButton({Key? key}) : super(key: key);
+class RegisterButton extends StatelessWidget {
+  final VoidCallback onPressed; // Changed to VoidCallback to accept a function
+
+  const RegisterButton({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          // Navigasi ke HomeScreen
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MainScreen()),
-          );
-        },
+        onPressed: onPressed, // Use the callback passed
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF0D47A1),
           shape: RoundedRectangleBorder(
@@ -24,7 +22,7 @@ class LoginButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 15),
         ),
         child: const Text(
-          'Login',
+          'Register',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
