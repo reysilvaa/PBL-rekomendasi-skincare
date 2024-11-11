@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+  final Function(String) onEmailChanged;
+  final Function(String) onPasswordChanged;
+
+  const LoginForm({
+    Key? key,
+    required this.onEmailChanged,
+    required this.onPasswordChanged,
+  }) : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -9,6 +16,8 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   bool _obscurePassword = true;
+  String email = '';
+  String password = '';
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -21,6 +30,10 @@ class _LoginFormState extends State<LoginForm> {
     return Column(
       children: [
         TextField(
+          onChanged: (value) {
+            email = value;
+            widget.onEmailChanged(value); // Notify the parent widget
+          },
           decoration: InputDecoration(
             hintText: 'Username or email',
             filled: true,
@@ -34,6 +47,10 @@ class _LoginFormState extends State<LoginForm> {
         const SizedBox(height: 10),
         TextField(
           obscureText: _obscurePassword,
+          onChanged: (value) {
+            password = value;
+            widget.onPasswordChanged(value); // Notify the parent widget
+          },
           decoration: InputDecoration(
             hintText: 'Password',
             filled: true,

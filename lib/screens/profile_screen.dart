@@ -4,6 +4,7 @@ import '../widgets/profile/profile_header.dart';
 import '../widgets/profile/progress_button.dart';
 import '../model/profile_model.dart';
 import '../screens/login_screen.dart';
+import '../services/login.dart'; // Import the LoginService to handle logout
 
 class ProfileScreen extends StatelessWidget {
   final ProfileModel profile = ProfileModel(
@@ -13,7 +14,14 @@ class ProfileScreen extends StatelessWidget {
 
   ProfileScreen({Key? key}) : super(key: key);
 
-  void _handleLogout(BuildContext context) {
+  // Create an instance of LoginService to handle the logout logic
+  final LoginService _loginService = LoginService();
+
+  void _handleLogout(BuildContext context) async {
+    // Call the logout method from LoginService
+    await _loginService.logout();
+
+    // After logging out, navigate to the LoginScreen
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),

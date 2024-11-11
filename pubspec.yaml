@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   camera: 0.11.0+2 # Add the camera package; check for the latest version
   http: ^0.13.4
+  shared_preferences: ^2.0.15 # Make sure to use the latest version
+
 
 
 dev_dependencies:
