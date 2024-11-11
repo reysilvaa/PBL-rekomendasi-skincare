@@ -3,17 +3,21 @@ import '../widgets/profile/menu_item.dart';
 import '../widgets/profile/profile_header.dart';
 import '../widgets/profile/progress_button.dart';
 import '../model/profile_model.dart';
+import '../screens/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   final ProfileModel profile = ProfileModel(
-    name: 'Abima Fadricha',
+    name: 'Abima Fadricho',
     imageUrl: 'assets/profile/wajah.png',
   );
 
   ProfileScreen({Key? key}) : super(key: key);
 
   void _handleLogout(BuildContext context) {
-    print('Logging out...');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
   }
 
   void _checkProgress(BuildContext context) {
@@ -25,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Colors.grey[50], // Warna latar belakang yang lembut
+          color: Colors.grey[50],
           child: Column(
             children: [
               ProfileHeader(
