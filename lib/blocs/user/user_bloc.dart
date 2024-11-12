@@ -13,6 +13,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<FetchUserEvent>(_onFetchUser);
     on<UpdateUserProfileEvent>(_onUpdateUserProfile);
     on<UpdateUsernameEvent>(_onUpdateUsername);
+    on<UpdateFirstNameEvent>(_onUpdateFirstName);
+    on<UpdateLastNameEvent>(_onUpdatelastName);
+    on<UpdateEmailEvent>(_onUpdateEmail);
+    on<UpdateBirthDateEvent>(_onUpdateBirthDate);
   }
 
   Future<void> _onFetchUser(
