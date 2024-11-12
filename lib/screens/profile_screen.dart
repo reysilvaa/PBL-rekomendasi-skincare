@@ -1,27 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/profile/menu_item.dart';
 import '../widgets/profile/profile_header.dart';
 import '../widgets/profile/progress_button.dart';
-import '../model/profile_model.dart';
-import '../screens/login_screen.dart';
-import '../services/login.dart'; // Import the LoginService to handle logout
+import '../blocs/user/user_blocs.dart';
+import '../blocs/user/user_event.dart';
+import '../blocs/user/user_state.dart';
+import 'login_screen.dart'; // Import the login screen
 
-class ProfileScreen extends StatelessWidget {
-  final ProfileModel profile = ProfileModel(
-    name: 'Abima Fadricho',
-    imageUrl: 'assets/profile/wajah.png',
-  );
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
-  ProfileScreen({Key? key}) : super(key: key);
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
 
-  // Create an instance of LoginService to handle the logout logic
-  final LoginService _loginService = LoginService();
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _initializeUser();
+  }
 
-  void _handleLogout(BuildContext context) async {
-    // Call the logout method from LoginService
-    await _loginService.logout();
+  Future<void> _initializeUser() async {
+    // Assuming the access token is stored in shared preferences
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    if (token != null) {
+      if (mounted) {
+        context.read<UserBloc>().add(FetchUserEvent(token));
+      }
+    }
+  }
 
-    // After logging out, navigate to the LoginScreen
+  void _handleLogout(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -36,60 +49,81 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          color: Colors.grey[50],
-          child: Column(
-            children: [
-              ProfileHeader(
-                name: profile.name,
-                imageUrl: profile.imageUrl,
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: ProgressButton(
-                  onPressed: () => _checkProgress(context),
-                ),
-              ),
-              const SizedBox(height: 50),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: BlocBuilder<UserBloc, UserState>(
+          builder: (context, state) {
+            if (state is UserError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    MenuItem(
-                      title: 'Saved',
-                      onTap: () {
-                        // Handle saved items
-                      },
-                    ),
-                    MenuItem(
-                      title: 'Setting',
-                      onTap: () {
-                        // Handle settings
-                      },
-                    ),
-                    MenuItem(
-                      title: 'Support',
-                      onTap: () {
-                        // Handle support
-                      },
-                    ),
-                    MenuItem(
-                      title: 'About us',
-                      onTap: () {
-                        // Handle about
-                      },
-                    ),
-                    MenuItem(
-                      title: 'Logout',
-                      isLogout: true,
-                      onTap: () => _handleLogout(context),
+                    Text('Error: ${state.message}'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _initializeUser,
+                      child: const Text('Retry'),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
+              );
+            }
+
+            if (state is UserLoaded) {
+              return Container(
+                color: Colors.grey[50],
+                child: Column(
+                  children: [
+                    ProfileHeader(),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: ProgressButton(
+                        onPressed: () => _checkProgress(context),
+                      ),
+                    ),
+                    const SizedBox(height: 50),
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        children: [
+                          MenuItem(
+                            title: 'Saved',
+                            onTap: () {
+                              // Handle saved items
+                            },
+                          ),
+                          MenuItem(
+                            title: 'Setting',
+                            onTap: () {
+                              // Handle settings
+                            },
+                          ),
+                          MenuItem(
+                            title: 'Support',
+                            onTap: () {
+                              // Handle support
+                            },
+                          ),
+                          MenuItem(
+                            title: 'About us',
+                            onTap: () {
+                              // Handle about
+                            },
+                          ),
+                          MenuItem(
+                            title: 'Logout',
+                            isLogout: true,
+                            onTap: () => _handleLogout(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return const SizedBox.shrink(); // Show nothing while loading
+          },
         ),
       ),
     );

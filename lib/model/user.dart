@@ -33,13 +33,13 @@ class User extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-    'username': username,
-    'email': email,
-    'profile_image': profileImage,
-    'gender': gender,
-    'age': age,
-    'level': level,
-  };
+        'username': username,
+        'email': email,
+        'profile_image': profileImage,
+        'gender': gender,
+        'age': age,
+        'level': level,
+      };
 
   bool isValid() {
     if (password != null && confirmPassword != null) {
@@ -54,15 +54,15 @@ class User extends Equatable {
 
   @override
   List<Object?> get props => [
-    username,
-    email,
-    profileImage,
-    gender,
-    age,
-    level,
-    password,
-    confirmPassword,
-  ];
+        username,
+        email,
+        profileImage,
+        gender,
+        age,
+        level,
+        password,
+        confirmPassword,
+      ];
 
   User copyWith({
     String? username,
