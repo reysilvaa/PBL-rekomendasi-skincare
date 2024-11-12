@@ -14,14 +14,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UpdateUserProfileEvent>(_onUpdateUserProfile);
     on<UpdateUsernameEvent>(_onUpdateUsername);
     on<UpdateFirstNameEvent>(_onUpdateFirstName);
-    on<UpdateLastNameEvent>(_onUpdatelastName);
+    on<UpdateLastNameEvent>(_onUpdateLastName);
     on<UpdateEmailEvent>(_onUpdateEmail);
     on<UpdateBirthDateEvent>(_onUpdateBirthDate);
+    on<UpdatePhoneNumberEvent>(_onUpdatePhoneNumber);
   }
 
   Future<void> _onFetchUser(
       FetchUserEvent event, Emitter<UserState> emit) async {
-    // emit(UserLoading());
     try {
       final user = await _userInfoService.fetchUserInfo();
       emit(UserLoaded(user));
@@ -32,7 +32,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Future<void> _onUpdateUserProfile(
       UpdateUserProfileEvent event, Emitter<UserState> emit) async {
-    // emit(UserLoading());
     try {
       final updatedUser = await _userInfoService.updateUserProfile(event.user);
       emit(UserLoaded(updatedUser));
@@ -43,10 +42,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Future<void> _onUpdateUsername(
       UpdateUsernameEvent event, Emitter<UserState> emit) async {
-    // emit(UserLoading());
     try {
-      final updatedUser = await _userInfoService
-          .updateUserProfile(User(username: event.newUsername));
+      final currentUser = (state is UserLoaded)
+          ? (state as UserLoaded).user
+          : User(username: '');
+      final updatedUser = await _userInfoService.updateUserProfile(
+        currentUser.copyWith(username: event.newUsername),
+      );
       emit(UserLoaded(updatedUser));
     } catch (error) {
       emit(UserError(error.toString()));
@@ -55,20 +57,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Future<void> _onUpdatePhoneNumber(
       UpdatePhoneNumberEvent event, Emitter<UserState> emit) async {
-    // emit(UserLoading());
     try {
-      // Get the current user data, assuming it's already loaded
-      final currentUser = (state as UserLoaded).user;
-
-      // Make sure the current username is passed along with the updated phone number
+      final currentUser = (state is UserLoaded)
+          ? (state as UserLoaded).user
+          : User(username: '');
       final updatedUser = await _userInfoService.updateUserProfile(
-        User(
-          username: currentUser.username, // Keep the existing username
-          phoneNumber: event.newPhoneNumber,
-          // You can add other fields that you want to update if necessary
-        ),
+        currentUser.copyWith(phoneNumber: event.newPhoneNumber),
       );
-
       emit(UserLoaded(updatedUser));
     } catch (error) {
       emit(UserError(error.toString()));
@@ -77,42 +72,28 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Future<void> _onUpdateFirstName(
       UpdateFirstNameEvent event, Emitter<UserState> emit) async {
-    // emit(UserLoading());
     try {
-      // Get the current user data, assuming it's already loaded
-      final currentUser = (state as UserLoaded).user;
-
-      // Make sure the current username is passed along with the updated phone number
+      final currentUser = (state is UserLoaded)
+          ? (state as UserLoaded).user
+          : User(username: '');
       final updatedUser = await _userInfoService.updateUserProfile(
-        User(
-          username: currentUser.username, // Keep the existing username
-          firstName: event.newFirstName,
-          // You can add other fields that you want to update if necessary
-        ),
+        currentUser.copyWith(firstName: event.newFirstName),
       );
-
       emit(UserLoaded(updatedUser));
     } catch (error) {
       emit(UserError(error.toString()));
     }
   }
 
-  Future<void> _onUpdatelastName(
+  Future<void> _onUpdateLastName(
       UpdateLastNameEvent event, Emitter<UserState> emit) async {
-    // emit(UserLoading());
     try {
-      // Get the current user data, assuming it's already loaded
-      final currentUser = (state as UserLoaded).user;
-
-      // Make sure the current username is passed along with the updated phone number
+      final currentUser = (state is UserLoaded)
+          ? (state as UserLoaded).user
+          : User(username: '');
       final updatedUser = await _userInfoService.updateUserProfile(
-        User(
-          username: currentUser.username, // Keep the existing username
-          lastName: event.newLastName,
-          // You can add other fields that you want to update if necessary
-        ),
+        currentUser.copyWith(lastName: event.newLastName),
       );
-
       emit(UserLoaded(updatedUser));
     } catch (error) {
       emit(UserError(error.toString()));
@@ -121,20 +102,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Future<void> _onUpdateEmail(
       UpdateEmailEvent event, Emitter<UserState> emit) async {
-    // emit(UserLoading());
     try {
-      // Get the current user data, assuming it's already loaded
-      final currentUser = (state as UserLoaded).user;
-
-      // Make sure the current username is passed along with the updated phone number
+      final currentUser = (state is UserLoaded)
+          ? (state as UserLoaded).user
+          : User(username: '');
       final updatedUser = await _userInfoService.updateUserProfile(
-        User(
-          username: currentUser.username, // Keep the existing username
-          email: event.newEmail,
-          // You can add other fields that you want to update if necessary
-        ),
+        currentUser.copyWith(email: event.newEmail),
       );
-
       emit(UserLoaded(updatedUser));
     } catch (error) {
       emit(UserError(error.toString()));
@@ -143,20 +117,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Future<void> _onUpdateBirthDate(
       UpdateBirthDateEvent event, Emitter<UserState> emit) async {
-    // emit(UserLoading());
     try {
-      // Get the current user data, assuming it's already loaded
-      final currentUser = (state as UserLoaded).user;
-
-      // Make sure the current username is passed along with the updated phone number
+      final currentUser = (state is UserLoaded)
+          ? (state as UserLoaded).user
+          : User(username: '');
       final updatedUser = await _userInfoService.updateUserProfile(
-        User(
-          username: currentUser.username, // Keep the existing username
-          birthDate: event.newBirthDate,
-          // You can add other fields that you want to update if necessary
-        ),
+        currentUser.copyWith(birthDate: event.newBirthDate),
       );
-
       emit(UserLoaded(updatedUser));
     } catch (error) {
       emit(UserError(error.toString()));

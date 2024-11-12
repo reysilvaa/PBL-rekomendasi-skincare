@@ -36,8 +36,7 @@ class UpdateUsernameEvent extends UserEvent {
   const UpdateUsernameEvent(this.newUsername);
 
   @override
-  List<Object> get props =>
-      [newUsername]; // Include newUsername for equality comparison
+  List<Object> get props => [newUsername];
 }
 
 // Event to update the phone num
@@ -47,8 +46,7 @@ class UpdatePhoneNumberEvent extends UserEvent {
   const UpdatePhoneNumberEvent(this.newPhoneNumber);
 
   @override
-  List<Object> get props =>
-      [newPhoneNumber]; // Include newUsername for equality comparison
+  List<Object> get props => [newPhoneNumber];
 }
 
 class UpdateFirstNameEvent extends UserEvent {
@@ -57,8 +55,7 @@ class UpdateFirstNameEvent extends UserEvent {
   const UpdateFirstNameEvent(this.newFirstName);
 
   @override
-  List<Object> get props =>
-      [newFirstName]; // Include newUsername for equality comparison
+  List<Object> get props => [newFirstName];
 }
 
 class UpdateLastNameEvent extends UserEvent {
@@ -67,8 +64,7 @@ class UpdateLastNameEvent extends UserEvent {
   const UpdateLastNameEvent(this.newLastName);
 
   @override
-  List<Object> get props =>
-      [newLastName]; // Include newUsername for equality comparison
+  List<Object> get props => [newLastName];
 }
 
 class UpdateEmailEvent extends UserEvent {
@@ -77,8 +73,7 @@ class UpdateEmailEvent extends UserEvent {
   const UpdateEmailEvent(this.newEmail);
 
   @override
-  List<Object> get props =>
-      [newEmail]; // Include newUsername for equality comparison
+  List<Object> get props => [newEmail];
 }
 
 class UpdateBirthDateEvent extends UserEvent {
@@ -87,6 +82,15 @@ class UpdateBirthDateEvent extends UserEvent {
   const UpdateBirthDateEvent(this.newBirthDate);
 
   @override
-  List<Object> get props =>
-      [newBirthDate]; // Include newUsername for equality comparison
+  List<Object> get props => [newBirthDate];
+}
+
+// UserErrorEvent: Define an event that handles error states
+class UserErrorEvent extends UserEvent {
+  final String message;
+
+  const UserErrorEvent(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

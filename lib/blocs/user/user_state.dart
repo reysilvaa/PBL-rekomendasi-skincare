@@ -12,8 +12,8 @@ abstract class UserState extends Equatable {
 // Initial state when the user data is not loaded yet
 class UserInitial extends UserState {}
 
-// Loading state while waiting for the data
-// class UserLoading extends UserState {}
+// Loading state while waiting for the data (optional for indicating loading)
+class UserLoading extends UserState {}
 
 // Loaded state when the user data is successfully fetched or updated
 class UserLoaded extends UserState {
@@ -25,7 +25,7 @@ class UserLoaded extends UserState {
   List<Object?> get props => [user];
 }
 
-// Error state when something goes wrong
+// Error state when something goes wrong (e.g., failed to fetch user data)
 class UserError extends UserState {
   final String message;
 
