@@ -1,19 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../services/user-info.dart';
+import '../../model/user.dart';
+import '../../blocs/user/user_blocs.dart';
+import '../../blocs/user/user_event.dart';
+import '../../blocs/user/user_state.dart';
 
-class UserHeader extends StatelessWidget {
-  const UserHeader({super.key});
+class UserHeader extends StatefulWidget {
+  final User user;
+
+  const UserHeader({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  @override
+  _UserHeaderState createState() => _UserHeaderState();
+}
+
+class _UserHeaderState extends State<UserHeader> {
+  late String _accessToken;
+
+  // Function to retrieve the access token from SharedPreferences
+  Future<String?> _getAccessToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('access_token');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Get the access token from SharedPreferences
+    _getAccessToken().then((token) {
+      if (token != null) {
+        _accessToken = token;
+      } else {
+        // Handle case where token is not available (user not logged in)
+        print("Token not found");
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [Color(0xFF1A4BBA), Color(0xFF1257aa)],
         ),
-        borderRadius: const BorderRadius.only(
+        borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
         ),
@@ -24,10 +64,9 @@ class UserHeader extends StatelessWidget {
           bottomRight: Radius.circular(30),
         ),
         child: SafeArea(
-          top: false, // Tidak menggunakan padding SafeArea di atas
+          top: false,
           child: Stack(
             children: [
-              // Decorative pattern on the right
               Positioned(
                 right: -75,
                 top: 0,
@@ -35,7 +74,7 @@ class UserHeader extends StatelessWidget {
                 child: Opacity(
                   opacity: 0.5,
                   child: Transform.scale(
-                    scaleX: -1, // Flip the image horizontally
+                    scaleX: -1,
                     child: ColorFiltered(
                       colorFilter: const ColorFilter.mode(
                         Colors.white,
@@ -49,8 +88,6 @@ class UserHeader extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // Main content
               Padding(
                 padding: const EdgeInsets.fromLTRB(50, 30, 50, 40),
                 child: Column(
@@ -63,9 +100,9 @@ class UserHeader extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Hello, Satria Fattan',
-                              style: TextStyle(
+                            Text(
+                              'Hello, ${widget.user.username}', // Use the passed user object
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

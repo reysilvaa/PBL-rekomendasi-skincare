@@ -4,6 +4,7 @@ import 'package:deteksi_jerawat/widgets/bottom_navigation.dart'; // Import botto
 import 'package:deteksi_jerawat/services/login.dart'; // Import login service
 import 'package:deteksi_jerawat/widgets/login/logo.dart'; // Import Logo widget
 import 'package:deteksi_jerawat/widgets/login/login_button.dart'; // Import LoginButton widget
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -29,6 +30,11 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  Future<void> _storeAccessToken(String token) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('access_token', token);
+  }
+
   Future<void> _login() async {
     var result = await _loginService.loginUser(emailOrUsername, password);
 
@@ -39,14 +45,15 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.red,
       ));
     } else {
-      // Store the token (in your preferred way, like SharedPreferences or Secure Storage)
+      // Store the token in SharedPreferences
       String token = result['access_token'];
-      // Navigate to the next screen
+      await _storeAccessToken(token);
+
+      // Navigate to the next screen (MainScreen)
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                MainScreen()), // Replace with your main screen
+            builder: (context) => MainScreen()), // Replace with your MainScreen
       );
     }
   }

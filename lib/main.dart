@@ -1,65 +1,79 @@
-import 'package:deteksi_jerawat/screens/history/recommendation_screen.dart';
-import 'package:deteksi_jerawat/screens/history_screen.dart';
-import 'package:deteksi_jerawat/screens/profile_screen.dart';
-import 'package:deteksi_jerawat/widgets/bottom_navigation.dart';
+// lib/main.dart
 import 'package:flutter/material.dart';
-import './screens/home_screen.dart';
-import './screens/camera_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:deteksi_jerawat/widgets/bottom_navigation.dart';
 import './screens/login_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
+import './screens/history/recommendation_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/camera_screen.dart';
+import 'screens/history_screen.dart';
+import 'screens/profile_screen.dart';
+import './blocs/user/user_blocs.dart';
+import '/services/user-info.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        primaryColor: const Color(0xFF1a5fab),
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      home: FutureBuilder(
-        future:
-            _checkLoginStatus(), // Check login status before building the UI
-        builder: (context, snapshot) {
-          // Show a loading indicator while checking the login status
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-                body: Center(child: CircularProgressIndicator()));
-          }
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<UserInfoService>(
+          create: (context) => UserInfoService(),
+        ),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<UserBloc>(
+            create: (context) => UserBloc(
+              userInfoService: context.read<UserInfoService>(),
+            ),
+          ),
+          // Add other BLoCs here
+        ],
+        child: MaterialApp(
+          title: 'Deteksi Jerawat',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            primaryColor: const Color(0xFF1a5fab),
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          home: FutureBuilder<bool>(
+            future: _checkLoginStatus(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
 
-          // If the user is logged in, show the MainScreen, otherwise, show the LoginScreen
-          if (snapshot.data == true) {
-            return MainScreen();
-          } else {
-            return LoginScreen();
-          }
-        },
-      ),
-      routes: {
-        '/home': (context) => HomeScreen(),
-        '/scan': (context) => CameraScreen(),
-        '/profile': (context) => ProfileScreen(),
-        '/history': (context) => HistoryScreen(),
-        '/history/rekomendasi': (context) => RecommendationScreen(),
-      },
-      onUnknownRoute: (settings) => MaterialPageRoute(
-        builder: (context) => const Scaffold(
-          body: Center(child: Text('Page not found')),
+              return snapshot.data == true ? MainScreen() : const LoginScreen();
+            },
+          ),
+          routes: {
+            '/home': (context) => const HomeScreen(),
+            '/scan': (context) => const CameraScreen(),
+            '/profile': (context) => ProfileScreen(),
+            '/history': (context) => const HistoryScreen(),
+            '/history/rekomendasi': (context) => const RecommendationScreen(),
+          },
+          onUnknownRoute: (settings) => MaterialPageRoute(
+            builder: (context) => const Scaffold(
+              body: Center(child: Text('Page not found')),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  // Method to check if the user is logged in
   Future<bool> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    // Check if the access token exists
-    String? token = prefs.getString('access_token');
-    return token != null; // If token is not null, user is logged in
+    return prefs.getString('access_token') != null;
   }
 }
