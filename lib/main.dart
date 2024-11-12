@@ -9,7 +9,7 @@ import 'screens/home_screen.dart';
 import 'screens/camera_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/profile_screen.dart';
-import './blocs/user/user_blocs.dart';
+import 'blocs/user/user_bloc.dart';
 import '/services/user-info.dart';
 
 void main() {

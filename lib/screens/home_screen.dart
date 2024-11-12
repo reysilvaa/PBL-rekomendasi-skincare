@@ -4,7 +4,7 @@ import '../widgets/home/greeting_card.dart';
 import '../widgets/home/brand_list.dart';
 import '../widgets/home/product_list.dart';
 import '../widgets/home/user_header.dart';
-import '../blocs/user/user_blocs.dart';
+import '../blocs/user/user_bloc.dart';
 import '../blocs/user/user_event.dart';
 import '../blocs/user/user_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';

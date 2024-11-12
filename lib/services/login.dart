@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'access_token.dart';
 
 class LoginService {
   static const String _baseUrl =
@@ -19,8 +20,15 @@ class LoginService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(
-            response.body); // Return the response body (token data)
+        final responseData =
+            jsonDecode(response.body); // Response body contains token data
+        final String accessToken =
+            responseData['access_token']; // Get the access_token from response
+
+        // Store the access token
+        await storeAccessToken(accessToken);
+
+        return responseData; // Return the response body (token data)
       } else {
         return {'status': 'error', 'message': 'Invalid credentials'};
       }
@@ -42,7 +50,9 @@ class LoginService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body); // Return refreshed token data
+        final Map<String, dynamic> refreshedToken =
+            jsonDecode(response.body); // Return refreshed token data
+        return refreshedToken;
       } else {
         return {'status': 'error', 'message': 'Failed to refresh token'};
       }
@@ -55,7 +65,7 @@ class LoginService {
   Future<void> logout() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('access_token'); // Clear the token
+      await prefs.remove('access_token'); // Clear the access token
     } catch (e) {
       print('Error clearing the token: $e');
     }

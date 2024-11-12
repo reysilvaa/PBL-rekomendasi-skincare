@@ -1,11 +1,15 @@
+import 'package:deteksi_jerawat/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../screens/editProfile_screen.dart';
-import '../../blocs/user/user_blocs.dart';
+import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_state.dart';
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({Key? key}) : super(key: key);
+  final User
+      user; // Assuming you have a User object that you can pass to the fields
+
+  const ProfileHeader({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +130,9 @@ class ProfileHeader extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EditProfileScreen(),
+                                      builder: (context) => EditProfileScreen(
+                                        user: user,
+                                      ),
                                     ),
                                   );
                                 },
