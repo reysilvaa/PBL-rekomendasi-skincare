@@ -25,7 +25,7 @@ Future<String> pickImageAndUpload() async {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'http://your-server-url/upload'), // Replace with your server URL
+            'http://127.0.0.1:8000/user/update-profile-image'), // Replace with your server URL
       );
 
       // Attach the file to the request
