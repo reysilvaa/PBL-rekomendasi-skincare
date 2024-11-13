@@ -21,7 +21,8 @@ class Product {
       productName: json['product_name'],
       description: json['description'],
       productImage: json['product_image'],
-      price: json['price'].toDouble(),
+      price: double.tryParse(json['price'].toString()) ??
+          0.0, // Safely parse price
       stok: json['stok'],
     );
   }
