@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:deteksi_jerawat/model/user.dart';
+import 'package:deteksi_jerawat/services/user-info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../screens/editProfile_screen.dart';
@@ -30,6 +32,11 @@ class ProfileHeader extends StatelessWidget {
 
         if (state is UserLoaded) {
           final user = state.user;
+
+          // Get the full image URL using the service
+          String profileImageUrl = user.profileImage != null
+              ? UserInfoService().getFullImageUrl(user.profileImage!)
+              : 'assets/profile/wajah.png'; // Use default if no profile image
 
           return Container(
             width: double.infinity,
@@ -113,7 +120,8 @@ class ProfileHeader extends StatelessWidget {
                               CircleAvatar(
                                 radius: 40,
                                 backgroundImage: user.profileImage != null
-                                    ? NetworkImage(user.profileImage!)
+                                    ? CachedNetworkImageProvider(
+                                        profileImageUrl) // Memuat gambar dengan cache
                                     : const AssetImage(
                                             'assets/profile/wajah.png')
                                         as ImageProvider,

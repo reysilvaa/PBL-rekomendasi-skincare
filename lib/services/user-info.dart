@@ -7,11 +7,12 @@ import 'access_token.dart'; // Import the file that contains the storeAccessToke
 class UserInfoService {
   final String baseUrl =
       'http://127.0.0.1:8000/api'; // Replace with your actual base URL
+  final String storageBaseUrl =
+      'http://127.0.0.1:8000/storage/'; // Base URL for images
 
   // Fetch user info based on token
   Future<User> fetchUserInfo() async {
     try {
-      // Retrieve the token using getAccessToken
       final token = await getAccessToken();
 
       if (token == null) {
@@ -44,7 +45,6 @@ class UserInfoService {
   // Update user profile
   Future<User> updateUserProfile(User user) async {
     try {
-      // Retrieve the token using getAccessToken
       final token = await getAccessToken();
 
       if (token == null) {
@@ -52,7 +52,7 @@ class UserInfoService {
       }
 
       final response = await http.put(
-        Uri.parse('$baseUrl/user/update'),
+        Uri.parse('$baseUrl/user/update-profile-image'),
         headers: {
           'Authorization':
               'Bearer $token', // Use the token from SharedPreferences
@@ -61,7 +61,7 @@ class UserInfoService {
         body: json.encode({
           'username': user.username,
           'email': user.email,
-          'profile_image': user.profileImage,
+          'profile_image': user.profileImage, // This will be the full URL
           'gender': user.gender,
           'age': user.age,
           'level': user.level,
@@ -78,5 +78,10 @@ class UserInfoService {
     } catch (e) {
       throw Exception('Network error: $e');
     }
+  }
+
+  // Helper method to get the full image URL from a relative path
+  String getFullImageUrl(String relativePath) {
+    return '$storageBaseUrl$relativePath';
   }
 }

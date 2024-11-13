@@ -94,3 +94,13 @@ class UserErrorEvent extends UserEvent {
   @override
   List<Object?> get props => [message];
 }
+
+// Event to update the user's profile image
+class UpdateProfileImageEvent extends UserEvent {
+  final String newProfileImageUrl;
+
+  const UpdateProfileImageEvent(this.newProfileImageUrl);
+
+  @override
+  List<Object?> get props => [newProfileImageUrl];
+}

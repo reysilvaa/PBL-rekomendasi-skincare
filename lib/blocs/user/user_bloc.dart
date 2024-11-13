@@ -18,6 +18,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UpdateEmailEvent>(_onUpdateEmail);
     on<UpdateBirthDateEvent>(_onUpdateBirthDate);
     on<UpdatePhoneNumberEvent>(_onUpdatePhoneNumber);
+    on<UpdateProfileImageEvent>(_onUpdateProfileImage); // New event handler
   }
 
   Future<void> _onFetchUser(
@@ -123,6 +124,23 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           : User(username: '');
       final updatedUser = await _userInfoService.updateUserProfile(
         currentUser.copyWith(birthDate: event.newBirthDate),
+      );
+      emit(UserLoaded(updatedUser));
+    } catch (error) {
+      emit(UserError(error.toString()));
+    }
+  }
+
+  Future<void> _onUpdateProfileImage(
+      UpdateProfileImageEvent event, Emitter<UserState> emit) async {
+    try {
+      final currentUser = (state is UserLoaded)
+          ? (state as UserLoaded).user
+          : User(username: ''); // Fallback user if state is not loaded
+
+      // Update profile image using the service
+      final updatedUser = await _userInfoService.updateUserProfile(
+        currentUser.copyWith(profileImage: event.newProfileImageUrl),
       );
       emit(UserLoaded(updatedUser));
     } catch (error) {
