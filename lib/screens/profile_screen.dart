@@ -1,5 +1,6 @@
 import 'package:deteksi_jerawat/model/user.dart';
-import 'package:deteksi_jerawat/services/access_token.dart';
+import 'package:deteksi_jerawat/services/auth.dart'; // Gunakan auth_service.dart
+import 'package:deteksi_jerawat/services/user-info.dart'; // Gunakan user-info.dart
 import 'package:deteksi_jerawat/widgets/profile/menu_item.dart';
 import 'package:deteksi_jerawat/widgets/profile/profile_header.dart';
 import 'package:deteksi_jerawat/widgets/profile/progress_button.dart';
@@ -9,7 +10,6 @@ import '../blocs/user/user_bloc.dart';
 import '../blocs/user/user_event.dart';
 import '../blocs/user/user_state.dart';
 import 'login_screen.dart';
-import '../services/user-info.dart'; // Import the UserInfoService class
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,6 +19,10 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final Auth _auth = Auth(); // Buat instance dari Auth
+  final UserInfoService _userInfoService =
+      UserInfoService(); // Instance UserInfoService
+
   @override
   void initState() {
     super.initState();
@@ -27,33 +31,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _initializeUser() async {
     try {
-      final userInfoService =
-          UserInfoService(); // Create instance of the service
-      final token =
-          await getAccessToken(); // Retrieve token using getAccessToken()
+      final token = await _auth.getAccessToken(); // Ambil token melalui Auth
 
       if (token == null) {
         throw Exception('No access token found');
       }
 
-      final user = await userInfoService
-          .fetchUserInfo(); // Fetch user info using the token
+      final user =
+          await _userInfoService.fetchUserInfo(); // Ambil data pengguna
 
-      // After fetching the user data, dispatch the UserLoaded event
       if (mounted) {
-        context
-            .read<UserBloc>()
-            .add(FetchUserEvent(token)); // Dispatch event with token
+        // Dispatch event dengan data pengguna
+        context.read<UserBloc>().add(FetchUserEvent(token));
       }
     } catch (e) {
-      // Handle error if fetching user info fails
       context
           .read<UserBloc>()
-          .add(UserErrorEvent('Failed to load user profile'));
+          .add(UserErrorEvent('Failed to load user profile: $e'));
     }
   }
 
-  void _handleLogout(BuildContext context) {
+  void _handleLogout(BuildContext context) async {
+    await _auth.logout(); // Hapus token saat logout
+
+    // Arahkan ke layar login
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -69,20 +70,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: SafeArea(
         child: BlocBuilder<UserBloc, UserState>(
-          // Using BlocBuilder to listen to UserBloc states
           builder: (context, state) {
             if (state is UserLoading) {
-              return _buildLoadingScreen(); // Show loading screen
+              return _buildLoadingScreen();
             }
             if (state is UserError) {
-              return _buildErrorScreen(state); // Show error message
+              return _buildErrorScreen(state);
             }
             if (state is UserLoaded) {
-              return _buildLoadedScreen(
-                  state.user); // Show profile screen with user data
+              return _buildLoadedScreen(state.user);
             }
-            return const SizedBox
-                .shrink(); // Return an empty widget while the state is uninitialized
+            return const SizedBox.shrink();
           },
         ),
       ),
@@ -90,8 +88,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildLoadingScreen() {
-    return Center(
-      child: CircularProgressIndicator(), // Show loading indicator
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 
@@ -103,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Text('Error: ${state.message}'),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: _initializeUser, // Retry fetching user data
+            onPressed: _initializeUser,
             child: const Text('Retry'),
           ),
         ],
@@ -116,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       color: Colors.grey[50],
       child: Column(
         children: [
-          ProfileHeader(user: user), // Display user info in profile header
+          ProfileHeader(user: user),
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -134,7 +132,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 MenuItem(
                   title: 'Logout',
                   isLogout: true,
-                  onTap: () => _handleLogout(context), // Handle logout action
+                  onTap: () =>
+                      _handleLogout(context), // Logout melalui _handleLogout
                 ),
               ],
             ),

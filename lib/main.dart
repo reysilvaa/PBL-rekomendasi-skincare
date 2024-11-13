@@ -1,7 +1,6 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deteksi_jerawat/widgets/bottom_navigation.dart';
 import './screens/login_screen.dart';
 import './screens/history/recommendation_screen.dart';
@@ -11,6 +10,7 @@ import 'screens/history_screen.dart';
 import 'screens/profile_screen.dart';
 import 'blocs/user/user_bloc.dart';
 import '/services/user-info.dart';
+import '/services/auth.dart'; // Import auth_service.dart
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +26,10 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<UserInfoService>(
           create: (context) => UserInfoService(),
         ),
+        RepositoryProvider<Auth>(
+          // Menyediakan Auth sebagai repository
+          create: (context) => Auth(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -34,7 +38,7 @@ class MyApp extends StatelessWidget {
               userInfoService: context.read<UserInfoService>(),
             ),
           ),
-          // Add other BLoCs here
+          // Tambahkan BLoC lainnya di sini
         ],
         child: MaterialApp(
           title: 'Deteksi Jerawat',
@@ -44,7 +48,7 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Colors.white,
           ),
           home: FutureBuilder<bool>(
-            future: _checkLoginStatus(),
+            future: _checkLoginStatus(context), // Memanggil fungsi cek login
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Scaffold(
@@ -58,7 +62,7 @@ class MyApp extends StatelessWidget {
           routes: {
             '/home': (context) => const HomeScreen(),
             '/scan': (context) => const CameraScreen(),
-            '/profile': (context) => ProfileScreen(),
+            '/profile': (context) => const ProfileScreen(),
             '/history': (context) => const HistoryScreen(),
             '/history/rekomendasi': (context) => const RecommendationScreen(),
           },
@@ -72,8 +76,8 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Future<bool> _checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('access_token') != null;
+  Future<bool> _checkLoginStatus(BuildContext context) async {
+    final auth = context.read<Auth>(); // Menggunakan Auth instance
+    return await auth.isLoggedIn(); // Cek status login
   }
 }

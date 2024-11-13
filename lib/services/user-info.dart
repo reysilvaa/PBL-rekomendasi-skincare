@@ -1,19 +1,21 @@
+// lib/services/user_info_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import '../model/user.dart';
-import 'access_token.dart'; // Import the file that contains the storeAccessToken and getAccessToken functions
+import 'auth.dart'; // Import Auth dari auth_service.dart
 
 class UserInfoService {
   final String baseUrl =
-      'http://127.0.0.1:8000/api'; // Replace with your actual base URL
+      'http://127.0.0.1:8000/api'; // Ganti dengan URL API Anda
   final String storageBaseUrl =
-      'http://127.0.0.1:8000/storage/'; // Base URL for images
+      'http://127.0.0.1:8000/storage/'; // URL untuk gambar
 
-  // Fetch user info based on token
+  final Auth _auth = Auth(); // Membuat instance dari Auth
+
+  // Mengambil informasi pengguna berdasarkan token
   Future<User> fetchUserInfo() async {
     try {
-      final token = await getAccessToken();
+      final token = await _auth.getAccessToken();
 
       if (token == null) {
         throw Exception('No access token found in SharedPreferences');
@@ -42,10 +44,10 @@ class UserInfoService {
     }
   }
 
-  // Update user profile
+  // Memperbarui profil pengguna
   Future<User> updateUserProfile(User user) async {
     try {
-      final token = await getAccessToken();
+      final token = await _auth.getAccessToken();
 
       if (token == null) {
         throw Exception('No access token found in SharedPreferences');
@@ -54,14 +56,13 @@ class UserInfoService {
       final response = await http.put(
         Uri.parse('$baseUrl/user/update-profile-image'),
         headers: {
-          'Authorization':
-              'Bearer $token', // Use the token from SharedPreferences
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
         body: json.encode({
           'username': user.username,
           'email': user.email,
-          'profile_image': user.profileImage, // This will be the full URL
+          'profile_image': user.profileImage,
           'gender': user.gender,
           'age': user.age,
           'level': user.level,
@@ -80,7 +81,7 @@ class UserInfoService {
     }
   }
 
-  // Helper method to get the full image URL from a relative path
+  // Metode untuk mendapatkan URL lengkap gambar dari path relatif
   String getFullImageUrl(String relativePath) {
     return '$storageBaseUrl$relativePath';
   }
