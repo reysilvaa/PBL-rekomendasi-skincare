@@ -1,4 +1,5 @@
 import 'package:deteksi_jerawat/widgets/login/login_form.dart';
+import 'package:deteksi_jerawat/widgets/login/sign_up_link.dart';
 import 'package:flutter/material.dart';
 import 'package:deteksi_jerawat/widgets/bottom_navigation.dart'; // Import bottom navigation
 import 'package:deteksi_jerawat/services/login.dart'; // Import login service
@@ -79,7 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: Color(0xFF0D47A1),
                 ),
               ),
-
               LoginForm(
                 onEmailChanged: _handleEmailChanged, // Use the defined method
                 onPasswordChanged:
@@ -93,6 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     _login, // Pass the _login function as onPressed callback
               ),
               const SizedBox(height: 20),
+              SignUpLink(),
             ],
           ),
         ),
