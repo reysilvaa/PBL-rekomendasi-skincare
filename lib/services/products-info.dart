@@ -1,16 +1,16 @@
 // lib/services/product_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/product.dart'; // Import model Product yang sesuai
-import 'auth.dart'; // Import Auth untuk mendapatkan token
-import 'config.dart'; // Import konfigurasi
+import '../model/product.dart'; // Import model Product
+import 'auth.dart'; // Import Auth for token
+import 'config.dart'; // Import config for the base URL
 
 class ProductService {
-  final Auth _auth = Auth(); // Instance dari Auth untuk mengambil token
+  final Auth _auth = Auth(); // Instance from Auth to get token
 
-  Future<List<Product>> fetchProducts() async {
+  // Updated fetchProducts method to accept a page parameter
+  Future<List<Product>> fetchProducts({int page = 1}) async {
     try {
-      // Ambil token dari Auth
       final token = await _auth.getAccessToken();
 
       if (token == null) {
@@ -18,10 +18,9 @@ class ProductService {
       }
 
       final response = await http.get(
-        Uri.parse(
-            '${Config.baseUrl}/products'), // Menggunakan baseUrl dari Config
+        Uri.parse('${Config.baseUrl}/products?page=$page'), // Passing the page in the query string
         headers: {
-          'Authorization': 'Bearer $token', // Sertakan token di header
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
@@ -29,9 +28,7 @@ class ProductService {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
 
-        // Menangani format response Laravel
         if (data['status'] == 'success' && data['data'] != null) {
-          // Mengambil data produk
           List<Product> products = (data['data'] as List)
               .map((productJson) => Product.fromJson(productJson))
               .toList();

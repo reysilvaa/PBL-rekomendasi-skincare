@@ -44,6 +44,7 @@ dependencies:
   cached_network_image: ^3.3.1
   mime: ^2.0.0
   http_parser: ^4.0.2
+  shimmer: ^3.0.0
 
 
 
@@ -75,6 +76,14 @@ flutter:
     - assets/profile/
     - assets/produk/
     - assets/login/
+    - assets/fonts/
+  
+  fonts:
+  - family: IsidoraSansAlt
+    fonts:
+      - asset: assets/fonts/IsidoraSansAlt-Bold.ttf
+        weight: 700
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

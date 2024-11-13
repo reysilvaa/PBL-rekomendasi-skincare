@@ -1,16 +1,15 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:deteksi_jerawat/widgets/bottom_navigation.dart';
-import './screens/login_screen.dart';
-import './screens/history/recommendation_screen.dart';
-import 'screens/home_screen.dart';
-import 'screens/camera_screen.dart';
-import 'screens/history_screen.dart';
-import 'screens/profile_screen.dart';
-import 'blocs/user/user_bloc.dart';
+import 'package:deteksi_jerawat/screens/home_screen.dart';
+import 'package:deteksi_jerawat/screens/login_screen.dart';
+import 'package:deteksi_jerawat/screens/history/recommendation_screen.dart';
+import 'package:deteksi_jerawat/screens/camera_screen.dart';
+import 'package:deteksi_jerawat/screens/history_screen.dart';
+import 'package:deteksi_jerawat/screens/profile_screen.dart';
+import 'package:deteksi_jerawat/blocs/user/user_bloc.dart';
 import '/services/user-info.dart';
-import '/services/auth.dart'; // Import auth_service.dart
+import '/services/auth.dart';
+import 'splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +26,6 @@ class MyApp extends StatelessWidget {
           create: (context) => UserInfoService(),
         ),
         RepositoryProvider<Auth>(
-          // Menyediakan Auth sebagai repository
           create: (context) => Auth(),
         ),
       ],
@@ -38,7 +36,6 @@ class MyApp extends StatelessWidget {
               userInfoService: context.read<UserInfoService>(),
             ),
           ),
-          // Tambahkan BLoC lainnya di sini
         ],
         child: MaterialApp(
           title: 'Deteksi Jerawat',
@@ -47,18 +44,7 @@ class MyApp extends StatelessWidget {
             primaryColor: const Color(0xFF1a5fab),
             scaffoldBackgroundColor: Colors.white,
           ),
-          home: FutureBuilder<bool>(
-            future: _checkLoginStatus(context), // Memanggil fungsi cek login
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                );
-              }
-
-              return snapshot.data == true ? MainScreen() : const LoginScreen();
-            },
-          ),
+          home: const SplashScreen(),
           routes: {
             '/home': (context) => const HomeScreen(),
             '/scan': (context) => const CameraScreen(),
@@ -74,10 +60,5 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<bool> _checkLoginStatus(BuildContext context) async {
-    final auth = context.read<Auth>(); // Menggunakan Auth instance
-    return await auth.isLoggedIn(); // Cek status login
   }
 }
