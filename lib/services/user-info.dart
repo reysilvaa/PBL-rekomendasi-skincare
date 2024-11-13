@@ -1,15 +1,11 @@
 // lib/services/user_info_service.dart
 import 'dart:convert';
+import 'package:deteksi_jerawat/services/config.dart';
 import 'package:http/http.dart' as http;
 import '../model/user.dart';
 import 'auth.dart'; // Import Auth dari auth_service.dart
 
 class UserInfoService {
-  final String baseUrl =
-      'http://127.0.0.1:8000/api'; // Ganti dengan URL API Anda
-  final String storageBaseUrl =
-      'http://127.0.0.1:8000/storage/'; // URL untuk gambar
-
   final Auth _auth = Auth(); // Membuat instance dari Auth
 
   // Mengambil informasi pengguna berdasarkan token
@@ -22,7 +18,8 @@ class UserInfoService {
       }
 
       final response = await http.get(
-        Uri.parse('$baseUrl/user/profile-info'),
+        Uri.parse(
+            '${Config.baseUrl}/user/profile-info'), // Menggunakan baseUrl dari Auth
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -54,7 +51,8 @@ class UserInfoService {
       }
 
       final response = await http.put(
-        Uri.parse('$baseUrl/user/update-profile-image'),
+        Uri.parse(
+            '${Config.baseUrl}/user/update-profile-image'), // Menggunakan baseUrl dari Auth
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -83,6 +81,7 @@ class UserInfoService {
 
   // Metode untuk mendapatkan URL lengkap gambar dari path relatif
   String getFullImageUrl(String relativePath) {
-    return '$storageBaseUrl$relativePath';
+    // Menambahkan base URL gambar ke path gambar relatif
+    return '${Config.baseUrl.replaceFirst('/api', '')}/storage/$relativePath';
   }
 }
