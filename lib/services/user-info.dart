@@ -81,7 +81,6 @@ class UserInfoService {
 
   // Metode untuk mendapatkan URL lengkap gambar dari path relatif
   String getFullImageUrl(String relativePath) {
-    // Menambahkan base URL gambar ke path gambar relatif
-    return '${Config.baseUrl.replaceFirst('/api', '')}/storage/$relativePath';
+    return relativePath; // Return the already complete URL from the server or cloud storage
   }
 }
