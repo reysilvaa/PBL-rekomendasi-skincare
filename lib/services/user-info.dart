@@ -81,6 +81,7 @@ class UserInfoService {
 
   // Metode untuk mendapatkan URL lengkap gambar dari path relatif
   String getFullImageUrl(String relativePath) {
-    return relativePath; // Return the already complete URL from the server or cloud storage
-  }
+  return relativePath; // Return the already complete URL from the server or cloud storage
+}
+
 }

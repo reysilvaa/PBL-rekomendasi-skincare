@@ -1,53 +1,57 @@
 import 'package:flutter/material.dart';
-import '../model/history_item.dart';
-import '../widgets/history/history_card.dart';
-import '../widgets/history/history_header.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:deteksi_jerawat/blocs/history/history_bloc.dart';
+import 'package:deteksi_jerawat/blocs/history/history_event.dart';
+import 'package:deteksi_jerawat/blocs/history/history_state.dart';
+import 'package:deteksi_jerawat/widgets/history/history_card.dart';
+import 'package:deteksi_jerawat/widgets/history/history_header.dart';
+import 'package:deteksi_jerawat/services/history-info.dart'; // Make sure to import the service
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final List<HistoryItem> historyItems = [
-      HistoryItem(
-        date: "30, Okt 2024",
-        title: "Kondisi Kulit",
-        subtitle: "berjerawat parah",
-        description: "Lorem ipsum dolor sit amet",
-        imagePath: "assets/profile/wajah.png",
-      ),
-      HistoryItem(
-        date: "27, Okt 2024",
-        title: "Kondisi Kulit",
-        subtitle: "berjerawat parah",
-        description: "Lorem ipsum dolor sit amet",
-        imagePath: "assets/profile/wajah.png",
-      ),
-    ];
-
     return Scaffold(
       body: Column(
         children: [
-          const HistoryHeader(), // Using the separated header widget
+          const HistoryHeader(), // Header widget
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: historyItems.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    // Navigate to the Recommendation screen when tapped
-                    Navigator.pushNamed(
-                      context,
-                      '/history/rekomendasi', // Navigate to RecommendationScreen
+            child: BlocProvider(
+              create: (context) => HistoryBloc(historyService: HistoryService())
+                ..add(FetchHistories()), // Provide the service
+              child: BlocBuilder<HistoryBloc, HistoryState>(
+                builder: (context, state) {
+                  if (state is HistoryLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is HistoryError) {
+                    return Center(child: Text(state.message));
+                  } else if (state is HistoryLoaded) {
+                    final historyItems = state.histories;
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: historyItems.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            // Navigate to the details page on item tap
+                            Navigator.pushNamed(
+                              context,
+                              '/history/rekomendasi', // Make sure this route is set up
+                            );
+                          },
+                          child: HistoryCard(
+                            historyItem:
+                                historyItems[index], // Passing the history data
+                          ),
+                        );
+                      },
                     );
-                  },
-                  child: HistoryCard(
-                    historyItem: historyItems[index],
-                  ),
-                );
-              },
+                  } else {
+                    return const Center(child: Text('Tidak ada riwayat.'));
+                  }
+                },
+              ),
             ),
           ),
         ],

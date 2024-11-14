@@ -3,8 +3,8 @@ class Product {
   final String productName;
   final String description;
   final String productImage;
-  final double price;
-  final int stok;
+  final String price;
+  final int stock;
 
   Product({
     required this.productId,
@@ -12,7 +12,7 @@ class Product {
     required this.description,
     required this.productImage,
     required this.price,
-    required this.stok,
+    required this.stock,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -21,9 +21,19 @@ class Product {
       productName: json['product_name'],
       description: json['description'],
       productImage: json['product_image'],
-      price: double.tryParse(json['price'].toString()) ??
-          0.0, // Safely parse price
-      stok: json['stok'],
+      price: json['price'],
+      stock: json['stok'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'product_id': productId,
+      'product_name': productName,
+      'description': description,
+      'product_image': productImage,
+      'price': price,
+      'stok': stock,
+    };
   }
 }
