@@ -49,7 +49,10 @@ class RecommendationScreen extends StatelessWidget {
                       ImageSection(gambarScan: gambarScan),
 
                       // Other sections
-                      const SkinConditionSection(),
+                      SkinConditionSection(
+                        skinCondition: history.recommendation
+                            .skinCondition, // Passing the skin condition from the API response
+                      ),
                       const ProductRecommendationSection(),
 
                       // BuyButton leading to checkout screen

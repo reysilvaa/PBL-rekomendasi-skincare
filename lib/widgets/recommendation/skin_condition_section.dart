@@ -1,7 +1,11 @@
+import 'package:deteksi_jerawat/model/skincondition.dart';
 import 'package:flutter/material.dart';
 
 class SkinConditionSection extends StatelessWidget {
-  const SkinConditionSection({super.key});
+  final SkinCondition
+      skinCondition; // Accept the SkinCondition object as a parameter
+
+  const SkinConditionSection({super.key, required this.skinCondition});
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +21,15 @@ class SkinConditionSection extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const Text(
-            'berjerawat parah',
-            style: TextStyle(
+          Text(
+            skinCondition
+                .conditionName, // Display the condition name from the model
+            style: const TextStyle(
               fontSize: 14,
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 16), // Memberi jarak antara teks baru dan teks "Solusi"
+          const SizedBox(height: 16), // Adding spacing
           const Text(
             'Solusi',
             style: TextStyle(
@@ -34,7 +39,8 @@ class SkinConditionSection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
+            skinCondition
+                .description, // Display the condition description from the model
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[600],
