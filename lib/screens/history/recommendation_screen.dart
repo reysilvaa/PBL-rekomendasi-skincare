@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/history/history_bloc.dart'; // Import HistoryBloc
 import '../../services/history-info.dart'; // Import the HistoryService
 import '../../widgets/recommendation/product_recommendation_section.dart';
-import '../../widgets/recommendation/profile_section.dart';
+import '../../widgets/recommendation/image_section.dart';
 import '../../widgets/recommendation/skin_condition_section.dart';
 import '../../widgets/recommendation/buy_button.dart';
 import '../../screens/history/checkout_screen.dart';
@@ -28,13 +28,14 @@ class RecommendationScreen extends StatelessWidget {
             } else if (state is HistoryError) {
               return Center(child: Text(state.message));
             } else if (state is HistoryLoaded) {
-              // Ensure that the history and recommendation exist
+              // Ensure that the history exists and is not empty
               final history =
                   state.histories.isNotEmpty ? state.histories[0] : null;
 
               if (history != null) {
-                final detectionDate =
-                    history.detectionDate; // Use detectionDate here
+                final detectionDate = history.detectionDate;
+                final gambarScan = history.gambarScan;
+
                 return SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,16 +44,22 @@ class RecommendationScreen extends StatelessWidget {
                       HeaderSection(
                           detectionDate:
                               detectionDate), // Pass DateTime to HeaderSection
-                      const ProfileSection(),
+
+                      // Pass gambarScan to ImageSection
+                      ImageSection(gambarScan: gambarScan),
+
+                      // Other sections
                       const SkinConditionSection(),
                       const ProductRecommendationSection(),
+
+                      // BuyButton leading to checkout screen
                       BuyButton(
                         onPressed: () {
-                          // Navigate to checkout screen
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const CheckoutScreen()),
+                              builder: (context) => const CheckoutScreen(),
+                            ),
                           );
                         },
                       ),
@@ -60,7 +67,8 @@ class RecommendationScreen extends StatelessWidget {
                   ),
                 );
               } else {
-                return const SizedBox(); // No history or recommendation data
+                // Handle case where no history is available
+                return const Center(child: Text('No history available.'));
               }
             } else {
               return const SizedBox(); // Default empty state
