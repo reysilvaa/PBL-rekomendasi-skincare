@@ -101,7 +101,7 @@ class _UserHeaderState extends State<UserHeader> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Hello, ${widget.user.username}', // Use the passed user object
+                              'Hello, ${widget.user.firstName}', // Use the passed user object
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,

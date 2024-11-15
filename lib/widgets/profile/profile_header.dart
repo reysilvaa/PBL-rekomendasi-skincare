@@ -97,7 +97,7 @@ class ProfileHeader extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Hello, ${user.username}',
+                                      'Hello, ${user.firstName}',
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 24,
