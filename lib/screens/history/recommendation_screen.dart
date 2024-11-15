@@ -53,8 +53,10 @@ class RecommendationScreen extends StatelessWidget {
                         skinCondition: history.recommendation
                             .skinCondition, // Passing the skin condition from the API response
                       ),
-                      const ProductRecommendationSection(),
-
+                      ProductRecommendationSection(
+                        recommendation: history
+                            .recommendation, // Passing the recommendation from historyItem
+                      ),
                       // BuyButton leading to checkout screen
                       BuyButton(
                         onPressed: () {
