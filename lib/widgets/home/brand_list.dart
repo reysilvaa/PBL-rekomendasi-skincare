@@ -37,7 +37,7 @@ class _BrandListState extends State<BrandList> {
           // Display the brands in a horizontal list
           final brands = snapshot.data!;
           return SizedBox(
-            height: 100,
+            height: 120,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: brands.length,
@@ -57,6 +57,7 @@ class _BrandListState extends State<BrandList> {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 );
@@ -68,27 +69,49 @@ class _BrandListState extends State<BrandList> {
     );
   }
 
-  // Shimmer loading widget
+  /// Build shimmer loading widget
   Widget _buildShimmerLoading() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+    return SizedBox(
+      height: 120, // Matches the height of the brand list
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 5, // You can display a few loading items
+        itemCount: 6, // Show 6 shimmer items
         itemBuilder: (context, index) {
-          return Container(
-            width: 120,
-            margin: const EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey[300]!),
-            ),
-            child: const Center(
-              child: Text(
-                'Loading...',
-                style: TextStyle(fontWeight: FontWeight.bold),
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: 120,
+              margin: const EdgeInsets.only(right: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: 80,
+                    height: 12,
+                    color: Colors.grey[200], // Placeholder for text
+                  ),
+                  const SizedBox(height: 5),
+                  Container(
+                    width: 60,
+                    height: 12,
+                    color: Colors.grey[200], // Placeholder for smaller text
+                  ),
+                ],
               ),
             ),
           );
