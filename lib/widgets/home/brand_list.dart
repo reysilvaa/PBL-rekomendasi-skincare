@@ -1,6 +1,6 @@
-// lib/widgets/brand_list.dart
 import 'package:deteksi_jerawat/model/brands.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart'; // Import the shimmer package
 import '../../services/brands-info.dart';
 
 class BrandList extends StatefulWidget {
@@ -25,8 +25,8 @@ class _BrandListState extends State<BrandList> {
       future: _brandsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while fetching data
-          return const Center(child: CircularProgressIndicator());
+          // Show shimmer effect while fetching data
+          return _buildShimmerLoading();
         } else if (snapshot.hasError) {
           // Show error message if there's an issue with fetching
           return Center(child: Text('Error: ${snapshot.error}'));
@@ -65,6 +65,35 @@ class _BrandListState extends State<BrandList> {
           );
         }
       },
+    );
+  }
+
+  // Shimmer loading widget
+  Widget _buildShimmerLoading() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 5, // You can display a few loading items
+        itemBuilder: (context, index) {
+          return Container(
+            width: 120,
+            margin: const EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[300]!),
+            ),
+            child: const Center(
+              child: Text(
+                'Loading...',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
