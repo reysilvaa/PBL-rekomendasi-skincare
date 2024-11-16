@@ -1,61 +1,69 @@
 import 'dart:convert';
 import 'package:deteksi_jerawat/services/config.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../model/history.dart';
 import 'auth.dart';
 
 class HistoryService {
   final Auth _auth = Auth();
-
-  // Mengambil riwayat berdasarkan token saja
   Future<List<History>> fetchUserHistory() async {
     try {
       final token = await _auth.getAccessToken();
-
       if (token == null) {
-        throw Exception('No access token found in SharedPreferences');
+        throw Exception('No access token found');
       }
 
       final response = await http.get(
-        Uri.parse(
-            '${Config.baseUrl}/user/history'), // endpoint untuk fetch history
+        Uri.parse('${Config.baseUrl}/user/history'),
         headers: {
-          'Authorization':
-              'Bearer $token', // Hanya menggunakan token untuk autentikasi
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
-      if (response.statusCode == 200) {
-        try {
-          final decodedResponse = json.decode(response.body);
+      // Print the response body for debugging purposes
+      print('Response body: ${response.body}');
 
-          // Check if the response contains 'status' and 'data'
-          if (decodedResponse is Map &&
-              decodedResponse.containsKey('status') &&
+      if (response.statusCode == 200) {
+        final decodedResponse = json.decode(response.body);
+
+        // Check if 'status' and 'data' are present
+        if (decodedResponse is Map) {
+          // Handle success response
+          if (decodedResponse.containsKey('status') &&
               decodedResponse.containsKey('data')) {
             final status = decodedResponse['status'];
-            final List<dynamic> data = decodedResponse['data'];
-
-            // Check for 'success' status
             if (status == 'success') {
+              final List<dynamic> data = decodedResponse['data'];
               return data.map((item) => History.fromJson(item)).toList();
             } else {
-              throw Exception('Failed to fetch history: $status');
+              throw Exception('No Data Found!: $status');
             }
-          } else {
-            throw Exception(
-                'Unexpected response structure: Missing "status" or "data"');
           }
-        } catch (e) {
-          throw Exception('Error decoding history data: $e');
+
+          if (decodedResponse.containsKey('message')) {
+            final message = decodedResponse['message'];
+            throw (message); // Display the message from the API
+          }
+
+          // Handle unexpected structure
+          throw Exception(
+              'Unexpected response structure: Missing "status" or "data"');
+        } else {
+          throw Exception('Unexpected response format');
         }
       } else {
-        throw Exception('Failed to fetch history: ${response.statusCode}');
+        throw ('No Data Found!: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Network error: $e');
+      throw ('$e');
     }
+  }
+
+  void _showErrorMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   // Menambahkan riwayat baru menggunakan token

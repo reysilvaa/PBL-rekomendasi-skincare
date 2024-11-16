@@ -1,3 +1,4 @@
+import 'package:deteksi_jerawat/widgets/card/error-card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:deteksi_jerawat/blocs/history/history_bloc.dart';
@@ -25,7 +26,8 @@ class HistoryScreen extends StatelessWidget {
                   if (state is HistoryLoading) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is HistoryError) {
-                    return Center(child: Text(state.message));
+                    // Show the ErrorCard widget for errors
+                    return ErrorCard(message: state.message);
                   } else if (state is HistoryLoaded) {
                     final historyItems = state.histories;
                     return ListView.builder(

@@ -1,5 +1,7 @@
 import 'package:deteksi_jerawat/blocs/history/history_event.dart';
 import 'package:deteksi_jerawat/blocs/history/history_state.dart';
+import 'package:deteksi_jerawat/model/recommendation.dart';
+import 'package:deteksi_jerawat/model/skincondition.dart';
 import 'package:deteksi_jerawat/widgets/recommendation/recommendation_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,27 +37,27 @@ class RecommendationScreen extends StatelessWidget {
               if (history != null) {
                 final detectionDate = history.detectionDate;
                 final gambarScan = history.gambarScan;
+                final recommendation = history.recommendation ??
+                    Recommendation.empty(); // Fallback to empty recommendation
 
                 return SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Pass detectionDate to HeaderSection
-                      HeaderSection(
-                          detectionDate:
-                              detectionDate), // Pass DateTime to HeaderSection
+                      HeaderSection(detectionDate: detectionDate),
 
                       // Pass gambarScan to ImageSection
-                      ImageSection(gambarScan: gambarScan),
+                      ImageSection(gambarScan: gambarScan ?? "Kosong"),
 
-                      // Other sections
+                      // Pass non-null recommendation to SkinConditionSection
                       SkinConditionSection(
-                        skinCondition: history.recommendation
-                            .skinCondition, // Passing the skin condition from the API response
+                        skinCondition: history.recommendation?.skinCondition ??
+                            SkinCondition.empty(), // Null-safe fallback
                       ),
                       ProductRecommendationSection(
-                        recommendation: history
-                            .recommendation, // Passing the recommendation from historyItem
+                        recommendation:
+                            recommendation, // Passing the non-null recommendation
                       ),
                       // BuyButton leading to checkout screen
                       BuyButton(

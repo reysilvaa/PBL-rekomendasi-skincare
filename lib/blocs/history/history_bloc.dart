@@ -16,58 +16,57 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     on<UpdateHistory>(_onUpdateHistory);
     on<DeleteHistory>(_onDeleteHistory);
   }
-
-  // Fetch histories
   Future<void> _onFetchHistories(
       FetchHistories event, Emitter<HistoryState> emit) async {
-    try {
-      emit(HistoryLoading());
-      final histories =
-          await _historyService.fetchUserHistory(); // Fetch from the service
-      emit(HistoryLoaded(histories)); // Emit loaded state with data
-    } catch (error) {
-      emit(HistoryError('Failed to fetch histories: $error'));
-    }
+    await _handleHistoryAction(
+      () async => await _historyService.fetchUserHistory(),
+      emit,
+      (data) => HistoryLoaded(data),
+    );
   }
 
-  // Add a new history
   Future<void> _onAddHistory(
       AddHistory event, Emitter<HistoryState> emit) async {
-    try {
-      emit(HistoryLoading());
-      final history = await _historyService
-          .addHistory(event.history); // Add history via service
-      emit(HistoryAdded(history)); // Emit added state with the new history
-    } catch (error) {
-      emit(HistoryError('Failed to add history: $error'));
-    }
+    await _handleHistoryAction(
+      () async => await _historyService.addHistory(event.history),
+      emit,
+      (data) => HistoryAdded(data),
+    );
   }
 
-  // Update an existing history
   Future<void> _onUpdateHistory(
       UpdateHistory event, Emitter<HistoryState> emit) async {
-    try {
-      emit(HistoryLoading());
-      final updatedHistory = await _historyService
-          .updateHistory(event.history); // Update via service
-      emit(HistoryUpdated(
-          updatedHistory)); // Emit updated state with the updated history
-    } catch (error) {
-      emit(HistoryError('Failed to update history: $error'));
-    }
+    await _handleHistoryAction(
+      () async => await _historyService.updateHistory(event.history),
+      emit,
+      (data) => HistoryUpdated(data),
+    );
   }
 
-  // Delete a history
   Future<void> _onDeleteHistory(
       DeleteHistory event, Emitter<HistoryState> emit) async {
+    await _handleHistoryAction(
+      () async {
+        await _historyService.deleteHistory(event.historyId);
+        return event.historyId; // Return the ID of the deleted history
+      },
+      emit,
+      (data) => HistoryDeleted(data),
+    );
+  }
+
+  Future<void> _handleHistoryAction(
+      Future<dynamic> Function() action,
+      Emitter<HistoryState> emit,
+      HistoryState Function(dynamic data) onSuccess) async {
     try {
-      emit(HistoryLoading());
-      await _historyService
-          .deleteHistory(event.historyId); // Delete history via service
-      emit(HistoryDeleted(
-          event.historyId)); // Emit deleted state with the deleted ID
+      emit(HistoryLoading()); // Emit loading state
+      final result =
+          await action(); // Perform the action (e.g., fetch, add, update)
+      emit(onSuccess(result)); // Emit the success state with the result
     } catch (error) {
-      emit(HistoryError('Failed to delete history: $error'));
+      // Emit error state with a better formatted error message
+      emit(HistoryError('An error occurred: $error'));
     }
   }
 }

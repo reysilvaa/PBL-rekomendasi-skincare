@@ -22,8 +22,8 @@ class SkinConditionSection extends StatelessWidget {
             ),
           ),
           Text(
-            skinCondition
-                .conditionName, // Display the condition name from the model
+            skinCondition.conditionName ??
+                'Nama Kondisi Tidak Tersedia', // Fallback if null
             style: const TextStyle(
               fontSize: 14,
               color: Colors.grey,
@@ -39,8 +39,8 @@ class SkinConditionSection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            skinCondition
-                .description, // Display the condition description from the model
+            skinCondition.description ??
+                'Deskripsi Tidak Tersedia', // Fallback if null
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[600],

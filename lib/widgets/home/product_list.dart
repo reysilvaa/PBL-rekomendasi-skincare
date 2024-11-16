@@ -72,7 +72,7 @@ class _ProductListState extends State<ProductList> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      product.productName,
+                      product.productName ?? 'Tidak Ada Produk',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

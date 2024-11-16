@@ -1,36 +1,32 @@
 class Product {
   final int productId;
-  final String productName;
-  final String description;
-  final String productImage;
-  final String price;
-  final int stock;
-  final int rating;
+  final String? productName; // Nullable
+  final String? description; // Nullable
+  final String? productImage; // Nullable
+  final String? price; // Nullable
+  final int? stock; // Nullable
+  final int? rating; // Nullable
 
   Product({
     required this.productId,
-    required this.productName,
-    required this.description,
-    required this.productImage,
-    required this.price,
-    required this.stock,
-    required this.rating,
+    this.productName,
+    this.description,
+    this.productImage,
+    this.price,
+    this.stock,
+    this.rating,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      productId: json['product_id'] ?? 0, // Default to 0 if null
-      productName: json['product_name'] ??
-          'Unknown Product', // Default to a string if null
-      description: json['description'] ??
-          'No description available', // Default to a string if null
-      productImage:
-          json['product_image'] ?? '', // Default to an empty string if null
-      price: json['price'] != null ? json['price'] : 0, // Default to 0 if null
-      stock: json['stok'] != null ? json['stok'] : 0, // Default to 0 if null
-      rating: json['rating'] != null
-          ? json['rating'].toInt()
-          : 0, // Default to 0 if null
+      productId: json['product_id'] ?? 0,
+      productName: json['product_name'],
+      description: json['description'],
+      productImage: json['product_image'],
+      price: json['price']?.toString(),
+      stock: json['stok'],
+      rating:
+          (json['rating'] is int) ? json['rating'] : (json['rating']?.toInt()),
     );
   }
 
@@ -44,5 +40,17 @@ class Product {
       'stok': stock,
       'rating': rating,
     };
+  }
+
+  static Product empty() {
+    return Product(
+      productId: 0,
+      productName: null,
+      description: null,
+      productImage: null,
+      price: null,
+      stock: null,
+      rating: null,
+    );
   }
 }

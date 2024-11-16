@@ -32,8 +32,10 @@ class HistoryCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
+                  // Safe access with null-aware operator
                   Text(
-                    historyItem.recommendation.skinCondition.conditionName,
+                    historyItem.recommendation?.skinCondition?.conditionName ??
+                        'Kondisi Kulit Tidak Diketahui', // Fallback text
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -43,7 +45,8 @@ class HistoryCard extends StatelessWidget {
                     maxLines: 2,
                   ),
                   Text(
-                    historyItem.recommendation.skinCondition.description,
+                    historyItem.recommendation?.skinCondition?.description ??
+                        'Deskripsi Tidak Tersedia', // Fallback text
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -52,16 +55,17 @@ class HistoryCard extends StatelessWidget {
                     maxLines: 2,
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  const Text(
                     'Solusi',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
                   Text(
-                    historyItem.recommendation.product.description,
+                    historyItem.recommendation?.product?.description ??
+                        'Deskripsi Produk Tidak Tersedia', // Fallback text
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -75,7 +79,7 @@ class HistoryCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                historyItem.gambarScan,
+                historyItem.gambarScan ?? 'Gambar tidak ada',
                 width: 60,
                 height: 60,
                 fit: BoxFit.cover,
