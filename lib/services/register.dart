@@ -1,15 +1,14 @@
 import 'dart:convert';
+import 'package:deteksi_jerawat/services/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:deteksi_jerawat/model/user.dart'; // Import the User model
 
 class RegisterService {
-  final String apiUrl = 'http://127.0.0.1:8000/api/register';
-
   // Function to handle the registration process
   Future<Map<String, dynamic>> registerUser(User user) async {
     try {
       final response = await http.post(
-        Uri.parse(apiUrl),
+        Uri.parse('${Config.baseUrl}/register'), // API endpoint to fetch brands
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': user.email,

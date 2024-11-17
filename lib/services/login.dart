@@ -1,16 +1,16 @@
 import 'dart:convert';
+import 'package:deteksi_jerawat/services/config.dart';
 import 'package:http/http.dart' as http;
 import 'auth.dart'; // Pastikan mengimpor auth_service.dart
 
 class LoginService {
-  static const String _baseUrl = 'http://127.0.0.1:8000/api'; // URL dasar API
   final Auth _auth = Auth(); // Membuat instansi dari Auth
 
   // Method untuk login menggunakan JWT
   Future<Map<String, dynamic>> loginUser(String login, String password) async {
     try {
       final response = await http.post(
-        Uri.parse('$_baseUrl/login'), // Endpoint untuk login
+        Uri.parse('${Config.baseUrl}/login'), // API endpoint to fetch brands
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'login': login, // Bisa berupa email atau username
@@ -44,7 +44,7 @@ class LoginService {
       }
 
       final response = await http.post(
-        Uri.parse('$_baseUrl/refresh'), // Endpoint untuk refresh token
+        Uri.parse('${Config.baseUrl}/refresh'), // Endpoint untuk refresh token
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
