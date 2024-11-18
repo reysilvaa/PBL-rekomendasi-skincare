@@ -1,12 +1,15 @@
-// lib/services/user_info_service.dart
 import 'dart:convert';
 import 'package:deteksi_jerawat/services/config.dart';
+import 'package:deteksi_jerawat/services/pick_image_and_upload.dart';
 import 'package:http/http.dart' as http;
 import '../model/user.dart';
-import 'auth.dart'; // Import Auth dari auth_service.dart
+import 'auth.dart';
+import 'pick_image_and_upload.dart'; // Import service image upload
 
 class UserInfoService {
   final Auth _auth = Auth(); // Membuat instance dari Auth
+  final ImageUploadService _imageUploadService =
+      ImageUploadService(); // Membuat instance dari ImageUploadService
 
   // Mengambil informasi pengguna berdasarkan token
   Future<User> fetchUserInfo() async {
@@ -18,8 +21,7 @@ class UserInfoService {
       }
 
       final response = await http.get(
-        Uri.parse(
-            '${Config.baseUrl}/user/profile-info'), // Menggunakan baseUrl dari Auth
+        Uri.parse('${Config.baseUrl}/user/profile-info'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -41,7 +43,7 @@ class UserInfoService {
     }
   }
 
-  // Memperbarui profil pengguna
+  // Memperbarui profil pengguna (tanpa profile image)
   Future<User> updateUserProfile(User user) async {
     try {
       final token = await _auth.getAccessToken();
@@ -51,16 +53,18 @@ class UserInfoService {
       }
 
       final response = await http.put(
-        Uri.parse(
-            '${Config.baseUrl}/user/update-profile-image'), // Menggunakan baseUrl dari Auth
+        Uri.parse('${Config.baseUrl}/user/update'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
         body: json.encode({
           'username': user.username,
+          'first_name': user.firstName,
+          'last_name': user.lastName,
+          'birth_date': user.birthDate,
+          'phone_number': user.phoneNumber,
           'email': user.email,
-          'profile_image': user.profileImage,
           'gender': user.gender,
           'age': user.age,
           'level': user.level,
@@ -79,9 +83,19 @@ class UserInfoService {
     }
   }
 
+  // Memperbarui gambar profil pengguna
+  Future<String> updateProfileImage() async {
+    try {
+      // Panggil ImageUploadService untuk memilih dan mengunggah gambar
+      final profileImagePath = await _imageUploadService.pickImageAndUpload();
+      return profileImagePath;
+    } catch (e) {
+      throw Exception('Failed to update profile image: $e');
+    }
+  }
+
   // Metode untuk mendapatkan URL lengkap gambar dari path relatif
   String getFullImageUrl(String relativePath) {
-  return relativePath; // Return the already complete URL from the server or cloud storage
-}
-
+    return relativePath;
+  }
 }

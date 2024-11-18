@@ -35,6 +35,27 @@ class _BirthDateFieldState extends State<BirthDateField> {
         UpdateBirthDateEvent(newBirthDate)); // Handle the birth date change
   }
 
+  // Open the date picker dialog and update the text field with the selected date
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(), // default to the current date
+      firstDate: DateTime(1900), // minimum date that can be selected
+      lastDate: DateTime.now(), // maximum date that can be selected
+    );
+
+    if (selectedDate != null) {
+      // Format the selected date into a string
+      final String formattedDate =
+          '${selectedDate.toLocal()}'.split(' ')[0]; // Format: YYYY-MM-DD
+      _controller.text =
+          formattedDate; // Update the text field with the selected date
+
+      _onBirthDateChanged(
+          formattedDate); // Update the birth date in the UserBloc
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -49,9 +70,14 @@ class _BirthDateFieldState extends State<BirthDateField> {
           controller: _controller,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
-            hintText: 'Enter your birth date',
+            hintText: 'Select your birth date',
           ),
-          onChanged: _onBirthDateChanged,
+          onTap: () {
+            // Prevent the keyboard from showing when tapping the text field
+            FocusScope.of(context).requestFocus(FocusNode());
+            _selectDate(context); // Show the date picker
+          },
+          readOnly: true, // Make the text field read-only
         ),
       ],
     );

@@ -1,57 +1,73 @@
-import 'dart:io';
-import 'package:http_parser/http_parser.dart';
+import 'dart:io' as io;
+import 'package:flutter/foundation.dart'; // Import this to use kIsWeb
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:mime/mime.dart'; // Importing mime for MediaType
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
+import 'package:deteksi_jerawat/services/config.dart';
 
-Future<String> pickImageAndUpload() async {
-  final ImagePicker picker = ImagePicker();
+class ImageUploadService {
+  final ImagePicker _picker = ImagePicker();
 
-  // Pick an image from the gallery
-  final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+  // Metode untuk memilih gambar dari galeri dan mengunggahnya langsung
+  Future<String> pickImageAndUpload() async {
+    // Pilih gambar dari galeri
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
-  if (image != null) {
-    try {
-      final imageFile = File(image.path);
+    if (image != null) {
+      try {
+        // Jika platform adalah Web, gunakan Blob untuk mengirim file
+        if (kIsWeb) {
+          // For web, you would need to use a different method for uploading the image
+          // For example, using FormData in web or other API-compatible solutions
+          // This is a simplified placeholder for web upload
+          print('Image selected for web upload: ${image.path}');
+          // Placeholder response - modify this according to your web backend
+          return "http://your-web-image-upload-endpoint.com/image.jpg"; // Modify as per your backend
+        } else {
+          // Platform is mobile (Android/iOS), use dart:io and MultipartRequest
+          final imageFile = io.File(image.path);
 
-      // Detect mime type from file extension
-      final mimeType = lookupMimeType(image.path);
-      final contentType = mimeType != null
-          ? MediaType.parse(mimeType)
-          : MediaType.parse(
-              'image/jpeg'); // Default to 'image/jpeg' if mime type is unknown
+          // Menentukan tipe mime berdasarkan ekstensi file
+          final mimeType = lookupMimeType(image.path);
+          final contentType = mimeType != null
+              ? MediaType.parse(mimeType)
+              : MediaType.parse('image/jpeg'); // Default ke 'image/jpeg'
 
-      // Create a request for uploading the image
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'http://127.0.0.1:8000/user/update-profile-image'), // Replace with your server URL
-      );
+          // Membuat request untuk mengunggah gambar
+          var request = http.MultipartRequest(
+            'POST',
+            Uri.parse(
+                '${Config.baseUrl}/user/update-profile-image'), // Ganti dengan endpoint server yang sesuai
+          );
 
-      // Attach the file to the request
-      var pic = await http.MultipartFile.fromPath(
-        'image', // Parameter expected by the server
-        imageFile.path,
-        contentType: contentType, // Set content type dynamically
-      );
+          // Menambahkan file ke request
+          var pic = await http.MultipartFile.fromPath(
+            'image', // Parameter yang diharapkan oleh server
+            imageFile.path,
+            contentType: contentType, // Mengatur tipe konten secara dinamis
+          );
 
-      request.files.add(pic);
+          request.files.add(pic);
 
-      // Send the request
-      var response = await request.send();
+          // Mengirim request untuk mengunggah gambar
+          var response = await request.send();
 
-      // Check if the upload was successful
-      if (response.statusCode == 200) {
-        var responseBody = await response.stream.bytesToString();
-        print('Image uploaded successfully: $responseBody');
-        return responseBody; // Return the URL or path of the uploaded image
-      } else {
-        throw Exception('Failed to upload image');
+          // Mengecek apakah upload berhasil
+          if (response.statusCode == 200) {
+            var responseBody = await response.stream.bytesToString();
+            print('Image uploaded successfully: $responseBody');
+            return responseBody; // Kembalikan URL atau path gambar yang diunggah
+          } else {
+            throw Exception(
+                'Failed to upload image with status code: ${response.statusCode}');
+          }
+        }
+      } catch (e) {
+        throw Exception('Image upload failed: $e');
       }
-    } catch (e) {
-      throw Exception('Image upload failed: $e');
+    } else {
+      throw Exception('No image selected');
     }
-  } else {
-    throw Exception('No image selected');
   }
 }

@@ -1,15 +1,15 @@
-import 'package:deteksi_jerawat/blocs/user/user_bloc.dart';
-import 'package:deteksi_jerawat/blocs/user/user_event.dart';
-import 'package:deteksi_jerawat/blocs/user/user_state.dart';
-import 'package:deteksi_jerawat/widgets/editProfile/edit_profile_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/editProfile/username.dart';
-import '../widgets/editProfile/first_name.dart';
-import '../widgets/editProfile/last_name.dart';
-import '../widgets/editProfile/email.dart';
-import '../widgets/editProfile/phone_number.dart';
-import '../widgets/editProfile/birth_date.dart';
+import 'package:deteksi_jerawat/blocs/user/user_bloc.dart';
+import 'package:deteksi_jerawat/blocs/user/user_event.dart';
+import 'package:deteksi_jerawat/widgets/editProfile/edit_profile_header.dart';
+import 'package:deteksi_jerawat/widgets/editProfile/username.dart';
+import 'package:deteksi_jerawat/widgets/editProfile/first_name.dart';
+import 'package:deteksi_jerawat/widgets/editProfile/last_name.dart';
+import 'package:deteksi_jerawat/widgets/editProfile/email.dart';
+import 'package:deteksi_jerawat/widgets/editProfile/phone_number.dart';
+import 'package:deteksi_jerawat/widgets/editProfile/birth_date.dart';
+import 'package:deteksi_jerawat/widgets/editProfile/save_button.dart';
 import '../model/user.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -35,6 +35,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
+    // Initialize controllers with current user data
     usernameController = TextEditingController(text: widget.user.username);
     phoneNumberController = TextEditingController(text: widget.user.phoneNumber);
     birthDateController = TextEditingController(text: widget.user.birthDate);
@@ -45,6 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void dispose() {
+    // Dispose of controllers to avoid memory leaks
     usernameController.dispose();
     phoneNumberController.dispose();
     birthDateController.dispose();
@@ -73,6 +75,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Image Picker and Upload
             EditProfileHeader(
               onImagePicked: (newProfileImageUrl) {
                 context
@@ -80,75 +83,49 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     .add(UpdateProfileImageEvent(newProfileImageUrl));
               },
             ),
-            _buildProfileForm(context),
+            _buildProfileForm(),
             const SizedBox(height: 20),
-            _buildSaveButton(context),
+            _buildSaveButton(),
           ],
         ),
       ),
     );
   }
 
- Widget _buildProfileForm(BuildContext context) {
+  // Profile form fields
+  Widget _buildProfileForm() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          UsernameField(user: widget.user), 
+          UsernameField(user: widget.user),
           const SizedBox(height: 20),
           PhoneNumberField(user: widget.user),
           const SizedBox(height: 20),
-          BirthDateField(birthDate: widget.user.birthDate), 
+          BirthDateField(birthDate: widget.user.birthDate),
           const SizedBox(height: 20),
-          EmailField(email: widget.user.email), 
+          EmailField(email: widget.user.email),
           const SizedBox(height: 20),
-          FirstNameField(user: widget.user), 
+          FirstNameField(user: widget.user),
           const SizedBox(height: 20),
-          LastNameField(user: widget.user), // Passing User object to LastNameField
+          LastNameField(user: widget.user),
         ],
       ),
     );
   }
-  Widget _buildSaveButton(BuildContext context) {
-  return ElevatedButton(
-    onPressed: () async {
-      final updatedUser = User(
-        username: usernameController.text,
-        phoneNumber: phoneNumberController.text,
-        birthDate: birthDateController.text,
-        email: emailController.text,
-        firstName: firstNameController.text,
-        lastName: lastNameController.text,
-      );
 
-     
-      context.read<UserBloc>().add(UpdateUserProfileEvent(updatedUser));
-
-     
-      final userState = context.read<UserBloc>().state;
-
-      if (userState is UserUpdated) {
-       
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile updated successfully!')),
-        );
-        Navigator.pop(context); 
-      } else if (userState is UserError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update profile. Try again.')),
-        );
-      }
-    },
-    style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFF0D47A1),
-      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
-    ),
-    child: const Text(
-      'Save',
-      style: TextStyle(fontSize: 16, color: Colors.white),
-    ),
-  );
-}
+  // Save button to save the user profile changes
+  Widget _buildSaveButton() {
+    return SaveButton(
+      user: widget.user,
+      usernameController: usernameController,
+      phoneNumberController: phoneNumberController,
+      birthDateController: birthDateController,
+      emailController: emailController,
+      firstNameController: firstNameController,
+      lastNameController: lastNameController,
+    );
+  }
 }
