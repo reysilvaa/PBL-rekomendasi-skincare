@@ -80,6 +80,7 @@ flutter:
     - assets/produk/
     - assets/login/
     - assets/fonts/
+    - assets/skinpedia/
   
   fonts:
   - family: IsidoraSansAlt

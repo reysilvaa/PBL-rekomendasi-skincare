@@ -3,6 +3,7 @@ import 'package:deteksi_jerawat/screens/history/recommendation_screen.dart';
 import 'package:deteksi_jerawat/screens/history_screen.dart';
 import 'package:deteksi_jerawat/screens/home_screen.dart';
 import 'package:deteksi_jerawat/screens/profile_screen.dart';
+import 'package:deteksi_jerawat/screens/skinpedia_screen.dart'; // Import Skinpedia screen
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -17,13 +18,14 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(), // Home screen
     HistoryScreen(), // History screen
     CameraScreen(), // Camera screen
-    Center(child: Text('Community')), // Placeholder for Community screen
+    SkinpediaScreen(), // Skinpedia screen
     ProfileScreen(), // Profile screen
     RecommendationScreen(), // Recommendation screen
   ];
 
   void _onItemTapped(int index) {
     if (index == 2) {
+      // Navigate to Camera screen
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => CameraScreen()),
@@ -88,9 +90,9 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Scan',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.people_outline),
-              activeIcon: Icon(Icons.people),
-              label: 'Community',
+              icon: Icon(Icons.book_outlined),
+              activeIcon: Icon(Icons.book),
+              label: 'Skinpedia', // Updated label
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),

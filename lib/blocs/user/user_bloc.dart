@@ -25,7 +25,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       FetchUserEvent event, Emitter<UserState> emit) async {
     try {
       final user = await _userInfoService.fetchUserInfo();
-      emit(UserLoaded(user));
+      emit(UserLoaded(user)); // Ensure you're emitting UserLoaded
     } catch (error) {
       emit(UserError(error.toString()));
     }
@@ -35,7 +35,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       UpdateUserProfileEvent event, Emitter<UserState> emit) async {
     try {
       final updatedUser = await _userInfoService.updateUserProfile(event.user);
-      emit(UserLoaded(updatedUser));
+      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
     } catch (error) {
       emit(UserError(error.toString()));
     }
@@ -46,11 +46,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final currentUser = (state is UserLoaded)
           ? (state as UserLoaded).user
-          : User(username: '');
+          : User(username: ''); // Ensure UserLoaded state is used here
       final updatedUser = await _userInfoService.updateUserProfile(
         currentUser.copyWith(username: event.newUsername),
       );
-      emit(UserLoaded(updatedUser));
+      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
     } catch (error) {
       emit(UserError(error.toString()));
     }
@@ -61,11 +61,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final currentUser = (state is UserLoaded)
           ? (state as UserLoaded).user
-          : User(username: '');
+          : User(username: ''); // Ensure UserLoaded state is used here
       final updatedUser = await _userInfoService.updateUserProfile(
         currentUser.copyWith(phoneNumber: event.newPhoneNumber),
       );
-      emit(UserLoaded(updatedUser));
+      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
     } catch (error) {
       emit(UserError(error.toString()));
     }
@@ -76,11 +76,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final currentUser = (state is UserLoaded)
           ? (state as UserLoaded).user
-          : User(username: '');
+          : User(username: ''); // Ensure UserLoaded state is used here
       final updatedUser = await _userInfoService.updateUserProfile(
         currentUser.copyWith(firstName: event.newFirstName),
       );
-      emit(UserLoaded(updatedUser));
+      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
     } catch (error) {
       emit(UserError(error.toString()));
     }
@@ -91,11 +91,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final currentUser = (state is UserLoaded)
           ? (state as UserLoaded).user
-          : User(username: '');
+          : User(username: ''); // Ensure UserLoaded state is used here
       final updatedUser = await _userInfoService.updateUserProfile(
         currentUser.copyWith(lastName: event.newLastName),
       );
-      emit(UserLoaded(updatedUser));
+      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
     } catch (error) {
       emit(UserError(error.toString()));
     }
@@ -106,11 +106,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final currentUser = (state is UserLoaded)
           ? (state as UserLoaded).user
-          : User(username: '');
+          : User(username: ''); // Ensure UserLoaded state is used here
       final updatedUser = await _userInfoService.updateUserProfile(
         currentUser.copyWith(email: event.newEmail),
       );
-      emit(UserLoaded(updatedUser));
+      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
     } catch (error) {
       emit(UserError(error.toString()));
     }
@@ -121,11 +121,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final currentUser = (state is UserLoaded)
           ? (state as UserLoaded).user
-          : User(username: '');
+          : User(username: ''); // Ensure UserLoaded state is used here
       final updatedUser = await _userInfoService.updateUserProfile(
         currentUser.copyWith(birthDate: event.newBirthDate),
       );
-      emit(UserLoaded(updatedUser));
+      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
     } catch (error) {
       emit(UserError(error.toString()));
     }
@@ -142,7 +142,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       final updatedUser = await _userInfoService.updateUserProfile(
         currentUser.copyWith(profileImage: event.newProfileImageUrl),
       );
-      emit(UserLoaded(updatedUser));
+      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
     } catch (error) {
       emit(UserError(error.toString()));
     }

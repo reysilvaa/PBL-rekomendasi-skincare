@@ -34,3 +34,12 @@ class UserError extends UserState {
   @override
   List<Object?> get props => [message];
 }
+
+class UserUpdated extends UserState {
+  final User updatedUser;
+
+  const UserUpdated(this.updatedUser);
+
+  @override
+  List<Object?> get props => [updatedUser];
+  }
