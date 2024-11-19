@@ -2,6 +2,7 @@ import 'package:deteksi_jerawat/blocs/history/history_event.dart';
 import 'package:deteksi_jerawat/blocs/history/history_state.dart';
 import 'package:deteksi_jerawat/model/recommendation.dart';
 import 'package:deteksi_jerawat/model/skincondition.dart';
+import 'package:deteksi_jerawat/model/treatments.dart';
 import 'package:deteksi_jerawat/widgets/recommendation/recommendation_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,8 +38,11 @@ class RecommendationScreen extends StatelessWidget {
               if (history != null) {
                 final detectionDate = history.detectionDate;
                 final gambarScan = history.gambarScan;
-                final recommendation = history.recommendation ??
-                    Recommendation.empty(); // Fallback to empty recommendation
+                final recommendation =
+                    history.recommendation ?? Recommendation.empty();
+                final treatments = history
+                        .recommendation?.skinCondition?.deskripsi_treatment ??
+                    Treatments.empty(); // Get treatments
 
                 return SingleChildScrollView(
                   child: Column(
@@ -46,18 +50,17 @@ class RecommendationScreen extends StatelessWidget {
                     children: [
                       // Pass detectionDate to HeaderSection
                       HeaderSection(
-                        detectionDate: detectionDate ??
-                            DateTime.now(), // Fallback to current date
+                        detectionDate:
+                            detectionDate, // Fallback to current date
                       ),
 
                       // Pass gambarScan to ImageSection
                       ImageSection(gambarScan: gambarScan ?? "Kosong"),
 
-                      // Pass non-null recommendation to SkinConditionSection
+                      // Pass non-null recommendation and treatments to SkinConditionSection
                       SkinConditionSection(
-                        recommendation: history.recommendation ??
-                            Recommendation
-                                .empty(), // Provide a fallback Recommendation if null
+                        recommendation: recommendation, // Pass recommendation
+                        treatments: treatments, // Pass treatments
                       ),
 
                       ProductRecommendationSection(
