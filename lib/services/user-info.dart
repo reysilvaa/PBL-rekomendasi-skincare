@@ -7,11 +7,11 @@ import 'auth.dart';
 import 'pick_image_and_upload.dart'; // Import service image upload
 
 class UserInfoService {
-  final Auth _auth = Auth(); // Membuat instance dari Auth
+  final Auth _auth = Auth(); // Instance of Auth
   final ImageUploadService _imageUploadService =
-      ImageUploadService(); // Membuat instance dari ImageUploadService
+      ImageUploadService(); // Instance of ImageUploadService
 
-  // Mengambil informasi pengguna berdasarkan token
+  // Fetch user info based on token
   Future<User> fetchUserInfo() async {
     try {
       final token = await _auth.getAccessToken();
@@ -43,7 +43,7 @@ class UserInfoService {
     }
   }
 
-  // Memperbarui profil pengguna (tanpa profile image)
+  // Update user profile (without profile image)
   Future<User> updateUserProfile(User user) async {
     try {
       final token = await _auth.getAccessToken();
@@ -83,18 +83,25 @@ class UserInfoService {
     }
   }
 
-  // Memperbarui gambar profil pengguna
+  // Update profile image using the same token
   Future<String> updateProfileImage() async {
     try {
-      // Panggil ImageUploadService untuk memilih dan mengunggah gambar
-      final profileImagePath = await _imageUploadService.pickImageAndUpload();
+      // Get the token from Auth service
+      final token = await _auth.getAccessToken();
+      if (token == null) {
+        throw Exception('No access token found in SharedPreferences');
+      }
+
+      // Call ImageUploadService to pick and upload image
+      final profileImagePath =
+          await _imageUploadService.pickImageAndUpload(token);
       return profileImagePath;
     } catch (e) {
       throw Exception('Failed to update profile image: $e');
     }
   }
 
-  // Metode untuk mendapatkan URL lengkap gambar dari path relatif
+  // Method to get full image URL from relative path
   String getFullImageUrl(String relativePath) {
     return relativePath;
   }

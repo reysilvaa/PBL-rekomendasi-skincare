@@ -1,8 +1,9 @@
 import 'package:deteksi_jerawat/services/pick_image_and_upload.dart';
 import 'package:flutter/material.dart';
+import '../../services/auth.dart';
 
 class EditProfileHeader extends StatelessWidget {
-  final Function(String) onImagePicked; // Add the callback
+  final Function(String) onImagePicked; // Callback for passing the image URL
 
   const EditProfileHeader({
     Key? key,
@@ -26,11 +27,17 @@ class EditProfileHeader extends StatelessWidget {
               icon: const Icon(Icons.camera_alt, color: Colors.white),
               onPressed: () async {
                 try {
-                  // Panggil metode untuk memilih dan mengunggah gambar
-                  String newProfileImageUrl =
-                      await ImageUploadService().pickImageAndUpload();
+                  // Get the token from the Auth service
+                  final token = await Auth().getAccessToken();
+                  if (token == null) {
+                    throw Exception('No access token found');
+                  }
 
-                  // Panggil callback untuk memberi tahu parent widget tentang URL gambar baru
+                  // Call the method to pick and upload the image with the token
+                  String newProfileImageUrl =
+                      await ImageUploadService().pickImageAndUpload(token);
+
+                  // Notify the parent widget about the new image URL
                   onImagePicked(newProfileImageUrl);
 
                   print('Gambar berhasil diunggah: $newProfileImageUrl');

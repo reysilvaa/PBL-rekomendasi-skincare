@@ -24,7 +24,7 @@ class HistoryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _formatDate(historyItem.detectionDate),
+                    _formatDate(historyItem.detectionDate ?? DateTime.now()),
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,

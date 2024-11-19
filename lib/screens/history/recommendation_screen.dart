@@ -45,16 +45,21 @@ class RecommendationScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Pass detectionDate to HeaderSection
-                      HeaderSection(detectionDate: detectionDate),
+                      HeaderSection(
+                        detectionDate: detectionDate ??
+                            DateTime.now(), // Fallback to current date
+                      ),
 
                       // Pass gambarScan to ImageSection
                       ImageSection(gambarScan: gambarScan ?? "Kosong"),
 
                       // Pass non-null recommendation to SkinConditionSection
                       SkinConditionSection(
-                        skinCondition: history.recommendation?.skinCondition ??
-                            SkinCondition.empty(), // Null-safe fallback
+                        recommendation: history.recommendation ??
+                            Recommendation
+                                .empty(), // Provide a fallback Recommendation if null
                       ),
+
                       ProductRecommendationSection(
                         recommendation:
                             recommendation, // Passing the non-null recommendation
