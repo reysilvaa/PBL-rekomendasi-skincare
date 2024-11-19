@@ -37,10 +37,9 @@ class _CameraScreenState extends State<CameraScreen> {
 
         await _controller!.initialize();
 
-        if (!mounted) return; // Check if widget is still mounted
+        if (!mounted) return;
 
-        _isCameraInitialized.value =
-            true; // Notify listeners about camera initialization
+        _isCameraInitialized.value = true;
       } else {
         print('No cameras available');
       }
@@ -51,13 +50,13 @@ class _CameraScreenState extends State<CameraScreen> {
 
   void _onClose() {
     _disposeCamera();
-    Navigator.pop(context); // Return to the previous page
+    Navigator.pop(context);
   }
 
   void _onFlipCamera() {
-    _disposeCamera(); // Dispose the current camera controller before switching
+    _disposeCamera();
     _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
-    _initializeCamera(); // Reinitialize the camera with the new index
+    _initializeCamera();
   }
 
   Future<void> _onCapture() async {
@@ -71,14 +70,14 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   void _disposeCamera() {
-    _controller?.dispose(); // Dispose the camera controller
-    _controller = null; // Clear the controller reference
-    _isCameraInitialized.value = false; // Update the state
+    _controller?.dispose();
+    _controller = null;
+    _isCameraInitialized.value = false;
   }
 
   @override
   void dispose() {
-    _disposeCamera(); // Dispose of the camera when the widget is destroyed
+    _disposeCamera();
     super.dispose();
   }
 
@@ -102,13 +101,39 @@ class _CameraScreenState extends State<CameraScreen> {
                 }
               },
             ),
-            TopBar(onClose: _onClose), // Close button
-            const CenterFrame(),
-            const InstructionText(),
-            BottomControl(
-              onFlipCamera: _onFlipCamera,
-              onCapture: _onCapture,
-              onImageSelected: (String) {},
+            // TopBar at the top of the screen
+            Positioned(
+              top: 20,
+              left: 0,
+              right: 0,
+              child: TopBar(onClose: _onClose),
+            ),
+            // CenterFrame for face alignment
+            const Positioned(
+              top: 150,
+              left: 0,
+              right: 0,
+              child: CenterFrame(),
+            ),
+            // InstructionText on top of the camera preview
+            const Positioned(
+              top: 100,
+              left: 0,
+              right: 0,
+              child: InstructionText(),
+            ),
+            // Bottom control bar
+            Positioned(
+              bottom: 20,
+              left: 0,
+              right: 0,
+              child: BottomControl(
+                onFlipCamera: _onFlipCamera,
+                onCapture: _onCapture,
+                onImageSelected: (String path) {
+                  print('Image selected: $path');
+                },
+              ),
             ),
           ],
         ),
