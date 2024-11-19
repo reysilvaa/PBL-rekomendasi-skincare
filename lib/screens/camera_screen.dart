@@ -16,7 +16,7 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   CameraController? _controller;
   List<CameraDescription> cameras = [];
-  bool _isCameraInitialized = false;
+  final ValueNotifier<bool> _isCameraInitialized = ValueNotifier(false);
   int _currentCameraIndex = 0;
 
   @override
@@ -36,11 +36,11 @@ class _CameraScreenState extends State<CameraScreen> {
         );
 
         await _controller!.initialize();
-        if (!mounted) return; // Pastikan widget masih terpasang
 
-        setState(() {
-          _isCameraInitialized = true;
-        });
+        if (!mounted) return; // Check if widget is still mounted
+
+        _isCameraInitialized.value =
+            true; // Notify listeners about camera initialization
       } else {
         print('No cameras available');
       }
@@ -51,20 +51,17 @@ class _CameraScreenState extends State<CameraScreen> {
 
   void _onClose() {
     _disposeCamera();
-    Navigator.pop(context); // Kembali ke halaman sebelumnya
+    Navigator.pop(context); // Return to the previous page
   }
 
   void _onFlipCamera() {
-    _disposeCamera(); // Membuang controller kamera saat ini sebelum beralih
-    setState(() {
-      _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
-      _initializeCamera(); // Menginisialisasi ulang kamera dengan indeks baru
-    });
+    _disposeCamera(); // Dispose the current camera controller before switching
+    _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
+    _initializeCamera(); // Reinitialize the camera with the new index
   }
 
   Future<void> _onCapture() async {
-    if (_controller == null || !_isCameraInitialized)
-      return; // Memastikan controller tidak null dan kamera terinisialisasi
+    if (_controller == null || !_isCameraInitialized.value) return;
     try {
       final image = await _controller!.takePicture();
       print('Captured image path: ${image.path}');
@@ -74,18 +71,14 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   void _disposeCamera() {
-    _controller?.dispose(); // Membuang controller kamera
-    _controller = null; // Menghapus referensi controller
-    if (mounted) {
-      setState(() {
-        _isCameraInitialized = false; // Mengatur ulang status inisialisasi
-      });
-    }
+    _controller?.dispose(); // Dispose the camera controller
+    _controller = null; // Clear the controller reference
+    _isCameraInitialized.value = false; // Update the state
   }
 
   @override
   void dispose() {
-    _disposeCamera(); // Pastikan kamera dibuang ketika widget dihancurkan
+    _disposeCamera(); // Dispose of the camera when the widget is destroyed
     super.dispose();
   }
 
@@ -95,19 +88,27 @@ class _CameraScreenState extends State<CameraScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            if (_isCameraInitialized &&
-                _controller != null) // Pastikan controller tidak null
-              CameraPreviewWidget(
-                controller: _controller!,
-                onFlipCamera: _onFlipCamera,
-                onCapture: _onCapture,
-              ),
-            TopBar(onClose: _onClose), // Tombol close
+            ValueListenableBuilder<bool>(
+              valueListenable: _isCameraInitialized,
+              builder: (context, isInitialized, child) {
+                if (isInitialized && _controller != null) {
+                  return CameraPreviewWidget(
+                    controller: _controller!,
+                    onFlipCamera: _onFlipCamera,
+                    onCapture: _onCapture,
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+            TopBar(onClose: _onClose), // Close button
             const CenterFrame(),
             const InstructionText(),
             BottomControl(
               onFlipCamera: _onFlipCamera,
               onCapture: _onCapture,
+              onImageSelected: (String) {},
             ),
           ],
         ),

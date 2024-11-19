@@ -76,6 +76,7 @@ class CameraPreviewWidget extends StatelessWidget {
             child: BottomControl(
               onFlipCamera: onFlipCamera,
               onCapture: onCapture,
+              onImageSelected: (String) {},
             ),
           ),
         ],

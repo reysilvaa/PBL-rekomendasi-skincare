@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart'; // Import the image_picker package
 
 class BottomControl extends StatelessWidget {
   final VoidCallback onFlipCamera; // Callback to flip the camera
   final VoidCallback onCapture; // Callback to capture an image
+  final Function(String) onImageSelected; // Callback to handle selected image
 
   const BottomControl({
     Key? key,
     required this.onFlipCamera,
     required this.onCapture,
+    required this.onImageSelected, // Accept the callback for image selection
   }) : super(key: key);
 
   @override
@@ -51,8 +54,23 @@ class BottomControl extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.image, color: Colors.white),
-              onPressed: () {
-                // Add logic to open image gallery
+              onPressed: () async {
+                try {
+                  // Open the gallery to pick an image
+                  final picker = ImagePicker();
+                  final XFile? image =
+                      await picker.pickImage(source: ImageSource.gallery);
+
+                  // Check if the user selected an image
+                  if (image != null) {
+                    // Call the callback and pass the selected image path
+                    onImageSelected(image.path);
+                  } else {
+                    print("No image selected");
+                  }
+                } catch (e) {
+                  print("Error picking image: $e");
+                }
               },
             ),
           ],
