@@ -44,16 +44,34 @@ class _FirstNameFieldState extends State<FirstNameField> {
       children: [
         const Text(
           'First Name',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF0D47A1),
+          ),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: _controller,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
+          onChanged: _onFirstNameChanged,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[200],
             hintText: 'Enter your first name',
+            hintStyle: const TextStyle(color: Colors.grey),
+            prefixIcon: const Icon(
+              Icons.person,
+              color: Color(0xFF0D47A1),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFF0D47A1), width: 2),
+            ),
           ),
-          onChanged: _onFirstNameChanged, // Trigger event when text changes
         ),
       ],
     );

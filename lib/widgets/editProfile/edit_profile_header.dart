@@ -20,31 +20,77 @@ class EditProfileHeader extends StatelessWidget {
       child: Container(
         width: double.infinity,
         color: const Color(0xFF0D47A1),
-        padding: const EdgeInsets.only(top: 20, bottom: 40),
+        padding: const EdgeInsets.symmetric(vertical: 40),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(
-              icon: const Icon(Icons.camera_alt, color: Colors.white),
-              onPressed: () async {
-                try {
-                  // Get the token from the Auth service
-                  final token = await Auth().getAccessToken();
-                  if (token == null) {
-                    throw Exception('No access token found');
-                  }
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                // Circular profile placeholder
+                Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[300], // Placeholder background color
+                  ),
+                  child: const Icon(
+                    Icons.person,
+                    size: 50,
+                    color: Colors.grey,
+                  ),
+                ),
+                // Camera icon button overlay
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () async {
+                      try {
+                        final token = await Auth().getAccessToken();
+                        if (token == null) {
+                          throw Exception('No access token found');
+                        }
 
-                  // Call the method to pick and upload the image with the token
-                  String newProfileImageUrl =
-                      await ImageUploadService().pickImageAndUpload(token);
+                        // Call image picker and upload
+                        String newProfileImageUrl =
+                            await ImageUploadService().pickImageAndUpload(token);
 
-                  // Notify the parent widget about the new image URL
-                  onImagePicked(newProfileImageUrl);
+                        // Notify the parent widget about the new image URL
+                        onImagePicked(newProfileImageUrl);
 
-                  print('Gambar berhasil diunggah: $newProfileImageUrl');
-                } catch (e) {
-                  print("Image upload failed: $e");
-                }
-              },
+                        print('Image uploaded successfully: $newProfileImageUrl');
+                      } catch (e) {
+                        print("Image upload failed: $e");
+                      }
+                    },
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,  
+                        border: Border.all(color: Colors.black12),
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        size: 20,
+                        color: Color(0xFF0D47A1),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'Edit Profile Picture',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
