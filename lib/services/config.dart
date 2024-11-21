@@ -4,5 +4,5 @@
 
 class Config {
   static const String baseUrl =
-      'https://rnkjs-125-166-1-156.a.free.pinggy.link/api'; // Base URL API
+      'https://9b16da82775b87c93728f50a30202267.serveo.net/api'; // Base URL API
 }
