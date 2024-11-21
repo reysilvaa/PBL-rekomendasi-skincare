@@ -35,24 +35,31 @@ class _BirthDateFieldState extends State<BirthDateField> {
         UpdateBirthDateEvent(newBirthDate)); // Handle the birth date change
   }
 
-  // Open the date picker dialog and update the text field with the selected date
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(), // default to the current date
-      firstDate: DateTime(1900), // minimum date that can be selected
-      lastDate: DateTime.now(), // maximum date that can be selected
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: const Color(0xFF0D47A1), // Header background color
+              onPrimary: Colors.white, // Header text color
+              onSurface: Colors.black, // Body text color
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (selectedDate != null) {
-      // Format the selected date into a string
       final String formattedDate =
           '${selectedDate.toLocal()}'.split(' ')[0]; // Format: YYYY-MM-DD
-      _controller.text =
-          formattedDate; // Update the text field with the selected date
-
-      _onBirthDateChanged(
-          formattedDate); // Update the birth date in the UserBloc
+      _controller.text = formattedDate;
+      _onBirthDateChanged(formattedDate);
     }
   }
 
@@ -63,21 +70,39 @@ class _BirthDateFieldState extends State<BirthDateField> {
       children: [
         const Text(
           'Birth Date',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
         ),
         const SizedBox(height: 8),
-        TextField(
-          controller: _controller,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Select your birth date',
-          ),
+        GestureDetector(
           onTap: () {
-            // Prevent the keyboard from showing when tapping the text field
             FocusScope.of(context).requestFocus(FocusNode());
-            _selectDate(context); // Show the date picker
+            _selectDate(context);
           },
-          readOnly: true, // Make the text field read-only
+          child: TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+              hintText: 'Select your birth date',
+              filled: true,
+              fillColor: Colors.grey[200],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 15,
+                horizontal: 10,
+              ),
+              suffixIcon: const Icon(
+                Icons.calendar_today_outlined,
+                color: Color(0xFF0D47A1),
+              ),
+            ),
+            readOnly: true, // Prevent keyboard display
+          ),
         ),
       ],
     );

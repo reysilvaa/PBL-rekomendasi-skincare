@@ -35,7 +35,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with current user data
     usernameController = TextEditingController(text: widget.user.username);
     phoneNumberController = TextEditingController(text: widget.user.phoneNumber);
     birthDateController = TextEditingController(text: widget.user.birthDate);
@@ -46,7 +45,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void dispose() {
-    // Dispose of controllers to avoid memory leaks
     usernameController.dispose();
     phoneNumberController.dispose();
     birthDateController.dispose();
@@ -75,17 +73,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Image Picker and Upload
+            // Profile header with image picker
             EditProfileHeader(
               onImagePicked: (newProfileImageUrl) {
-                context
-                    .read<UserBloc>()
-                    .add(UpdateProfileImageEvent(newProfileImageUrl));
+                context.read<UserBloc>().add(UpdateProfileImageEvent(newProfileImageUrl));
               },
             ),
             _buildProfileForm(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             _buildSaveButton(),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -95,21 +92,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   // Profile form fields
   Widget _buildProfileForm() {
     return Container(
-      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Username field
           UsernameField(user: widget.user),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
+          // Phone number field
           PhoneNumberField(user: widget.user),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
+          // Birthdate field
           BirthDateField(birthDate: widget.user.birthDate),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
+          // Email field
           EmailField(email: widget.user.email),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
+          // First name field
           FirstNameField(user: widget.user),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
+          // Last name field
           LastNameField(user: widget.user),
         ],
       ),
@@ -118,14 +127,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   // Save button to save the user profile changes
   Widget _buildSaveButton() {
-    return SaveButton(
-      user: widget.user,
-      usernameController: usernameController,
-      phoneNumberController: phoneNumberController,
-      birthDateController: birthDateController,
-      emailController: emailController,
-      firstNameController: firstNameController,
-      lastNameController: lastNameController,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: SaveButton(
+        user: widget.user,
+        usernameController: usernameController,
+        phoneNumberController: phoneNumberController,
+        birthDateController: birthDateController,
+        emailController: emailController,
+        firstNameController: firstNameController,
+        lastNameController: lastNameController,
+      ),
     );
   }
 }
