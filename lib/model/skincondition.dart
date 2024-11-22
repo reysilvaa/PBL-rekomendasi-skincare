@@ -21,8 +21,8 @@ class SkinCondition {
       conditionId: json['condition_id'] as int,
       conditionName: json['condition_name'] as String? ?? '',
       description: json['description'] as String? ?? '',
-      treatments: json['treatments'] != null
-          ? Treatments.fromJson(json['treatments'])
+      treatments: json['treatment'] != null
+          ? Treatments.fromJson(json['treatment'])
           : Treatments.empty(),
       products: json['products'] != null
           ? (json['products'] as List)
@@ -37,7 +37,7 @@ class SkinCondition {
       'condition_id': conditionId,
       'condition_name': conditionName,
       'description': description,
-      'treatments': treatments.toJson(),
+      'treatment': treatments.toJson(),
       'products': products.map((product) => product.toJson()).toList(),
     };
   }

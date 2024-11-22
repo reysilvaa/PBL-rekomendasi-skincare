@@ -61,7 +61,7 @@ class HistoryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Rekomendasi Produk',
+                    'Treatments',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -69,9 +69,7 @@ class HistoryCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    recommendation.condition.products.isNotEmpty
-                        ? recommendation.condition.products[0].productName
-                        : 'Tidak ada produk tersedia',
+                    recommendation.condition.treatments.deskripsi_treatment,
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
