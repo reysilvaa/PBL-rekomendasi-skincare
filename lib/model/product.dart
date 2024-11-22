@@ -1,3 +1,5 @@
+import 'package:deteksi_jerawat/model/skincondition.dart';
+
 class Product {
   final int productId;
   final String? productName; // Nullable
@@ -6,6 +8,7 @@ class Product {
   final String? price; // Nullable
   final int? stock; // Nullable
   final int? rating; // Nullable
+  final SkinCondition? condition; // Nullable
 
   Product({
     required this.productId,
@@ -15,6 +18,7 @@ class Product {
     this.price,
     this.stock,
     this.rating,
+    this.condition,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -27,6 +31,7 @@ class Product {
       stock: json['stok'],
       rating:
           (json['rating'] is int) ? json['rating'] : (json['rating']?.toInt()),
+      condition: json['id_condition'],
     );
   }
 
@@ -39,6 +44,7 @@ class Product {
       'price': price,
       'stok': stock,
       'rating': rating,
+      'id_condition': condition,
     };
   }
 
@@ -51,6 +57,7 @@ class Product {
       price: null,
       stock: null,
       rating: null,
+      condition: null,
     );
   }
 }

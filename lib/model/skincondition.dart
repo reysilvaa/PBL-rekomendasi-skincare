@@ -18,7 +18,7 @@ class SkinCondition {
       conditionId: json['condition_id'] ?? 0,
       conditionName: json['condition_name'],
       description: json['description'],
-      deskripsi_treatment: json['id_treatment'], // diganti nkok
+      deskripsi_treatment: json['deskripsi_treatment'], // diganti nkok
     );
   }
 
