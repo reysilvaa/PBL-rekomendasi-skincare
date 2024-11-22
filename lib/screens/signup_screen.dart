@@ -3,6 +3,7 @@ import 'package:deteksi_jerawat/widgets/signup/register_form.dart';
 import 'package:flutter/material.dart';
 import 'package:deteksi_jerawat/services/register.dart'; // Import RegisterService
 import 'package:deteksi_jerawat/model/user.dart'; // Import the User model
+import 'package:deteksi_jerawat/widgets/signup/logo.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -56,6 +57,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Logo(),
               const Text(
                 "Create Your Account",
                 style: TextStyle(
