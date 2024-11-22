@@ -8,7 +8,8 @@ class BuyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(
+          horizontal: 16), // Adjusted to only have horizontal margin
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -32,7 +33,8 @@ class BuyButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           onTap: onPressed,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            padding: const EdgeInsets.symmetric(
+                vertical: 12, horizontal: 20), // Reduced vertical padding
             child: Center(
               child: Text(
                 'Beli Sekarang',
