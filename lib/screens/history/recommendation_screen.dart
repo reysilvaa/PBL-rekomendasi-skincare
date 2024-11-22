@@ -10,11 +10,17 @@ import '../../services/history-info.dart';
 import '../../widgets/recommendation/product_recommendation_section.dart';
 import '../../widgets/recommendation/image_section.dart';
 import '../../widgets/recommendation/skin_condition_section.dart';
-import '../../widgets/recommendation/buy_button.dart';
 import '../../screens/history/checkout_screen.dart';
 
-class RecommendationScreen extends StatelessWidget {
+class RecommendationScreen extends StatefulWidget {
   const RecommendationScreen({super.key});
+
+  @override
+  _RecommendationScreenState createState() => _RecommendationScreenState();
+}
+
+class _RecommendationScreenState extends State<RecommendationScreen> {
+  int _selectedProductIndex = 0; // Index produk yang dipilih dari carousel
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +40,10 @@ class RecommendationScreen extends StatelessWidget {
                   state.histories.isNotEmpty ? state.histories[0] : null;
 
               if (history != null) {
-                // Ensure correct DateTime conversion
                 final detectionDate = history.detectionDate ?? DateTime.now();
                 final gambarScan = history.gambarScan;
                 final recommendation = history.recommendation;
-                final treatments = recommendation.skinCondition?.treatments ??
-                    []; // Safe handling of treatments
+                final products = recommendation.skinCondition?.products ?? [];
 
                 return SingleChildScrollView(
                   child: Column(
@@ -47,35 +51,30 @@ class RecommendationScreen extends StatelessWidget {
                     children: [
                       // Header Section
                       HeaderSection(
-                        history: history, // Pass the whole history object
-                        detectionDate:
-                            history.detectionDate, // Pass detectionDate
+                        history: history,
+                        detectionDate: detectionDate,
                       ),
-// Pass the whole history object
+
                       // Image Section
-                      ImageSection(
-                          gambarScan: gambarScan), // Pass only gambarScan
+                      ImageSection(gambarScan: gambarScan),
+
                       // Skin Condition Section
                       SkinConditionSection(
                         recommendation: recommendation,
-                        treatments:
-                            recommendation.condition.treatments, // Passing treatments to the section
+                        treatments: recommendation.condition.treatments,
                       ),
+
                       // Product Recommendations Section
                       ProductRecommendationSection(
                         recommendation: recommendation,
-                      ),
-                      // Buy Button
-                      BuyButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CheckoutScreen(),
-                            ),
-                          );
+                        onProductChanged: (index) {
+                          setState(() {
+                            _selectedProductIndex = index; // Update index
+                          });
                         },
                       ),
+
+                      // Checkout Button
                     ],
                   ),
                 );
@@ -83,7 +82,7 @@ class RecommendationScreen extends StatelessWidget {
                 return const Center(child: Text('No history available.'));
               }
             } else {
-              return const SizedBox(); // If no state, show an empty widget
+              return const SizedBox(); // Empty state
             }
           },
         ),
