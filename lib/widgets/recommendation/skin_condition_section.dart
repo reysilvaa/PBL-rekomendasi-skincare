@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class SkinConditionSection extends StatelessWidget {
   final Recommendation recommendation;
-  final Treatments? treatments; // Make treatments nullable
+  final Treatments? treatments;
 
   const SkinConditionSection(
       {super.key, required this.recommendation, this.treatments});
@@ -25,8 +25,9 @@ class SkinConditionSection extends StatelessWidget {
             ),
           ),
           Text(
-            recommendation.skinCondition?.conditionName ??
-                'Nama Kondisi Tidak Tersedia',
+            recommendation.skinCondition.conditionName.isNotEmpty
+                ? recommendation.skinCondition.conditionName
+                : 'Nama Kondisi Tidak Tersedia',
             style: const TextStyle(
               fontSize: 14,
               color: Colors.grey,
@@ -41,8 +42,11 @@ class SkinConditionSection extends StatelessWidget {
             ),
           ),
           Text(
-            treatments?.deskripsi_treatment ??
-                'Nama Treatment Tidak Tersedia', // Correctly handling null for treatments
+            recommendation.skinCondition.treatments!.deskripsi_treatment
+                        .isNotEmpty ==
+                    true
+                ? recommendation.skinCondition.treatments!.deskripsi_treatment
+                : 'Nama Treatment Tidak Tersedia',
             style: const TextStyle(
               fontSize: 14,
               color: Colors.grey,

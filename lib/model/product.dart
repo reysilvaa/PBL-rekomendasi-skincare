@@ -6,6 +6,7 @@ class Product {
   final double price;
   final int stock;
   final int rating;
+  final int conditionId; // Add conditionId field
 
   Product({
     required this.productId,
@@ -15,18 +16,38 @@ class Product {
     required this.price,
     required this.stock,
     required this.rating,
+    required this.conditionId, // Add conditionId to constructor
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      productId: json['product_id'] as int,
-      productName: json['product_name'] as String,
-      description: json['description'] as String,
-      productImage: json['product_image'] as String,
-      price: double.parse(json['price']),
-      stock: json['stok'] as int,
-      rating: json['rating'] as int,
+      productId: json['product_id'] != null
+          ? json['product_id'] as int
+          : 0, // Handle null values gracefully
+      productName:
+          json['product_name'] ?? '', // Default to empty string if null
+      description: json['description'] ?? '', // Default to empty string if null
+      productImage:
+          json['product_image'] ?? '', // Default to empty string if null
+      price: _safeParseDouble(json['price']),
+      stock: json['stok'] != null
+          ? json['stok'] as int
+          : 0, // Handle null values gracefully
+      rating: json['rating'] != null
+          ? json['rating'] as int
+          : 0, // Handle null values gracefully
+      conditionId: json['condition_id'] != null
+          ? json['condition_id'] as int
+          : 0, // Handle null condition_id gracefully
     );
+  }
+
+  static double _safeParseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
   }
 
   Map<String, dynamic> toJson() {
@@ -38,6 +59,7 @@ class Product {
       'price': price.toString(),
       'stok': stock,
       'rating': rating,
+      'condition_id': conditionId, // Include conditionId in toJson
     };
   }
 
@@ -50,6 +72,7 @@ class Product {
       price: 0.0,
       stock: 0,
       rating: 0,
+      conditionId: 0, // Default value for conditionId
     );
   }
 }
