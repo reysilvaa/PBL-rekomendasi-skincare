@@ -58,11 +58,15 @@ class SaveButton extends StatelessWidget {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF0D47A1),
-        padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 14.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 5,
       ),
       child: const Text(
         'Save',
-        style: TextStyle(fontSize: 16, color: Colors.white),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }

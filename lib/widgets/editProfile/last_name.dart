@@ -44,16 +44,34 @@ class _LastNameFieldState extends State<LastNameField> {
       children: [
         const Text(
           'Last Name',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF0D47A1),
+          ),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: _controller,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
+          onChanged: _onLastNameChanged,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[200],
             hintText: 'Enter your last name',
+            hintStyle: const TextStyle(color: Colors.grey),
+            prefixIcon: const Icon(
+              Icons.person_outline,
+              color: Color(0xFF0D47A1),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFF0D47A1), width: 2),
+            ),
           ),
-          onChanged: _onLastNameChanged, // Trigger event when text changes
         ),
       ],
     );
