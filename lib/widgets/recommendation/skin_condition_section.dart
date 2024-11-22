@@ -42,10 +42,10 @@ class SkinConditionSection extends StatelessWidget {
             ),
           ),
           Text(
-            recommendation.skinCondition.treatments!.deskripsi_treatment
-                        .isNotEmpty ==
+            recommendation
+                        .condition.treatments.deskripsi_treatment.isNotEmpty ==
                     true
-                ? recommendation.skinCondition.treatments!.deskripsi_treatment
+                ? recommendation.skinCondition.treatments.deskripsi_treatment
                 : 'Nama Treatment Tidak Tersedia',
             style: const TextStyle(
               fontSize: 14,

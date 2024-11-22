@@ -17,7 +17,8 @@ class Recommendation {
     return Recommendation(
       recommendationId: json['recommendation_id'] as int,
       conditionId: json['condition_id'] as int,
-      skinCondition: SkinCondition.fromJson(json['skin_condition']),
+      skinCondition:
+          SkinCondition.fromJson(json['condition']), // Change this line
       condition: SkinCondition.fromJson(json['condition']),
     );
   }

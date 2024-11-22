@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import for date formatting
 import 'back_button.dart';
+import 'package:deteksi_jerawat/model/history.dart'; // Import the History model
 
 class HeaderSection extends StatelessWidget {
-  final DateTime detectionDate; // Receive DateTime here
+  final History history; // Receive the entire History object
 
-  // Constructor with a required parameter
-  const HeaderSection({Key? key, required this.detectionDate})
-      : super(key: key);
+  // Constructor with a required parameter of History
+  const HeaderSection({Key? key, required this.history, required DateTime detectionDate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Format the date to display in the header
-    final formattedDate = DateFormat('dd MMM yyyy').format(detectionDate);
+    final formattedDate =
+        DateFormat('dd MMM yyyy').format(history.detectionDate);
 
     return Container(
       padding: const EdgeInsets.all(16.0),
