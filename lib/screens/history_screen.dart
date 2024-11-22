@@ -34,6 +34,11 @@ class HistoryScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(8),
                       itemCount: historyItems.length,
                       itemBuilder: (context, index) {
+                        final historyItem = historyItems[index];
+
+                        // Assuming that each history item contains a valid recommendation
+                        final recommendation = historyItem.recommendation;
+
                         return GestureDetector(
                           onTap: () {
                             // Navigate to the details page on item tap
@@ -44,7 +49,9 @@ class HistoryScreen extends StatelessWidget {
                           },
                           child: HistoryCard(
                             historyItem:
-                                historyItems[index], // Passing the history data
+                                historyItem, // Passing the history data
+                            recommendation:
+                                recommendation, // Passing the recommendation
                           ),
                         );
                       },

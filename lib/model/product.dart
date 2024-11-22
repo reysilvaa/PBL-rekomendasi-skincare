@@ -1,37 +1,31 @@
-import 'package:deteksi_jerawat/model/skincondition.dart';
-
 class Product {
   final int productId;
-  final String? productName; // Nullable
-  final String? description; // Nullable
-  final String? productImage; // Nullable
-  final String? price; // Nullable
-  final int? stock; // Nullable
-  final int? rating; // Nullable
-  final SkinCondition? condition; // Nullable
+  final String productName;
+  final String description;
+  final String productImage;
+  final double price;
+  final int stock;
+  final int rating;
 
   Product({
     required this.productId,
-    this.productName,
-    this.description,
-    this.productImage,
-    this.price,
-    this.stock,
-    this.rating,
-    this.condition,
+    required this.productName,
+    required this.description,
+    required this.productImage,
+    required this.price,
+    required this.stock,
+    required this.rating,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      productId: json['product_id'] ?? 0,
-      productName: json['product_name'],
-      description: json['description'],
-      productImage: json['product_image'],
-      price: json['price']?.toString(),
-      stock: json['stok'],
-      rating:
-          (json['rating'] is int) ? json['rating'] : (json['rating']?.toInt()),
-      condition: json['id_condition'],
+      productId: json['product_id'] as int,
+      productName: json['product_name'] as String,
+      description: json['description'] as String,
+      productImage: json['product_image'] as String,
+      price: double.parse(json['price']),
+      stock: json['stok'] as int,
+      rating: json['rating'] as int,
     );
   }
 
@@ -41,23 +35,21 @@ class Product {
       'product_name': productName,
       'description': description,
       'product_image': productImage,
-      'price': price,
+      'price': price.toString(),
       'stok': stock,
       'rating': rating,
-      'id_condition': condition,
     };
   }
 
   static Product empty() {
     return Product(
       productId: 0,
-      productName: null,
-      description: null,
-      productImage: null,
-      price: null,
-      stock: null,
-      rating: null,
-      condition: null,
+      productName: '',
+      description: '',
+      productImage: '',
+      price: 0.0,
+      stock: 0,
+      rating: 0,
     );
   }
 }

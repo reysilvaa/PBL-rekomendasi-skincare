@@ -5,6 +5,7 @@ import 'back_button.dart';
 class HeaderSection extends StatelessWidget {
   final DateTime detectionDate; // Receive DateTime here
 
+  // Constructor with a required parameter
   const HeaderSection({Key? key, required this.detectionDate})
       : super(key: key);
 
@@ -18,8 +19,8 @@ class HeaderSection extends StatelessWidget {
       color: const Color(0xFF0D47A1),
       child: Row(
         children: [
-          const BackButtonWidget(), // Menambahkan tombol kembali di sebelah kiri
-          const SizedBox(width: 8), // Jarak antara tombol dan teks
+          const BackButtonWidget(), // Adding a back button on the left
+          const SizedBox(width: 8), // Space between button and text
           Expanded(
             child: Center(
               child: Text(

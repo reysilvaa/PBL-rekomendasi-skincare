@@ -21,84 +21,74 @@ class ProductRecommendationSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey[300]!),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
+          // Ensure we have products in the skin condition
+          if (recommendation.skinCondition.products.isNotEmpty)
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
+                    child: Image.network(
+                      recommendation.skinCondition.products[0].productImage,
+                      height: 150,
+                      width: 150,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  child: recommendation.product?.productImage != null
-                      ? Image.network(
-                          recommendation.product!.productImage!,
-                          height: 150,
-                          width: 150,
-                          fit: BoxFit.cover,
-                        )
-                      : const SizedBox(
-                          height: 150,
-                          width: 150,
-                          child: Center(
-                            child: Icon(
-                              Icons.image_not_supported,
-                              size: 40,
-                              color: Colors.grey,
-                            ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          recommendation.skinCondition.products[0].productName,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        recommendation.product?.productName ??
-                            'No product name',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          // Add stars based on a dynamic rating, e.g., product rating
-                          ...List.generate(
-                            5, // Assume 5-star rating system
-                            (index) => Icon(
-                              Icons.star,
-                              size: 16,
-                              color:
-                                  index < (recommendation.product?.rating ?? 0)
-                                      ? Colors.amber
-                                      : Colors.grey,
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            // Add stars based on a dynamic rating
+                            ...List.generate(
+                              5, // Assume 5-star rating system
+                              (index) => Icon(
+                                Icons.star,
+                                size: 16,
+                                color: index <
+                                        (recommendation.skinCondition
+                                                .products[0].rating ??
+                                            0)
+                                    ? Colors.amber
+                                    : Colors.grey,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        recommendation.product?.description ??
-                            'No product description available.',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
+                          ],
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ],
+                        const SizedBox(height: 8),
+                        Text(
+                          recommendation.skinCondition.products[0].description,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );

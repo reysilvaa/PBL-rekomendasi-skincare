@@ -1,13 +1,12 @@
 import 'package:deteksi_jerawat/blocs/history/history_event.dart';
 import 'package:deteksi_jerawat/blocs/history/history_state.dart';
 import 'package:deteksi_jerawat/model/recommendation.dart';
-import 'package:deteksi_jerawat/model/skincondition.dart';
 import 'package:deteksi_jerawat/model/treatments.dart';
 import 'package:deteksi_jerawat/widgets/recommendation/recommendation_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/history/history_bloc.dart'; // Import HistoryBloc
-import '../../services/history-info.dart'; // Import the HistoryService
+import '../../blocs/history/history_bloc.dart';
+import '../../services/history-info.dart';
 import '../../widgets/recommendation/product_recommendation_section.dart';
 import '../../widgets/recommendation/image_section.dart';
 import '../../widgets/recommendation/skin_condition_section.dart';
@@ -22,7 +21,7 @@ class RecommendationScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => HistoryBloc(
         historyService: HistoryService(),
-      )..add(FetchHistories()), // Fetch histories on screen load
+      )..add(FetchHistories()),
       child: Scaffold(
         body: BlocBuilder<HistoryBloc, HistoryState>(
           builder: (context, state) {
@@ -31,43 +30,34 @@ class RecommendationScreen extends StatelessWidget {
             } else if (state is HistoryError) {
               return Center(child: Text(state.message));
             } else if (state is HistoryLoaded) {
-              // Ensure that the history exists and is not empty
               final history =
                   state.histories.isNotEmpty ? state.histories[0] : null;
 
               if (history != null) {
-                final detectionDate = history.detectionDate;
+                // Ensure correct DateTime conversion
+                final detectionDate = history.detectionDate is DateTime
+                    ? history.detectionDate
+                    : DateTime.now();
+
                 final gambarScan = history.gambarScan;
-                final recommendation =
-                    history.recommendation ?? Recommendation.empty();
-                final treatments = history
-                        .recommendation?.skinCondition?.deskripsi_treatment ??
-                    Treatments.empty(); // Get treatments
+
+                // Ensure correct Recommendation and Treatments handling
+                final recommendation = history.recommendation;
+                final treatments = recommendation.skinCondition.treatments; // Correct assignment here
 
                 return SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Pass detectionDate to HeaderSection
-                      HeaderSection(
-                        detectionDate:
-                            detectionDate, // Fallback to current date
-                      ),
-
-                      // Pass gambarScan to ImageSection
-                      ImageSection(gambarScan: gambarScan ?? "Kosong"),
-
-                      // Pass non-null recommendation and treatments to SkinConditionSection
+                      HeaderSection(detectionDate: detectionDate),
+                      ImageSection(gambarScan: gambarScan),
                       SkinConditionSection(
-                        recommendation: recommendation, // Pass recommendation
-                        treatments: treatments, // Pass treatments
+                        recommendation: recommendation,
+                        treatments: treatments, // Passing treatments
                       ),
-
                       ProductRecommendationSection(
-                        recommendation:
-                            recommendation, // Passing the non-null recommendation
+                        recommendation: recommendation,
                       ),
-                      // BuyButton leading to checkout screen
                       BuyButton(
                         onPressed: () {
                           Navigator.push(
@@ -82,11 +72,10 @@ class RecommendationScreen extends StatelessWidget {
                   ),
                 );
               } else {
-                // Handle case where no history is available
                 return const Center(child: Text('No history available.'));
               }
             } else {
-              return const SizedBox(); // Default empty state
+              return const SizedBox();
             }
           },
         ),

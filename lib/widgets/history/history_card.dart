@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../model/history.dart';
+import '../../model/recommendation.dart';
 
 class HistoryCard extends StatelessWidget {
   final History historyItem;
+  final Recommendation recommendation;
 
-  const HistoryCard({Key? key, required this.historyItem}) : super(key: key);
+  const HistoryCard({
+    Key? key,
+    required this.historyItem,
+    required this.recommendation,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +38,9 @@ class HistoryCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  // Safe access with null-aware operator
                   Text(
                     historyItem.recommendation?.skinCondition?.conditionName ??
-                        'Kondisi Kulit Tidak Diketahui', // Fallback text
+                        'Kondisi Kulit Tidak Diketahui',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -46,7 +51,7 @@ class HistoryCard extends StatelessWidget {
                   ),
                   Text(
                     historyItem.recommendation?.skinCondition?.description ??
-                        'Deskripsi Tidak Tersedia', // Fallback text
+                        'Deskripsi Tidak Tersedia',
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -56,7 +61,7 @@ class HistoryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Solusi',
+                    'Rekomendasi Produk',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -64,8 +69,9 @@ class HistoryCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    historyItem.recommendation?.product?.description ??
-                        'Deskripsi Produk Tidak Tersedia', // Fallback text
+                    recommendation.condition.products.isNotEmpty
+                        ? recommendation.condition.products[0].productName
+                        : 'Tidak ada produk tersedia',
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -78,33 +84,32 @@ class HistoryCard extends StatelessWidget {
             ),
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                historyItem.gambarScan ?? 'Gambar tidak ada',
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child; // Image loaded
-                  } else {
-                    // Show loading progress if image is not loaded yet
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                (loadingProgress.expectedTotalBytes ?? 1)
-                            : null,
-                      ),
-                    );
-                  }
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  // Handle error (e.g., image loading failed)
-                  return Center(
-                    child: Icon(Icons.error, color: Colors.red),
-                  );
-                },
-              ),
+              child: historyItem.gambarScan != null &&
+                      historyItem.gambarScan!.isNotEmpty
+                  ? Image.network(
+                      historyItem.gambarScan!,
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    (loadingProgress.expectedTotalBytes ?? 1)
+                                : null,
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Center(
+                          child: Icon(Icons.error, color: Colors.red),
+                        );
+                      },
+                    )
+                  : const Icon(Icons.image_not_supported,
+                      size: 60, color: Colors.grey),
             ),
           ],
         ),
