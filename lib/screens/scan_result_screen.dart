@@ -1,3 +1,4 @@
+import 'package:deteksi_jerawat/model/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:deteksi_jerawat/model/history.dart';
@@ -181,7 +182,7 @@ class ScanResultScreen extends StatelessWidget {
             itemCount: products.length,
             padding: const EdgeInsets.symmetric(horizontal: 8),
             itemBuilder: (context, index) {
-              final product = products[index];
+              final product = scan.data.products[index];
               return _ProductCard(product: product);
             },
           ),
@@ -192,7 +193,7 @@ class ScanResultScreen extends StatelessWidget {
 }
 
 class _ProductCard extends StatelessWidget {
-  final dynamic product;
+  final Product product;
 
   const _ProductCard({
     Key? key,
@@ -221,7 +222,7 @@ class _ProductCard extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: Image.network(
-              product['productImage'], // Replace with correct image field
+              product.productImage, // Replace with correct image field
               height: 150,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -233,7 +234,7 @@ class _ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product['productName'], // Replace with correct name field
+                  product.productName, // Replace with correct name field
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -243,8 +244,7 @@ class _ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  product[
-                      'description'], // Replace with correct description field
+                  product.description, // Replace with correct description field
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[600],
@@ -257,7 +257,7 @@ class _ProductCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Rp ${product['price'].toStringAsFixed(0)}', // Replace with correct price field
+                      'Rp ${product.price.toStringAsFixed(0)}', // Replace with correct price field
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

@@ -4,5 +4,5 @@
 
 class Config {
   static const String baseUrl =
-      'https://802d34e249fd191409152a3c764c073f.serveo.net/api'; // Base URL API
+      'https://c556e08e6792c5561ef4a76fd3018a8d.serveo.net/api'; // Base URL API
 }

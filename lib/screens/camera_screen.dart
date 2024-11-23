@@ -145,7 +145,9 @@ class _CameraScreenState extends State<CameraScreen> {
                 onImageSelected: (String path) {
                   final File imageFile = File(path);
                   // Dispatch the AnalyzeImageEvent to the ScanBloc
-                  context.read<ScanBloc>().add(AnalyzeImageEvent(imageFile, widget.token));
+                  context
+                      .read<ScanBloc>()
+                      .add(AnalyzeImageEvent(imageFile, widget.token));
                 },
               ),
             ),
