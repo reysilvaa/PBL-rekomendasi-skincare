@@ -1,28 +1,33 @@
 import 'package:deteksi_jerawat/blocs/history/history_event.dart';
 import 'package:deteksi_jerawat/blocs/history/history_state.dart';
 import 'package:deteksi_jerawat/model/recommendation.dart';
-import 'package:deteksi_jerawat/model/skincondition.dart';
 import 'package:deteksi_jerawat/model/treatments.dart';
 import 'package:deteksi_jerawat/widgets/recommendation/recommendation_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/history/history_bloc.dart'; // Import HistoryBloc
-import '../../services/history-info.dart'; // Import the HistoryService
+import '../../blocs/history/history_bloc.dart';
+import '../../services/history-info.dart';
 import '../../widgets/recommendation/product_recommendation_section.dart';
 import '../../widgets/recommendation/image_section.dart';
 import '../../widgets/recommendation/skin_condition_section.dart';
-import '../../widgets/recommendation/buy_button.dart';
 import '../../screens/history/checkout_screen.dart';
 
-class RecommendationScreen extends StatelessWidget {
+class RecommendationScreen extends StatefulWidget {
   const RecommendationScreen({super.key});
+
+  @override
+  _RecommendationScreenState createState() => _RecommendationScreenState();
+}
+
+class _RecommendationScreenState extends State<RecommendationScreen> {
+  int _selectedProductIndex = 0; // Index produk yang dipilih dari carousel
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HistoryBloc(
         historyService: HistoryService(),
-      )..add(FetchHistories()), // Fetch histories on screen load
+      )..add(FetchHistories()),
       child: Scaffold(
         body: BlocBuilder<HistoryBloc, HistoryState>(
           builder: (context, state) {
@@ -31,62 +36,53 @@ class RecommendationScreen extends StatelessWidget {
             } else if (state is HistoryError) {
               return Center(child: Text(state.message));
             } else if (state is HistoryLoaded) {
-              // Ensure that the history exists and is not empty
               final history =
                   state.histories.isNotEmpty ? state.histories[0] : null;
 
               if (history != null) {
-                final detectionDate = history.detectionDate;
+                final detectionDate = history.detectionDate ?? DateTime.now();
                 final gambarScan = history.gambarScan;
-                final recommendation =
-                    history.recommendation ?? Recommendation.empty();
-                final treatments = history
-                        .recommendation?.skinCondition?.deskripsi_treatment ??
-                    Treatments.empty(); // Get treatments
+                final recommendation = history.recommendation;
+                final products = recommendation.skinCondition?.products ?? [];
 
                 return SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Pass detectionDate to HeaderSection
+                      // Header Section
                       HeaderSection(
-                        detectionDate:
-                            detectionDate, // Fallback to current date
+                        history: history,
+                        detectionDate: detectionDate,
                       ),
 
-                      // Pass gambarScan to ImageSection
-                      ImageSection(gambarScan: gambarScan ?? "Kosong"),
+                      // Image Section
+                      ImageSection(gambarScan: gambarScan),
 
-                      // Pass non-null recommendation and treatments to SkinConditionSection
+                      // Skin Condition Section
                       SkinConditionSection(
-                        recommendation: recommendation, // Pass recommendation
-                        treatments: treatments, // Pass treatments
+                        recommendation: recommendation,
+                        treatments: recommendation.skinCondition.treatments,
                       ),
 
+                      // Product Recommendations Section
                       ProductRecommendationSection(
-                        recommendation:
-                            recommendation, // Passing the non-null recommendation
-                      ),
-                      // BuyButton leading to checkout screen
-                      BuyButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CheckoutScreen(),
-                            ),
-                          );
+                        recommendation: recommendation,
+                        onProductChanged: (index) {
+                          setState(() {
+                            _selectedProductIndex = index; // Update index
+                          });
                         },
                       ),
+
+                      // Checkout Button
                     ],
                   ),
                 );
               } else {
-                // Handle case where no history is available
                 return const Center(child: Text('No history available.'));
               }
             } else {
-              return const SizedBox(); // Default empty state
+              return const SizedBox(); // Empty state
             }
           },
         ),

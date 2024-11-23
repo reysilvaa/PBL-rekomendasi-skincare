@@ -8,17 +8,15 @@ import 'config.dart'; // Import config for the base URL
 class ProductService {
   final Auth _auth = Auth(); // Instance from Auth to get token
 
-  // Updated fetchProducts method to accept a page parameter
-  Future<List<Product>> fetchProducts({int page = 1}) async {
+  Future<List<Product>> fetchProducts() async {
     try {
       final token = await _auth.getAccessToken();
-
       if (token == null) {
-        throw Exception('No access token found');
+        throw Exception('Authentication failed: No access token');
       }
 
       final response = await http.get(
-        Uri.parse('${Config.baseUrl}/products?page=$page'), // Passing the page in the query string
+        Uri.parse('${Config.baseUrl}/products'), // No page parameter here
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -28,19 +26,21 @@ class ProductService {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
 
-        if (data['status'] == 'success' && data['data'] != null) {
-          List<Product> products = (data['data'] as List)
+        if (data['status'] == 'success' && data['data'] is List) {
+          List<dynamic> productList = data['data'];
+
+          return productList
               .map((productJson) => Product.fromJson(productJson))
               .toList();
-          return products;
         } else {
-          throw Exception('No products found or error: ${data['message']}');
+          throw Exception('Invalid product data format or empty data');
         }
       } else {
-        throw Exception('Failed to fetch products: ${response.statusCode}');
+        throw Exception('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Network error: $e');
+      print('Fetch products error: $e');
+      return []; // Return an empty list to avoid null reference errors
     }
   }
 }

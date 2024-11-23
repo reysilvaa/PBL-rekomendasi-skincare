@@ -1,5 +1,5 @@
 class Treatments {
-  final int deskripsi_treatment;
+  final String deskripsi_treatment;
 
   Treatments({
     required this.deskripsi_treatment,
@@ -7,17 +7,17 @@ class Treatments {
 
   factory Treatments.fromJson(Map<String, dynamic> json) {
     return Treatments(
-      deskripsi_treatment: json['id_treatment'] ?? 0,
+      deskripsi_treatment: json['deskripsi_treatment'] ?? "null",
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id_treatment': deskripsi_treatment,
+      'deskripsi_treatment': deskripsi_treatment,
     };
   }
 
   static Treatments empty() {
-    return Treatments(deskripsi_treatment: 0);
+    return Treatments(deskripsi_treatment: "null");
   }
 }

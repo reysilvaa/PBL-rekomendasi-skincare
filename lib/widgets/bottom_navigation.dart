@@ -1,38 +1,82 @@
+import 'package:deteksi_jerawat/blocs/scan/scan_bloc.dart';
 import 'package:deteksi_jerawat/screens/camera_screen.dart';
-import 'package:deteksi_jerawat/screens/history/recommendation_screen.dart';
 import 'package:deteksi_jerawat/screens/history_screen.dart';
 import 'package:deteksi_jerawat/screens/home_screen.dart';
 import 'package:deteksi_jerawat/screens/profile_screen.dart';
-import 'package:deteksi_jerawat/screens/skinpedia_screen.dart'; // Import Skinpedia screen
+import 'package:deteksi_jerawat/screens/skinpedia_screen.dart';
+import 'package:deteksi_jerawat/services/scan-post.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:deteksi_jerawat/services/auth.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key}) : super(key: key);
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0; // Track the tab index
+  int _selectedIndex = 0;
+  final Auth _auth = Auth();
+  late final ScanBloc _scanBloc;
 
+  @override
+  void initState() {
+    super.initState();
+    _scanBloc = ScanBloc(scanService: ScanService());
+  }
+
+  @override
+  void dispose() {
+    _scanBloc.close();
+    super.dispose();
+  }
+
+  // List of screens excluding camera
   final List<Widget> _screens = [
-    HomeScreen(), // Home screen
-    HistoryScreen(), // History screen
-    CameraScreen(), // Camera screen
-    SkinpediaScreen(), // Skinpedia screen
-    ProfileScreen(), // Profile screen
-    RecommendationScreen(), // Recommendation screen
+    const HomeScreen(),
+    const HistoryScreen(),
+    const SizedBox(), // Placeholder for camera
+    SkinpediaScreen(),
+    const ProfileScreen(),
   ];
+
+  Future<void> _navigateToCamera() async {
+    try {
+      final token = await _auth.getAccessToken();
+      if (token != null) {
+        if (!mounted) return;
+
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider.value(
+              value: _scanBloc,
+              child: CameraScreen(token: token),
+            ),
+          ),
+        );
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please login to use the camera')),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    }
+  }
 
   void _onItemTapped(int index) {
     if (index == 2) {
-      // Navigate to Camera screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CameraScreen()),
-      );
+      _navigateToCamera();
     } else {
       setState(() {
-        _selectedIndex = index; // Update index
+        _selectedIndex = index;
       });
     }
   }
@@ -92,7 +136,7 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.book_outlined),
               activeIcon: Icon(Icons.book),
-              label: 'Skinpedia', // Updated label
+              label: 'Skinpedia',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),

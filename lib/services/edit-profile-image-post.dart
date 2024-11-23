@@ -7,7 +7,7 @@ import 'package:mime/mime.dart';
 import 'package:deteksi_jerawat/services/config.dart';
 import 'auth.dart';
 
-class ImageUploadService {
+class ProfileImagePOST {
   final ImagePicker _picker = ImagePicker(); // Instance of ImagePicker
   final Auth _auth = Auth(); // Instance of Auth
 

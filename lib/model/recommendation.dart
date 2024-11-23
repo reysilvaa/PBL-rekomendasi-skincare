@@ -1,32 +1,22 @@
-import 'product.dart';
-import 'skincondition.dart';
+import 'package:deteksi_jerawat/model/skincondition.dart';
 
 class Recommendation {
   final int recommendationId;
   final int conditionId;
-  final int productId;
-  final SkinCondition? skinCondition; // Nullable
-  final Product? product; // Nullable
+  final SkinCondition skinCondition;
 
   Recommendation({
     required this.recommendationId,
     required this.conditionId,
-    required this.productId,
-    this.skinCondition, // Nullable
-    this.product, // Nullable
+    required this.skinCondition,
   });
 
   factory Recommendation.fromJson(Map<String, dynamic> json) {
     return Recommendation(
-      recommendationId: json['recommendation_id'] ?? 0,
-      conditionId: json['condition_id'] ?? 0,
-      productId: json['product_id'] ?? 0,
-      skinCondition: json['skin_condition'] != null
-          ? SkinCondition.fromJson(json['skin_condition'])
-          : null, // Null safety
-      product: json['product'] != null
-          ? Product.fromJson(json['product'])
-          : null, // Null safety
+      recommendationId: json['recommendation_id'] as int,
+      conditionId: json['condition_id'] as int,
+      skinCondition:
+          SkinCondition.fromJson(json['condition']), // Change this line
     );
   }
 
@@ -34,9 +24,7 @@ class Recommendation {
     return {
       'recommendation_id': recommendationId,
       'condition_id': conditionId,
-      'product_id': productId,
-      'skin_condition': skinCondition?.toJson(), // Safe access
-      'product': product?.toJson(), // Safe access
+      'skin_condition': skinCondition.toJson(),
     };
   }
 
@@ -44,9 +32,7 @@ class Recommendation {
     return Recommendation(
       recommendationId: 0,
       conditionId: 0,
-      productId: 0,
-      skinCondition: null,
-      product: null,
+      skinCondition: SkinCondition.empty(),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:deteksi_jerawat/services/pick_image_and_upload.dart';
+import 'package:deteksi_jerawat/services/edit-profile-image-post.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth.dart';
 
@@ -55,12 +55,13 @@ class EditProfileHeader extends StatelessWidget {
 
                         // Call image picker and upload
                         String newProfileImageUrl =
-                            await ImageUploadService().pickImageAndUpload(token);
+                            await ProfileImagePOST().pickImageAndUpload(token);
 
                         // Notify the parent widget about the new image URL
                         onImagePicked(newProfileImageUrl);
 
-                        print('Image uploaded successfully: $newProfileImageUrl');
+                        print(
+                            'Image uploaded successfully: $newProfileImageUrl');
                       } catch (e) {
                         print("Image upload failed: $e");
                       }
@@ -70,7 +71,7 @@ class EditProfileHeader extends StatelessWidget {
                       width: 35,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white,  
+                        color: Colors.white,
                         border: Border.all(color: Colors.black12),
                       ),
                       child: const Icon(

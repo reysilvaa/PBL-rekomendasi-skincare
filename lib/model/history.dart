@@ -3,32 +3,28 @@ import 'package:deteksi_jerawat/model/recommendation.dart';
 class History {
   final int historyId;
   final int userId;
-  final String? gambarScan; // Nullable
+  final String gambarScan;
   final DateTime detectionDate;
   final int recommendationId;
-  final Recommendation? recommendation; // Nullable
+  final Recommendation recommendation;
 
   History({
     required this.historyId,
     required this.userId,
-    this.gambarScan,
+    required this.gambarScan,
     required this.detectionDate,
     required this.recommendationId,
-    this.recommendation, // Nullable
+    required this.recommendation,
   });
 
   factory History.fromJson(Map<String, dynamic> json) {
     return History(
-      historyId: json['history_id'] ?? 0,
-      userId: json['user_id'] ?? 0,
-      gambarScan: json['gambar_scan'],
-      detectionDate: json['detection_date'] != null
-          ? DateTime.tryParse(json['detection_date']) ?? DateTime.now()
-          : DateTime.now(),
-      recommendationId: json['recommendation_id'] ?? 0,
-      recommendation: json['recommendation'] != null
-          ? Recommendation.fromJson(json['recommendation'])
-          : null, // Null safety
+      historyId: json['history_id'] as int,
+      userId: json['user_id'] as int,
+      gambarScan: json['gambar_scan'] as String,
+      detectionDate: DateTime.parse(json['detection_date']),
+      recommendationId: json['recommendation_id'] as int,
+      recommendation: Recommendation.fromJson(json['recommendation']),
     );
   }
 
@@ -39,7 +35,7 @@ class History {
       'gambar_scan': gambarScan,
       'detection_date': detectionDate.toIso8601String(),
       'recommendation_id': recommendationId,
-      'recommendation': recommendation?.toJson(), // Safe access
+      'recommendation': recommendation.toJson(),
     };
   }
 
@@ -47,10 +43,10 @@ class History {
     return History(
       historyId: 0,
       userId: 0,
-      gambarScan: null,
+      gambarScan: '',
       detectionDate: DateTime.now(),
       recommendationId: 0,
-      recommendation: null,
+      recommendation: Recommendation.empty(),
     );
   }
 }

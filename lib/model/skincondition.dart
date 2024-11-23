@@ -1,24 +1,34 @@
+import 'package:deteksi_jerawat/model/product.dart';
 import 'package:deteksi_jerawat/model/treatments.dart';
 
 class SkinCondition {
   final int conditionId;
-  final String? conditionName; // Nullable
-  final String? description; // Nullable
-  final Treatments? deskripsi_treatment; // Nullable
+  final String conditionName;
+  final String description;
+  final Treatments treatments;
+  final List<Product> products;
 
   SkinCondition({
     required this.conditionId,
-    this.conditionName,
-    this.description,
-    this.deskripsi_treatment,
+    required this.conditionName,
+    required this.description,
+    required this.treatments,
+    required this.products,
   });
 
   factory SkinCondition.fromJson(Map<String, dynamic> json) {
     return SkinCondition(
-      conditionId: json['condition_id'] ?? 0,
-      conditionName: json['condition_name'],
-      description: json['description'],
-      deskripsi_treatment: json['id_treatment'], // diganti nkok
+      conditionId: json['condition_id'] as int,
+      conditionName: json['condition_name'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      treatments: json['treatment'] != null
+          ? Treatments.fromJson(json['treatment'])
+          : Treatments.empty(),
+      products: json['products'] != null
+          ? (json['products'] as List)
+              .map((productJson) => Product.fromJson(productJson))
+              .toList()
+          : [], // Tambahkan list kosong jika null
     );
   }
 
@@ -27,16 +37,18 @@ class SkinCondition {
       'condition_id': conditionId,
       'condition_name': conditionName,
       'description': description,
-      'id_treatments': deskripsi_treatment,
+      'treatment': treatments.toJson(),
+      'products': products.map((product) => product.toJson()).toList(),
     };
   }
 
   static SkinCondition empty() {
     return SkinCondition(
       conditionId: 0,
-      conditionName: null,
-      description: null,
-      deskripsi_treatment: null,
+      conditionName: '',
+      description: '',
+      treatments: Treatments.empty(),
+      products: [],
     );
   }
 }

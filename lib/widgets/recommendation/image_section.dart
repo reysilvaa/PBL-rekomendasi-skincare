@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:deteksi_jerawat/model/history.dart'; // Import History model
 
 class ImageSection extends StatelessWidget {
   final String gambarScan; // Accept image URL as a parameter
