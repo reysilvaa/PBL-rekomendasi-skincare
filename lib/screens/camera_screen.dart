@@ -1,7 +1,6 @@
 import 'package:deteksi_jerawat/blocs/scan/scan_bloc.dart';
 import 'package:deteksi_jerawat/blocs/scan/scan_event.dart';
 import 'package:deteksi_jerawat/blocs/scan/scan_state.dart';
-import 'package:deteksi_jerawat/screens/history_screen.dart';
 import 'package:deteksi_jerawat/screens/scan_result_screen.dart';
 import 'package:deteksi_jerawat/services/scan-post.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +11,6 @@ import '../widgets/camera/camera_preview.dart';
 import '../widgets/camera/center_frame.dart';
 import '../widgets/camera/instruction_text.dart';
 import '../widgets/camera/top_bar.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
 
 class CameraScreen extends StatefulWidget {
@@ -72,22 +67,8 @@ class _CameraScreenState extends State<CameraScreen> {
 
       if (!mounted) return;
 
-      // Create a new instance of ScanBloc for the result screen
-      final scanBloc = ScanBloc(scanService: context.read<ScanService>());
-
-      // Add the event to analyze the image
-      scanBloc.add(AnalyzeImageEvent(imageFile, widget.token));
-
-      // Navigate to result screen with the new bloc
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BlocProvider.value(
-            value: scanBloc,
-            child: const ScanResultScreen(),
-          ),
-        ),
-      );
+      // Dispatch the AnalyzeImageEvent to the ScanBloc
+      context.read<ScanBloc>().add(AnalyzeImageEvent(imageFile, widget.token));
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -163,21 +144,28 @@ class _CameraScreenState extends State<CameraScreen> {
                 onCapture: _onCapture,
                 onImageSelected: (String path) {
                   final File imageFile = File(path);
-                  final scanBloc =
-                      ScanBloc(scanService: context.read<ScanService>());
-                  scanBloc.add(AnalyzeImageEvent(imageFile, widget.token));
-
+                  // Dispatch the AnalyzeImageEvent to the ScanBloc
+                  context.read<ScanBloc>().add(AnalyzeImageEvent(imageFile, widget.token));
+                },
+              ),
+            ),
+            // Listen for the ScanBloc state changes to navigate
+            BlocListener<ScanBloc, ScanState>(
+              listener: (context, state) {
+                if (state is ScanSuccess) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BlocProvider.value(
-                        value: scanBloc,
-                        child: const ScanResultScreen(),
-                      ),
+                      builder: (context) => ScanResultScreen(scan: state.scan),
                     ),
                   );
-                },
-              ),
+                } else if (state is ScanError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Scan Error: ${state.message}')),
+                  );
+                }
+              },
+              child: Container(),
             ),
           ],
         ),

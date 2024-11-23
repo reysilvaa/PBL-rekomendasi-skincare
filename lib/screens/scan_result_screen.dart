@@ -1,153 +1,77 @@
-import 'package:deteksi_jerawat/blocs/scan/scan_bloc.dart';
-import 'package:deteksi_jerawat/blocs/scan/scan_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../model/recommendation.dart';
+import 'package:deteksi_jerawat/model/history.dart';
+import '../model/scan.dart';
 
 class ScanResultScreen extends StatelessWidget {
-  const ScanResultScreen({Key? key}) : super(key: key);
+  final Scan scan;
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ScanBloc, ScanState>(
-      builder: (context, state) {
-        if (state is ScanLoading) {
-          return const LoadingAnalysisScreen();
-        } else if (state is ScanSuccess) {
-          return ScanResultContent(recommendation: state.recommendation);
-        } else if (state is ScanError) {
-          return ScanErrorScreen(error: state.message);
-        }
-        return const SizedBox();
-      },
-    );
-  }
-}
-
-class LoadingAnalysisScreen extends StatelessWidget {
-  const LoadingAnalysisScreen({Key? key}) : super(key: key);
+  const ScanResultScreen({Key? key, required this.scan}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF0046BE), Color(0xFF00337C)],
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/analyze.gif', width: 200),
-              const SizedBox(height: 24),
-              const Text(
-                'Analyzing your skin...',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Please wait while we process your image',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white70,
-                ),
-              ),
-              const SizedBox(height: 32),
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            ],
-          ),
-        ),
+      appBar: AppBar(
+        title: const Text("Skin Condition Result"),
+        backgroundColor: const Color(0xFF0046BE),
       ),
-    );
-  }
-}
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Display the image of the scan
+            Image.network(
+              scan.data.history.gambarScan,
+              height: 250,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+            const SizedBox(height: 16),
 
-class ScanResultContent extends StatelessWidget {
-  final Recommendation recommendation;
-
-  const ScanResultContent({
-    Key? key,
-    required this.recommendation,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final skinCondition = recommendation.skinCondition;
-
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 300,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.network(
-                    recommendation.skinCondition.products.isNotEmpty
-                        ? recommendation
-                            .skinCondition.products.first.productImage
-                        : 'https://placeholder.com/skin',
-                    fit: BoxFit.cover,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.7),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              title: Text(
-                skinCondition.conditionName,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+            // Display condition name
+            Text(
+              scan.data.condition.conditionName,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0046BE),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSection(
-                    'Condition Description',
-                    skinCondition.description,
-                    Icons.info_outline,
-                  ),
-                  const SizedBox(height: 24),
-                  _buildSection(
-                    'Recommended Treatment',
-                    skinCondition.treatments.deskripsi_treatment,
-                    Icons.medical_services_outlined,
-                  ),
-                  const SizedBox(height: 24),
-                  _buildProductsSection(skinCondition.products),
-                ],
+            const SizedBox(height: 8),
+
+            // Display condition description
+            Text(
+              scan.data.condition.description,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+
+            // Display treatment description
+            _buildSection(
+              'Recommended Treatment',
+              scan.data.treatment.deskripsiTreatment,
+              Icons.medical_services_outlined,
+            ),
+            const SizedBox(height: 16),
+
+            // Display prediction confidence
+            Text(
+              "Prediction Confidence: ${(scan.data.prediction.confidence * 100).toStringAsFixed(2)}%",
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black54,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Display recommended products (empty in this case)
+            _buildProductsSection(scan.data.products),
+          ],
+        ),
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(16),
@@ -233,6 +157,10 @@ class ScanResultContent extends StatelessWidget {
   }
 
   Widget _buildProductsSection(List<dynamic> products) {
+    if (products.isEmpty) {
+      return const SizedBox(); // If no products are available
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -293,7 +221,7 @@ class _ProductCard extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: Image.network(
-              product.productImage,
+              product['productImage'], // Replace with correct image field
               height: 150,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -305,7 +233,7 @@ class _ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product.productName,
+                  product['productName'], // Replace with correct name field
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -315,7 +243,8 @@ class _ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  product.description,
+                  product[
+                      'description'], // Replace with correct description field
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[600],
@@ -328,29 +257,12 @@ class _ProductCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Rp ${product.price.toStringAsFixed(0)}',
+                      'Rp ${product['price'].toStringAsFixed(0)}', // Replace with correct price field
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF0046BE),
                       ),
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          size: 16,
-                          color: Colors.amber,
-                        ),
-                        const SizedBox(width: 2),
-                        Text(
-                          '${product.rating}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),
@@ -358,59 +270,6 @@ class _ProductCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class ScanErrorScreen extends StatelessWidget {
-  final String error;
-
-  const ScanErrorScreen({
-    Key? key,
-    required this.error,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Error Occurred',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0046BE),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text('Try Again'),
-            ),
-          ],
-        ),
       ),
     );
   }

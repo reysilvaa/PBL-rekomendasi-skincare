@@ -1,10 +1,6 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'dart:io';
-import '../../model/recommendation.dart';
-import '../../services/scan-post.dart';
 
-// Events
 abstract class ScanEvent extends Equatable {
   const ScanEvent();
 
@@ -12,6 +8,7 @@ abstract class ScanEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+// Event for analyzing the image
 class AnalyzeImageEvent extends ScanEvent {
   final File image;
   final String token;
@@ -22,6 +19,7 @@ class AnalyzeImageEvent extends ScanEvent {
   List<Object?> get props => [image, token];
 }
 
+// Event for picking and analyzing image
 class PickAndAnalyzeImageEvent extends ScanEvent {
   final String token;
 
