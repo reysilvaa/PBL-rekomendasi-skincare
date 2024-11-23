@@ -124,6 +124,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildLoadedScreen(User user) {
     return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue.shade100, Colors.white],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
       child: Column(
         children: [
           ProfileHeader(user: user),

@@ -38,21 +38,23 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Colors.grey[50], // Background halus
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue.shade100, Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
           child: BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
-              // if (state is UserLoading) {
-              //   return const Center(
-              //     child: RefreshProgressIndicator(),
-              //   );
-              // }
-
               if (state is UserError) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Error: ${state.message}'),
+                      Icon(Icons.error, size: 40, color: Colors.red),
+                      const SizedBox(height: 16),
+                      Text('Error: ${state.message}', style: TextStyle(color: Colors.red, fontSize: 18)),
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: _initializeUser,
@@ -67,20 +69,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 return CustomScrollView(
                   slivers: [
                     SliverToBoxAdapter(
-                      child: UserHeader(
-                          user: state.user), // Header dengan user info
+                      child: UserHeader(user: state.user),
                     ),
                     const SliverPadding(padding: EdgeInsets.only(top: 20)),
                     SliverToBoxAdapter(
                       child: Card(
-                        elevation: 2,
+                        elevation: 4,
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         child: const Padding(
                           padding: EdgeInsets.all(16.0),
-                          child: GreetingCard(), // Kartu sapaan
+                          child: GreetingCard(),
                         ),
                       ),
                     ),
@@ -127,12 +128,12 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Text(
         title,
         style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
           color: Colors.black87,
         ),
       ),

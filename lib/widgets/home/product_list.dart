@@ -52,30 +52,48 @@ class _ProductListState extends State<ProductList> {
               return Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey[300]!),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
                       width: 80,
                       height: 80,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.grey,
+                        gradient: LinearGradient(
+                          colors: [Colors.blue, Colors.purple],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                       ),
                       child: const Icon(
                         Icons.shopping_bag,
                         color: Colors.white,
+                        size: 40,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                     Text(
-                      product.productName ?? 'Tidak Ada Produk',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                      product.productName ?? 'No Product Name',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Colors.black87,
+                        letterSpacing: 1.2,
                       ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -105,11 +123,18 @@ class _ProductListState extends State<ProductList> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 6,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   width: 80,
@@ -119,11 +144,17 @@ class _ProductListState extends State<ProductList> {
                     color: Colors.grey[200],
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Container(
                   width: 100,
                   height: 15,
                   color: Colors.grey[200], // Shimmer effect for text
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  width: 70,
+                  height: 12,
+                  color: Colors.grey[200],
                 ),
               ],
             ),
