@@ -1,3 +1,5 @@
+import 'package:deteksi_jerawat/blocs/scan/scan_bloc.dart';
+import 'package:deteksi_jerawat/services/scan-post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:deteksi_jerawat/screens/home_screen.dart';
@@ -10,6 +12,8 @@ import 'package:deteksi_jerawat/blocs/user/user_bloc.dart';
 import '/services/user-info.dart';
 import '/services/auth.dart';
 import 'splash_screen.dart';
+import 'package:provider/provider.dart'; // Add this import
+
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
@@ -75,9 +79,17 @@ class _MyAppState extends State<MyApp> {
         RepositoryProvider<Auth>(
           create: (context) => Auth(),
         ),
+        Provider<ScanService>(
+          create: (_) => ScanService(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider<ScanBloc>(
+            create: (context) => ScanBloc(
+              scanService: context.read<ScanService>(),
+            ),
+          ),
           BlocProvider<UserBloc>(
             create: (context) => UserBloc(
               userInfoService: context.read<UserInfoService>(),
@@ -94,7 +106,6 @@ class _MyAppState extends State<MyApp> {
           home: const SplashScreen(),
           routes: {
             '/home': (context) => const HomeScreen(),
-            '/scan': (context) => const CameraScreen(),
             '/profile': (context) => const ProfileScreen(),
             '/history': (context) => const HistoryScreen(),
             '/history/rekomendasi': (context) => const RecommendationScreen(),
