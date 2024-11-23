@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'package:deteksi_jerawat/services/config.dart';
-import 'package:deteksi_jerawat/services/pick_image_and_upload.dart';
+import 'package:deteksi_jerawat/services/edit-profile-image-post.dart';
 import 'package:http/http.dart' as http;
 import '../model/user.dart';
 import 'auth.dart';
-import 'pick_image_and_upload.dart'; // Import service image upload
+import 'edit-profile-image-post.dart'; // Import service image upload
 
 class UserInfoService {
   final Auth _auth = Auth(); // Instance of Auth
-  final ImageUploadService _imageUploadService =
-      ImageUploadService(); // Instance of ImageUploadService
+  final ProfileImagePOST _imageUploadService =
+      ProfileImagePOST(); // Instance of ImageUploadService
 
   // Fetch user info based on token
   Future<User> fetchUserInfo() async {
