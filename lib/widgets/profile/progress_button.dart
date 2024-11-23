@@ -11,44 +11,53 @@ class ProgressButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.symmetric(horizontal: 10), // Padding di luar tombol
+      padding: const EdgeInsets.symmetric(horizontal: 16), // Padding luar tombol
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          // Menggunakan warna latar belakang cerah
-          backgroundColor: Colors.amber,
-          padding: const EdgeInsets.symmetric(
-              vertical: 20), // Padding vertikal di dalam tombol
+          // Gradasi dengan warna terang
+          padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12), // Sudut bulat
+            borderRadius: BorderRadius.circular(20), // Sudut bulat
           ),
-          // Menghilangkan shadow
-          elevation: 0,
+          elevation: 6, // Shadow untuk efek kedalaman
         ),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 15), // Tambah padding horizontal di dalam tombol
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment
-                .spaceBetween, // Mengatur jarak antara teks dan ikon
-            children: [
-              Expanded(
-                // Menggunakan Expanded agar teks mengambil ruang yang tersisa
-                child: Text(
-                  'Check your progress',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24, // Ukuran font diperbesar
-                    fontWeight: FontWeight.bold,
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFFFA726), Color(0xFFFF7043)], // Warna gradasi
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 20, // Padding vertikal tombol
+              horizontal: 24, // Padding horizontal tombol
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Check your progress',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18, // Ukuran font lebih besar
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 20), // Jarak antara teks dan ikon
-              const Icon(Icons.timer,
-                  color: Colors.white, size: 24), // Ikon di sebelah kanan
-            ],
+                const SizedBox(width: 12), // Jarak antara teks dan ikon
+                const Icon(
+                  Icons.timer,
+                  color: Colors.white,
+                  size: 28, // Ukuran ikon lebih besar
+                ),
+              ],
+            ),
           ),
         ),
       ),
