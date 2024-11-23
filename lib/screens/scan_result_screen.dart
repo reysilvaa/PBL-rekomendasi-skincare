@@ -82,7 +82,7 @@ class ScanResultContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final condition = recommendation.condition;
+    final skinCondition = recommendation.skinCondition;
 
     return Scaffold(
       body: CustomScrollView(
@@ -116,7 +116,7 @@ class ScanResultContent extends StatelessWidget {
                 ],
               ),
               title: Text(
-                condition.conditionName,
+                skinCondition.conditionName,
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -132,17 +132,17 @@ class ScanResultContent extends StatelessWidget {
                 children: [
                   _buildSection(
                     'Condition Description',
-                    condition.description,
+                    skinCondition.description,
                     Icons.info_outline,
                   ),
                   const SizedBox(height: 24),
                   _buildSection(
                     'Recommended Treatment',
-                    condition.treatments.deskripsi_treatment,
+                    skinCondition.treatments.deskripsi_treatment,
                     Icons.medical_services_outlined,
                   ),
                   const SizedBox(height: 24),
-                  _buildProductsSection(condition.products),
+                  _buildProductsSection(skinCondition.products),
                 ],
               ),
             ),

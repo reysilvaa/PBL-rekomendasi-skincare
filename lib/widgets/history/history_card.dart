@@ -117,7 +117,7 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
               ],
             ),
           ),
-          if (widget.recommendation.condition.treatments.deskripsi_treatment
+          if (widget.recommendation.skinCondition.treatments.deskripsi_treatment
               .isNotEmpty)
             _buildTreatmentSection(),
           _buildReadMoreButton(),
@@ -196,7 +196,7 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
             ),
             const SizedBox(height: 6),
             Text(
-              widget.recommendation.condition.treatments.deskripsi_treatment,
+              widget.recommendation.skinCondition.treatments.deskripsi_treatment,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.blueGrey.shade600,

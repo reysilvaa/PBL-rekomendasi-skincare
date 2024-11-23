@@ -61,7 +61,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                       // Skin Condition Section
                       SkinConditionSection(
                         recommendation: recommendation,
-                        treatments: recommendation.condition.treatments,
+                        treatments: recommendation.skinCondition.treatments,
                       ),
 
                       // Product Recommendations Section
