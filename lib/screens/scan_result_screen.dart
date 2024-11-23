@@ -42,7 +42,7 @@ class LoadingAnalysisScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/images/analyzing.gif', width: 200),
+              Image.asset('assets/analyze.gif', width: 200),
               const SizedBox(height: 24),
               const Text(
                 'Analyzing your skin...',
