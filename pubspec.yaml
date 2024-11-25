@@ -50,6 +50,7 @@ dependencies:
   connectivity_plus: ^6.1.0
   dio: ^5.3.2
   carousel_slider: ^5.0.0
+  google_fonts: ^4.0.3
 
 
 

@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
       _showPermissionDeniedDialog();
     } else if (status.isPermanentlyDenied) {
       // Handle the case when the user permanently denies the permission
-      openAppSettings(); // This opens the app settings to let the user enable it
+      openAppSettings(); // This opens the app setti`ngs to let the user enable it
     }
     // Add more permissions if needed, e.g., storage, location, etc.
   }
