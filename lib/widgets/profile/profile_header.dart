@@ -1,26 +1,65 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:deteksi_jerawat/model/user.dart';
-import 'package:deteksi_jerawat/services/user-info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import '../../screens/editProfile_screen.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_state.dart';
+import '../../model/user.dart';
+import '../../services/user-info.dart';
 
-class ProfileHeader extends StatelessWidget {
-  final User
-      user; // Assuming you have a User object that you can pass to the fields
+class ProfileHeader extends StatefulWidget {
+  final User user;
 
   const ProfileHeader({Key? key, required this.user}) : super(key: key);
+
+  @override
+  State<ProfileHeader> createState() => _ProfileHeaderState();
+}
+
+class _ProfileHeaderState extends State<ProfileHeader>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+    ));
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 0.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.2, 0.7, curve: Curves.easeOutCubic),
+    ));
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
-        // if (state is UserLoading) {
-        //   return const Center(child: CircularProgressIndicator());
-        // }
-
         if (state is UserError) {
           return Center(
             child: Text(
@@ -32,148 +71,214 @@ class ProfileHeader extends StatelessWidget {
 
         if (state is UserLoaded) {
           final user = state.user;
-
-          // Get the full image URL using the service
           String profileImageUrl = user.profileImage != null
               ? UserInfoService().getFullImageUrl(user.profileImage!)
-              : 'assets/profile/wajah.png'; // Use default if no profile image
+              : 'assets/profile/wajah.png';
 
           return Container(
             width: double.infinity,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFF1A4BBA), Color(0xFF1257AA)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF2563EB),
+                  Color(0xFF3B82F6),
+                  Color(0xFF60A5FA),
+                ],
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 0,
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+              ],
               borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
+                bottomLeft: Radius.circular(40),
+                bottomRight: Radius.circular(40),
               ),
             ),
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
+                bottomLeft: Radius.circular(40),
+                bottomRight: Radius.circular(40),
               ),
               child: SafeArea(
                 top: false,
                 child: Stack(
                   children: [
-                    // Optional decorative pattern on the right
+                    // Animated background pattern
                     Positioned(
-                      right: -75,
+                      right: -100,
                       top: 0,
                       bottom: 0,
-                      child: Opacity(
-                        opacity: 0.5,
-                        child: Transform.scale(
-                          scaleX: -1,
-                          child: ColorFiltered(
-                            colorFilter: const ColorFilter.mode(
-                              Colors.white,
-                              BlendMode.srcIn,
+                      child: AnimatedBuilder(
+                        animation: _controller,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(50 * (1 - _fadeAnimation.value), 0),
+                            child: Opacity(
+                              opacity: 0.15 * _fadeAnimation.value,
+                              child: Image.asset(
+                                'assets/pattern.png',
+                                color: Colors.white,
+                                width: 300,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                            child: Image.asset(
-                              'assets/pattern.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                     ),
-                    // Main content
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(50, 30, 50, 30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // Main content with animations
+                    SlideTransition(
+                      position: _slideAnimation,
+                      child: FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(30, 40, 30, 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Flexible(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Hello, ${user.firstName}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 0.2,
-                                      ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        DefaultTextStyle(
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 0.5,
+                                          ),
+                                          child: AnimatedTextKit(
+                                            animatedTexts: [
+                                              TypewriterAnimatedText(
+                                                'Hello, ${user.firstName}',
+                                                speed: const Duration(
+                                                    milliseconds: 100),
+                                              ),
+                                            ],
+                                            totalRepeatCount: 1,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        const Text(
+                                          "How's your day?",
+                                          style: TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(height: 4),
-                                    const Text(
-                                      "How's your day?",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              CircleAvatar(
-                                radius: 40,
-                                backgroundImage: user.profileImage != null
-                                    ? CachedNetworkImageProvider(
-                                        profileImageUrl) // Memuat gambar dengan cache
-                                    : const AssetImage(
-                                            'assets/profile/wajah.png')
-                                        as ImageProvider,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const SizedBox(width: 20),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditProfileScreen(
-                                        user: user,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: const [
-                                    Icon(
-                                      Icons.edit,
-                                      color: Color(0xFF1257AA),
-                                      size: 24,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Edit Profile',
-                                      style: TextStyle(
-                                        color: Color(0xFF1257AA),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                  Hero(
+                                    tag: 'profile-image',
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            spreadRadius: 0,
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: 45,
+                                        backgroundColor: Colors.white,
+                                        child: CircleAvatar(
+                                          radius: 42,
+                                          backgroundImage: user.profileImage !=
+                                                  null
+                                              ? CachedNetworkImageProvider(
+                                                  profileImageUrl)
+                                              : const AssetImage(
+                                                      'assets/profile/wajah.png')
+                                                  as ImageProvider,
+                                        ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
+                              const SizedBox(height: 30),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                EditProfileScreen(user: user),
+                                          ),
+                                        );
+                                      },
+                                      borderRadius: BorderRadius.circular(25),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                          vertical: 12,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.1),
+                                              spreadRadius: 0,
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: const [
+                                            Icon(
+                                              Icons.edit_rounded,
+                                              color: Color(0xFF2563EB),
+                                              size: 20,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Text(
+                                              'Edit Profile',
+                                              style: TextStyle(
+                                                color: Color(0xFF2563EB),
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 60),
                             ],
                           ),
-                          const SizedBox(height: 80),
-                        ],
+                        ),
                       ),
                     ),
                   ],
