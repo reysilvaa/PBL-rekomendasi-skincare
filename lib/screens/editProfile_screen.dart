@@ -36,7 +36,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     usernameController = TextEditingController(text: widget.user.username);
-    phoneNumberController = TextEditingController(text: widget.user.phoneNumber);
+    phoneNumberController =
+        TextEditingController(text: widget.user.phoneNumber);
     birthDateController = TextEditingController(text: widget.user.birthDate);
     emailController = TextEditingController(text: widget.user.email);
     firstNameController = TextEditingController(text: widget.user.firstName);
@@ -76,7 +77,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             // Profile header with image picker
             EditProfileHeader(
               onImagePicked: (newProfileImageUrl) {
-                context.read<UserBloc>().add(UpdateProfileImageEvent(newProfileImageUrl));
+                context.read<UserBloc>().add(UpdateUserFieldEvent(
+                    'profileImage',
+                    newProfileImageUrl)); // Use the correct event for first name
               },
             ),
             _buildProfileForm(),

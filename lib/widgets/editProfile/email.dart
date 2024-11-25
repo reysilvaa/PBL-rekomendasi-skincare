@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/user/user_bloc.dart'; // Import UserBloc
-import '../../blocs/user/user_event.dart'; // Import UserEvent
+import '../../blocs/user/user_bloc.dart';
+import '../../blocs/user/user_event.dart';
 
 class EmailField extends StatefulWidget {
   final String? email;
 
-  const EmailField({
-    Key? key,
-    required this.email,
-  }) : super(key: key);
+  const EmailField({Key? key, required this.email}) : super(key: key);
 
   @override
   _EmailFieldState createState() => _EmailFieldState();
 }
 
 class _EmailFieldState extends State<EmailField> {
-  late TextEditingController _controller;
+  late final TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.email);
+    _controller = TextEditingController(text: widget.email ?? '');
   }
 
   @override
@@ -30,8 +27,8 @@ class _EmailFieldState extends State<EmailField> {
     super.dispose();
   }
 
-  void _onEmailChanged(String newEmail) {
-    context.read<UserBloc>().add(UpdateEmailEvent(newEmail));
+  void _updateEmail(String newEmail) {
+    context.read<UserBloc>().add(UpdateUserFieldEvent('email', newEmail));
   }
 
   @override
@@ -50,7 +47,7 @@ class _EmailFieldState extends State<EmailField> {
         const SizedBox(height: 8),
         TextField(
           controller: _controller,
-          onChanged: _onEmailChanged,
+          onChanged: _updateEmail,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             filled: true,

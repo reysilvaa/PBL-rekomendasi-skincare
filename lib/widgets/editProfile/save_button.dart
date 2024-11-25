@@ -1,5 +1,6 @@
 import 'package:deteksi_jerawat/services/user-info.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../model/user.dart';
 
 class SaveButton extends StatelessWidget {
@@ -28,11 +29,25 @@ class SaveButton extends StatelessWidget {
       onPressed: () async {
         final userInfoService = UserInfoService();
 
+        // Validate birth date format
+        String? formattedBirthDate;
+        try {
+          // Try parsing the input to ensure it's a valid date
+          final inputDate = DateFormat('yyyy-MM-dd').parse(birthDateController.text);
+          formattedBirthDate = DateFormat('yyyy-MM-dd').format(inputDate);
+        } catch (e) {
+          // Show error if date is invalid
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid birth date format')),
+          );
+          return;
+        }
+
         // Membuat objek user baru dengan data yang diperbarui
         final updatedUser = User(
           username: usernameController.text,
           phoneNumber: phoneNumberController.text,
-          birthDate: birthDateController.text,
+          birthDate: formattedBirthDate,
           email: emailController.text,
           firstName: firstNameController.text,
           lastName: lastNameController.text,

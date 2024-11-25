@@ -12,20 +12,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         super(UserInitial()) {
     on<FetchUserEvent>(_onFetchUser);
     on<UpdateUserProfileEvent>(_onUpdateUserProfile);
-    on<UpdateUsernameEvent>(_onUpdateUsername);
-    on<UpdateFirstNameEvent>(_onUpdateFirstName);
-    on<UpdateLastNameEvent>(_onUpdateLastName);
-    on<UpdateEmailEvent>(_onUpdateEmail);
-    on<UpdateBirthDateEvent>(_onUpdateBirthDate);
-    on<UpdatePhoneNumberEvent>(_onUpdatePhoneNumber);
-    on<UpdateProfileImageEvent>(_onUpdateProfileImage); // New event handler
+    on<UpdateUserFieldEvent>(_onUpdateUserField);
   }
 
   Future<void> _onFetchUser(
       FetchUserEvent event, Emitter<UserState> emit) async {
     try {
       final user = await _userInfoService.fetchUserInfo();
-      emit(UserLoaded(user)); // Ensure you're emitting UserLoaded
+      emit(UserLoaded(user));
     } catch (error) {
       emit(UserError(error.toString()));
     }
@@ -35,116 +29,48 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       UpdateUserProfileEvent event, Emitter<UserState> emit) async {
     try {
       final updatedUser = await _userInfoService.updateUserProfile(event.user);
-      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
+      emit(UserLoaded(updatedUser));
     } catch (error) {
       emit(UserError(error.toString()));
     }
   }
 
-  Future<void> _onUpdateUsername(
-      UpdateUsernameEvent event, Emitter<UserState> emit) async {
-    try {
-      final currentUser = (state is UserLoaded)
-          ? (state as UserLoaded).user
-          : User(username: ''); // Ensure UserLoaded state is used here
-      final updatedUser = await _userInfoService.updateUserProfile(
-        currentUser.copyWith(username: event.newUsername),
-      );
-      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
-    } catch (error) {
-      emit(UserError(error.toString()));
-    }
-  }
-
-  Future<void> _onUpdatePhoneNumber(
-      UpdatePhoneNumberEvent event, Emitter<UserState> emit) async {
-    try {
-      final currentUser = (state is UserLoaded)
-          ? (state as UserLoaded).user
-          : User(username: ''); // Ensure UserLoaded state is used here
-      final updatedUser = await _userInfoService.updateUserProfile(
-        currentUser.copyWith(phoneNumber: event.newPhoneNumber),
-      );
-      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
-    } catch (error) {
-      emit(UserError(error.toString()));
-    }
-  }
-
-  Future<void> _onUpdateFirstName(
-      UpdateFirstNameEvent event, Emitter<UserState> emit) async {
-    try {
-      final currentUser = (state is UserLoaded)
-          ? (state as UserLoaded).user
-          : User(username: ''); // Ensure UserLoaded state is used here
-      final updatedUser = await _userInfoService.updateUserProfile(
-        currentUser.copyWith(firstName: event.newFirstName),
-      );
-      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
-    } catch (error) {
-      emit(UserError(error.toString()));
-    }
-  }
-
-  Future<void> _onUpdateLastName(
-      UpdateLastNameEvent event, Emitter<UserState> emit) async {
-    try {
-      final currentUser = (state is UserLoaded)
-          ? (state as UserLoaded).user
-          : User(username: ''); // Ensure UserLoaded state is used here
-      final updatedUser = await _userInfoService.updateUserProfile(
-        currentUser.copyWith(lastName: event.newLastName),
-      );
-      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
-    } catch (error) {
-      emit(UserError(error.toString()));
-    }
-  }
-
-  Future<void> _onUpdateEmail(
-      UpdateEmailEvent event, Emitter<UserState> emit) async {
-    try {
-      final currentUser = (state is UserLoaded)
-          ? (state as UserLoaded).user
-          : User(username: ''); // Ensure UserLoaded state is used here
-      final updatedUser = await _userInfoService.updateUserProfile(
-        currentUser.copyWith(email: event.newEmail),
-      );
-      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
-    } catch (error) {
-      emit(UserError(error.toString()));
-    }
-  }
-
-  Future<void> _onUpdateBirthDate(
-      UpdateBirthDateEvent event, Emitter<UserState> emit) async {
-    try {
-      final currentUser = (state is UserLoaded)
-          ? (state as UserLoaded).user
-          : User(username: ''); // Ensure UserLoaded state is used here
-      final updatedUser = await _userInfoService.updateUserProfile(
-        currentUser.copyWith(birthDate: event.newBirthDate),
-      );
-      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
-    } catch (error) {
-      emit(UserError(error.toString()));
-    }
-  }
-
-  Future<void> _onUpdateProfileImage(
-      UpdateProfileImageEvent event, Emitter<UserState> emit) async {
+  Future<void> _onUpdateUserField(
+      UpdateUserFieldEvent event, Emitter<UserState> emit) async {
     try {
       final currentUser = (state is UserLoaded)
           ? (state as UserLoaded).user
           : User(username: ''); // Fallback user if state is not loaded
 
-      // Update profile image using the service
+      // Update the specific field
       final updatedUser = await _userInfoService.updateUserProfile(
-        currentUser.copyWith(profileImage: event.newProfileImageUrl),
+        _updateUserField(currentUser, event.field, event.value),
       );
-      emit(UserLoaded(updatedUser)); // Ensure you're emitting UserLoaded
+      emit(UserLoaded(updatedUser));
     } catch (error) {
       emit(UserError(error.toString()));
+    }
+  }
+
+  // Helper method to update user field dynamically
+  User _updateUserField(User user, String field, String value) {
+    switch (field) {
+      case 'username':
+        return user.copyWith(username: value);
+      case 'phone_number':
+        return user.copyWith(phoneNumber: value);
+      case 'first_name':
+        return user.copyWith(firstName: value);
+      case 'last_name':
+        return user.copyWith(lastName: value);
+      case 'email':
+        return user.copyWith(email: value);
+      case 'birth_date':
+        return user.copyWith(birthDate: value);
+      case 'profile_image':
+        return user.copyWith(profileImage: value);
+      default:
+        throw ArgumentError('Unknown field: $field');
     }
   }
 }

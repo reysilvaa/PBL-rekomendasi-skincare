@@ -33,8 +33,8 @@ class _LastNameFieldState extends State<LastNameField> {
   }
 
   void _onLastNameChanged(String newLastName) {
-    context.read<UserBloc>().add(
-        UpdateLastNameEvent(newLastName)); // Dispatch event to update last name
+      context.read<UserBloc>().add(UpdateUserFieldEvent('last_name', newLastName)); // Use the correct event for first name
+
   }
 
   @override

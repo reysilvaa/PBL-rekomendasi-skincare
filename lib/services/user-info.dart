@@ -28,6 +28,11 @@ class UserInfoService {
         },
       );
 
+      // Debugging the response
+      print('Response status code: ${response.statusCode}');
+      print('Response headers: ${response.headers}');
+      print('Response body: ${response.body}');
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['user'] != null) {
@@ -39,6 +44,7 @@ class UserInfoService {
         throw Exception('Failed to fetch user info: ${response.statusCode}');
       }
     } catch (e) {
+      print('Error: $e'); // Log the error for debugging
       throw Exception('Network error: $e');
     }
   }
@@ -71,6 +77,11 @@ class UserInfoService {
         }),
       );
 
+      // Debugging the response
+      print('Response status code: ${response.statusCode}');
+      print('Response headers: ${response.headers}');
+      print('Response body: ${response.body}');
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         return User.fromJson(data['user']);
@@ -79,6 +90,7 @@ class UserInfoService {
             'Failed to update user profile: ${response.statusCode}');
       }
     } catch (e) {
+      print('Error: $e'); // Log the error for debugging
       throw Exception('Network error: $e');
     }
   }
@@ -95,8 +107,11 @@ class UserInfoService {
       // Call ImageUploadService to pick and upload image
       final profileImagePath =
           await _imageUploadService.pickImageAndUpload(token);
+
+      print('Profile image uploaded successfully: $profileImagePath');
       return profileImagePath;
     } catch (e) {
+      print('Error: $e'); // Log the error for debugging
       throw Exception('Failed to update profile image: $e');
     }
   }
