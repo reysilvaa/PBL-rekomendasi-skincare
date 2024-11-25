@@ -108,7 +108,6 @@ class _MyAppState extends State<MyApp> {
             '/home': (context) => const HomeScreen(),
             '/profile': (context) => const ProfileScreen(),
             '/history': (context) => const HistoryScreen(),
-            '/history/rekomendasi': (context) => const RecommendationScreen(),
           },
           onUnknownRoute: (settings) => MaterialPageRoute(
             builder: (context) => const Scaffold(
