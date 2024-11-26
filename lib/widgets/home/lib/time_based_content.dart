@@ -39,7 +39,7 @@ class TimeBasedContent {
           "Time for your night routine!\nLet your skin repair while you sleep.");
       setStartColor(const Color(0xFF2d3436));
       setEndColor(const Color(0xFF636e72));
-      setWeatherIcon('assets/moon.png');
+      setWeatherIcon('assets/moon.gif');
     }
   }
 }
