@@ -13,32 +13,46 @@ class CustomSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 36,
+      height: 45,
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(8),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF60A5FA),
+            Color(0xFF2563EB),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            offset: const Offset(0, 3),
+            blurRadius: 6,
+          ),
+        ],
       ),
       child: TextField(
         controller: controller,
         onChanged: onChanged,
-        style: const TextStyle(fontSize: 14),
+        style: const TextStyle(fontSize: 14, color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Search Skinpedia...',
           hintStyle: TextStyle(
-            color: Colors.grey[600],
+            color: Colors.white.withOpacity(0.8),
             fontSize: 14,
           ),
           prefixIcon: Icon(
             Icons.search,
-            color: const Color(0xFF0046BE).withOpacity(0.7),
-            size: 20,
+            color: Colors.white.withOpacity(0.9),
+            size: 22,
           ),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
-            horizontal: 4,
-            vertical: 8,
+            horizontal: 8,
+            vertical: 12,
           ),
         ),
       ),

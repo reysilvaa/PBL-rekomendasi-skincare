@@ -15,59 +15,71 @@ class SkinpediaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        elevation: 6, // Elevation lebih tinggi untuk efek bayangan
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20), // Rounded corners lebih besar
         ),
+        margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16), // Margin lebih besar untuk ruang yang lebih luas
+        color: Colors.white, // Latar belakang putih untuk kontras lebih baik
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
-              child: skinpedia.image.isNotEmpty
-                  ? Image.network(
-                      skinpedia.image,
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.image_not_supported, size: 50),
-                    )
-                  : Container(
-                      height: 150,
-                      color: Colors.grey[200],
-                      child: const Icon(Icons.image_not_supported, size: 50),
+            if (skinpedia.image.isNotEmpty)
+              Image.network(
+                skinpedia.image,
+                height: 180, // Ukuran gambar sedikit lebih besar
+                width: double.infinity,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
                     ),
-            ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) => Container(
+                  height: 180,
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: Icon(Icons.image_not_supported, size: 70), // Ukuran ikon diperbesar
+                  ),
+                ),
+              )
+            else
+              Container(
+                height: 180,
+                color: Colors.grey[300],
+                child: const Center(
+                  child: Icon(Icons.image_not_supported, size: 70),
+                ),
+              ),
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(16.0), // Padding lebih besar agar teks lebih nyaman dibaca
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     skinpedia.title,
                     style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 20, // Ukuran font lebih besar
+                      fontWeight: FontWeight.bold, // Menggunakan bold untuk judul
+                      color: Colors.black87, // Warna teks lebih gelap untuk kontras yang lebih baik
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12), // Ruang lebih besar antar elemen
                   Text(
                     skinpedia.description,
                     style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
+                      fontSize: 16, // Ukuran font sedikit lebih besar
+                      color: Colors.grey[700],
                     ),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
