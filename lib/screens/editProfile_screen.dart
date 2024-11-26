@@ -36,7 +36,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     usernameController = TextEditingController(text: widget.user.username);
-    phoneNumberController = TextEditingController(text: widget.user.phoneNumber);
+    phoneNumberController =
+        TextEditingController(text: widget.user.phoneNumber);
     birthDateController = TextEditingController(text: widget.user.birthDate);
     emailController = TextEditingController(text: widget.user.email);
     firstNameController = TextEditingController(text: widget.user.firstName);
@@ -58,11 +59,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0D47A1),
         elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF2563EB),
+                Color(0xFF3B82F6),
+                Color(0xFF60A5FA),
+              ],
+            ),
+          ),
+        ),
         title: const Text(
           'Edit Profile',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -76,7 +92,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             // Profile header with image picker
             EditProfileHeader(
               onImagePicked: (newProfileImageUrl) {
-                context.read<UserBloc>().add(UpdateProfileImageEvent(newProfileImageUrl));
+                context
+                    .read<UserBloc>()
+                    .add(UpdateProfileImageEvent(newProfileImageUrl));
               },
             ),
             _buildProfileForm(),
