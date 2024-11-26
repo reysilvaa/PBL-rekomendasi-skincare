@@ -33,7 +33,8 @@ class _UsernameFieldState extends State<UsernameField> {
   }
 
   void _onUsernameChanged(String newUsername) {
-    context.read<UserBloc>().add(UpdateUsernameEvent(newUsername)); // Update the username
+    context.read<UserBloc>().add(UpdateUserFieldEvent(
+        'username', newUsername)); // Use the correct event for first name
   }
 
   @override

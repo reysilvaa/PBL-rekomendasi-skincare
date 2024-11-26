@@ -95,6 +95,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 context
                     .read<UserBloc>()
                     .add(UpdateProfileImageEvent(newProfileImageUrl));
+                context.read<UserBloc>().add(UpdateUserFieldEvent(
+                    'profileImage',
+                    newProfileImageUrl)); // Use the correct event for first name
               },
             ),
             _buildProfileForm(),
