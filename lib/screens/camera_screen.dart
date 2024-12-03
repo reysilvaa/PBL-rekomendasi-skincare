@@ -2,7 +2,6 @@ import 'package:deteksi_jerawat/blocs/scan/scan_bloc.dart';
 import 'package:deteksi_jerawat/blocs/scan/scan_event.dart';
 import 'package:deteksi_jerawat/blocs/scan/scan_state.dart';
 import 'package:deteksi_jerawat/screens/scan_result_screen.dart';
-import 'package:deteksi_jerawat/services/scan-post.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +29,7 @@ class _CameraScreenState extends State<CameraScreen> {
   List<CameraDescription> cameras = [];
   final ValueNotifier<bool> _isCameraInitialized = ValueNotifier(false);
   int _currentCameraIndex = 0;
+  bool _isLoading = false; // Flag untuk loading animation
 
   @override
   void initState() {
@@ -78,12 +78,6 @@ class _CameraScreenState extends State<CameraScreen> {
     }
   }
 
-  void _onFlipCamera() async {
-    await _disposeCamera();
-    _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
-    await _initializeCamera();
-  }
-
   Future<void> _disposeCamera() async {
     await _controller?.dispose();
     _controller = null;
@@ -99,61 +93,75 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            ValueListenableBuilder<bool>(
-              valueListenable: _isCameraInitialized,
-              builder: (context, isInitialized, child) {
-                if (isInitialized && _controller != null) {
-                  return CameraPreviewWidget(
-                    controller: _controller!,
-                    onFlipCamera: _onFlipCamera,
-                    onCapture: _onCapture,
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          ValueListenableBuilder<bool>(
+            valueListenable: _isCameraInitialized,
+            builder: (context, isInitialized, child) {
+              if (isInitialized && _controller != null) {
+                return CameraPreviewWidget(
+                  controller: _controller!,
+                  onFlipCamera: () async {
+                    await _disposeCamera();
+                    _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
+                    await _initializeCamera();
+                  },
+                  onCapture: _onCapture,
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+          Positioned(
+            top: 20,
+            left: 0,
+            right: 0,
+            child: TopBar(onClose: () => Navigator.pop(context)),
+          ),
+          const Positioned(
+            top: 150,
+            left: 0,
+            right: 0,
+            child: CenterFrame(),
+          ),
+          const Positioned(
+            top: 100,
+            left: 0,
+            right: 0,
+            child: InstructionText(),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: BottomControl(
+              onFlipCamera: () async {
+                await _disposeCamera();
+                _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
+                await _initializeCamera();
+              },
+              onCapture: _onCapture,
+              onImageSelected: (String path) {
+                final File imageFile = File(path);
+                context
+                    .read<ScanBloc>()
+                    .add(AnalyzeImageEvent(imageFile, widget.token));
               },
             ),
-            Positioned(
-              top: 20,
-              left: 0,
-              right: 0,
-              child: TopBar(onClose: () => Navigator.pop(context)),
-            ),
-            const Positioned(
-              top: 150,
-              left: 0,
-              right: 0,
-              child: CenterFrame(),
-            ),
-            const Positioned(
-              top: 100,
-              left: 0,
-              right: 0,
-              child: InstructionText(),
-            ),
-            Positioned(
-              bottom: 20,
-              left: 0,
-              right: 0,
-              child: BottomControl(
-                onFlipCamera: _onFlipCamera,
-                onCapture: _onCapture,
-                onImageSelected: (String path) {
-                  final File imageFile = File(path);
-                  // Dispatch the AnalyzeImageEvent to the ScanBloc
-                  context
-                      .read<ScanBloc>()
-                      .add(AnalyzeImageEvent(imageFile, widget.token));
-                },
-              ),
-            ),
-            // Listen for the ScanBloc state changes to navigate
-            BlocListener<ScanBloc, ScanState>(
-              listener: (context, state) {
+          ),
+          BlocListener<ScanBloc, ScanState>(
+            listener: (context, state) {
+              if (state is ScanLoading) {
+                setState(() {
+                  _isLoading = true;
+                });
+              } else {
+                setState(() {
+                  _isLoading = false;
+                });
+
                 if (state is ScanSuccess) {
                   Navigator.push(
                     context,
@@ -166,11 +174,34 @@ class _CameraScreenState extends State<CameraScreen> {
                     SnackBar(content: Text('Scan Error: ${state.message}')),
                   );
                 }
-              },
-              child: Container(),
+              }
+            },
+            child: Container(),
+          ),
+          if (_isLoading)
+            Center(
+              child: Container(
+                color: Colors.black.withOpacity(0.7),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset('assets/analyze.gif', width: 200),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Analyzing...',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

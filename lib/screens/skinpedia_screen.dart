@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:deteksi_jerawat/model/skinpedia.dart';
 import 'package:deteksi_jerawat/services/skinpedia-info.dart';
 import 'package:deteksi_jerawat/widgets/skinpedia/loading_state.dart';
 import 'package:deteksi_jerawat/widgets/skinpedia/skinpedia_card.dart';
 import 'package:deteksi_jerawat/widgets/skinpedia/skinpedia_detail_card.dart';
-import 'package:flutter/material.dart';
+import 'package:deteksi_jerawat/widgets/skinpedia/skinpedia_header.dart'; // Impor widget header
 
 class SkinpediaScreen extends StatefulWidget {
   const SkinpediaScreen({Key? key}) : super(key: key);
@@ -12,45 +13,22 @@ class SkinpediaScreen extends StatefulWidget {
   _SkinpediaScreenState createState() => _SkinpediaScreenState();
 }
 
-class _SkinpediaScreenState extends State<SkinpediaScreen>
-    with SingleTickerProviderStateMixin {
+class _SkinpediaScreenState extends State<SkinpediaScreen> {
   late Future<List<Skinpedia>> _skinpediaFuture;
-  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
     _skinpediaFuture = SkinpediaService().fetchSkinpedia();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[50],
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            expandedHeight: 120.0,
-            floating: true,
-            pinned: true,
-            elevation: 0,
-            backgroundColor: const Color(0xFF0046BE),
-            flexibleSpace: const FlexibleSpaceBar(
-              title: Text('Skinpedia',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              centerTitle: true,
-            ),
-          ),
+          const SkinpediaHeader(), // Gunakan widget header di sini
           SliverPadding(
             padding: const EdgeInsets.all(16.0),
             sliver: FutureBuilder<List<Skinpedia>>(
@@ -62,17 +40,25 @@ class _SkinpediaScreenState extends State<SkinpediaScreen>
 
                 if (snapshot.hasError) {
                   return SliverFillRemaining(
-                    child: ErrorState(error: snapshot.error.toString()),
+                    child: Center(
+                      child: Text(
+                        'Error: ${snapshot.error}',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
                   );
                 }
 
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const SliverFillRemaining(
-                    child: Center(child: Text('No data available')),
+                    child: Center(
+                      child: Text(
+                        'No data available',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
                   );
                 }
-
-                final List<Skinpedia> skinpediaList = snapshot.data!;
 
                 return SliverGrid(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -83,32 +69,13 @@ class _SkinpediaScreenState extends State<SkinpediaScreen>
                   ),
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      final skinpedia = skinpediaList[index];
-                      return AnimatedBuilder(
-                        animation: _animationController,
-                        builder: (context, child) {
-                          return SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0, 0.5),
-                              end: Offset.zero,
-                            ).animate(CurvedAnimation(
-                              parent: _animationController,
-                              curve: Interval(
-                                (index / skinpediaList.length),
-                                1.0,
-                                curve: Curves.easeOut,
-                              ),
-                            )),
-                            child: child,
-                          );
-                        },
-                        child: SkinpediaCard(
-                          skinpedia: skinpedia,
-                          onTap: () => _showDetailModal(context, skinpedia),
-                        ),
+                      final skinpedia = snapshot.data![index];
+                      return SkinpediaCard(
+                        skinpedia: skinpedia,
+                        onTap: () => _showDetailModal(context, skinpedia),
                       );
                     },
-                    childCount: skinpediaList.length,
+                    childCount: snapshot.data!.length,
                   ),
                 );
               },
