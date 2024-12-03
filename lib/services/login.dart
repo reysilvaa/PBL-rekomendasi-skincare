@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:deteksi_jerawat/services/config.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'auth.dart'; // Pastikan mengimpor auth_service.dart
 
@@ -68,12 +69,18 @@ class LoginService {
   }
 
   // Method untuk logout (menghapus token yang tersimpan)
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     try {
-      await _auth
-          .logout(); // Panggil metode logout dari Auth untuk menghapus token
+      await _auth.logout(context); // Passing context ke method logout
     } catch (e) {
-      print('Error clearing the token: $e');
+      print('Error during logout: $e');
+      // Opsional: Tambahkan feedback ke user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal melakukan logout: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 }

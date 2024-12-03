@@ -7,5 +7,5 @@ import 'dart:io';
 
 class Config {
   static const String baseUrl =
-      'https://rnnlm-114-6-25-184.a.free.pinggy.link/api'; // Base URL API
+      'https://rnqfg-114-6-25-184.a.free.pinggy.link/api'; // Base URL API
 }
