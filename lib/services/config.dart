@@ -5,5 +5,5 @@
 
 class Config {
   static const String baseUrl =
-      'https://rnukj-2001-448a-50a0-6462-4437-dba9-a4c7-d57a.a.free.pinggy.link/api'; // Base URL API
+      'https://rngiu-2001-448a-50a0-6462-4437-dba9-a4c7-d57a.a.free.pinggy.link/api'; // Base URL API
 }

@@ -1,3 +1,4 @@
+import 'package:deteksi_jerawat/screens/signup_screen.dart';
 import 'package:deteksi_jerawat/widgets/login/login_form.dart';
 import 'package:deteksi_jerawat/widgets/login/sign_up_link.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String emailOrUsername = '';
   String password = '';
   final LoginService _loginService = LoginService();
+  bool _isLoading = false; // State untuk melacak proses loading
 
   void _handleEmailChanged(String newEmail) {
     setState(() {
@@ -37,24 +39,34 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
+    setState(() {
+      _isLoading = true; // Mulai loading
+    });
+
     var result = await _loginService.loginUser(emailOrUsername, password);
 
+    setState(() {
+      _isLoading = false; // Selesai loading
+    });
+
     if (result['status'] == 'error') {
-      // Show error message
+      // Tampilkan pesan error
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(result['message']),
         backgroundColor: Colors.red,
       ));
     } else {
-      // Store the token in SharedPreferences
+      // Simpan token di SharedPreferences
       String token = result['access_token'];
       await _storeAccessToken(token);
 
-      // Navigate to the next screen (MainScreen)
+      // Navigasi ke layar berikutnya (MainScreen)
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => const MainScreen()), // Replace with your MainScreen
+          builder: (context) =>
+              const MainScreen(), // Ganti dengan MainScreen Anda
+        ),
       );
     }
   }
@@ -68,32 +80,91 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Logo(), // Use the Logo widget here
+              const Logo(), // Gunakan widget Logo di sini
 
               const SizedBox(height: 20),
 
               const Text(
                 "Login to Your Account",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF0D47A1),
+                  color: Color(0xFF1A237E),
                 ),
               ),
+              const SizedBox(height: 10),
+              const Text(
+                "Welcome back! Please enter your credentials to continue.",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF616161),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
               LoginForm(
-                onEmailChanged: _handleEmailChanged, // Use the defined method
+                onEmailChanged:
+                    _handleEmailChanged, // Gunakan metode yang sudah didefinisikan
                 onPasswordChanged:
-                    _handlePasswordChanged, // Use the defined method
+                    _handlePasswordChanged, // Gunakan metode yang sudah didefinisikan
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
 
-              // Replaced ElevatedButton with LoginButton
-              LoginButton(
-                onPressed:
-                    _login, // Pass the _login function as onPressed callback
-              ),
+              _isLoading
+                  ? const CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(0xFF1A237E)),
+                    ) // Tampilkan indikator loading saat _isLoading true
+                  : SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _login,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1A237E),
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        child: const Text(
+                          "Login",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
               const SizedBox(height: 20),
-              const SignUpLink(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't have an account? ",
+                    style: TextStyle(color: Color(0xFF616161)),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // Navigasi ke layar SignUpScreen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const SignUpScreen(), // Ganti dengan layar SignUpScreen Anda
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        color: Color(0xFF1A237E),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
