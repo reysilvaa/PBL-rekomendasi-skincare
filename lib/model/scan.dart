@@ -35,7 +35,8 @@ class Data {
     return Data(
       history: History.fromJson(json['history']),
       condition: SkinCondition.fromJson(json['condition']),
-      products: List<Product>.from(json['products'] ?? []),
+      products: List<Product>.from(
+          (json['products'] as List).map((x) => Product.fromJson(x))),
       treatment: Treatment.fromJson(json['treatment']),
       prediction: Prediction.fromJson(json['prediction']),
     );
@@ -45,12 +46,14 @@ class Data {
 class History {
   final int historyId;
   final String gambarScan;
+  final String gambarScanPredicted;
   final String detectionDate;
   final int recommendationId;
 
   History({
     required this.historyId,
     required this.gambarScan,
+    required this.gambarScanPredicted,
     required this.detectionDate,
     required this.recommendationId,
   });
@@ -60,6 +63,7 @@ class History {
     return History(
       historyId: json['history_id'] ?? 0,
       gambarScan: json['gambar_scan'] ?? '',
+      gambarScanPredicted: json['gambar_scan_predicted'] ?? '',
       detectionDate: json['detection_date'] ?? '',
       recommendationId: json['recommendation_id'] ?? 0,
     );
@@ -106,8 +110,8 @@ class Prediction {
   // Factory method to create Prediction from JSON
   factory Prediction.fromJson(Map<String, dynamic> json) {
     return Prediction(
-      predictionClass: json['class'] ?? 0,
-      confidence: json['confidence']?.toDouble() ?? 0.0,
+      predictionClass: json['prediction_class'] ?? 0, // Correct key name
+      confidence: json['avg_confidence']?.toDouble() ?? 0.0, // Correct key name
     );
   }
 }

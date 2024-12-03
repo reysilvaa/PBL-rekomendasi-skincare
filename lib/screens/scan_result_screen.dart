@@ -1,13 +1,22 @@
-import 'package:deteksi_jerawat/model/product.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:deteksi_jerawat/model/history.dart';
-import '../model/scan.dart';
+import 'package:http/http.dart' as http;
+import 'package:deteksi_jerawat/model/product.dart';
+import 'package:deteksi_jerawat/model/scan.dart';
 
 class ScanResultScreen extends StatelessWidget {
   final Scan scan;
 
   const ScanResultScreen({Key? key, required this.scan}) : super(key: key);
+
+  // Fungsi untuk mengecek ketersediaan gambar
+  Future<bool> _checkImageAvailable(String url) async {
+    try {
+      final response = await http.get(Uri.parse(url));
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +30,73 @@ class ScanResultScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Display the image of the scan
-            Image.network(
-              scan.data.history.gambarScan,
-              height: 250,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            // Menampilkan gambar scan
+            FutureBuilder<bool>(
+              future: _checkImageAvailable(scan.data.history.gambarScan),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError || !snapshot.data!) {
+                  return const Icon(Icons.error, color: Colors.red, size: 100);
+                } else {
+                  return Image.network(
+                    scan.data.history.gambarScan,
+                    height: 250,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      (loadingProgress.expectedTotalBytes ?? 1)
+                                  : null
+                              : null,
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+            const SizedBox(height: 16),
+            // Menampilkan gambar hasil prediksi
+            FutureBuilder<bool>(
+              future:
+                  _checkImageAvailable(scan.data.history.gambarScanPredicted),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError || !snapshot.data!) {
+                  return const Icon(Icons.error, color: Colors.red, size: 100);
+                } else {
+                  return Image.network(
+                    scan.data.history.gambarScanPredicted,
+                    height: 250,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      (loadingProgress.expectedTotalBytes ?? 1)
+                                  : null
+                              : null,
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
             ),
             const SizedBox(height: 16),
 
-            // Display condition name
+            // Menampilkan nama kondisi
             Text(
               scan.data.condition.conditionName,
               style: const TextStyle(
@@ -41,7 +107,7 @@ class ScanResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // Display condition description
+            // Menampilkan deskripsi kondisi
             Text(
               scan.data.condition.description,
               style: const TextStyle(
@@ -51,7 +117,7 @@ class ScanResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Display treatment description
+            // Menampilkan pengobatan yang direkomendasikan
             _buildSection(
               'Recommended Treatment',
               scan.data.treatment.deskripsiTreatment,
@@ -59,7 +125,7 @@ class ScanResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Display prediction confidence
+            // Menampilkan prediksi kepercayaan
             Text(
               "Prediction Confidence: ${(scan.data.prediction.confidence * 100).toStringAsFixed(2)}%",
               style: const TextStyle(
@@ -69,7 +135,7 @@ class ScanResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Display recommended products (empty in this case)
+            // Menampilkan produk yang direkomendasikan
             _buildProductsSection(scan.data.products),
           ],
         ),
@@ -113,6 +179,7 @@ class ScanResultScreen extends StatelessWidget {
     );
   }
 
+  // Membuat section untuk pengobatan atau informasi lainnya
   Widget _buildSection(String title, String content, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -157,9 +224,10 @@ class ScanResultScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProductsSection(List<dynamic> products) {
+  // Menampilkan produk yang direkomendasikan
+  Widget _buildProductsSection(List<Product> products) {
     if (products.isEmpty) {
-      return const SizedBox(); // If no products are available
+      return const SizedBox(); // Jika tidak ada produk
     }
 
     return Column(
@@ -222,7 +290,7 @@ class _ProductCard extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: Image.network(
-              product.productImage, // Replace with correct image field
+              product.productImage, // Ganti dengan field gambar produk
               height: 150,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -234,7 +302,7 @@ class _ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product.productName, // Replace with correct name field
+                  product.productName, // Ganti dengan field nama produk
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -244,7 +312,7 @@ class _ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  product.description, // Replace with correct description field
+                  product.description, // Ganti dengan field deskripsi produk
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[600],
@@ -257,7 +325,7 @@ class _ProductCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Rp ${product.price.toStringAsFixed(0)}', // Replace with correct price field
+                      'Rp ${product.price.toStringAsFixed(0)}', // Ganti dengan field harga produk
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
