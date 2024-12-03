@@ -30,21 +30,31 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     final recommendation = widget.history.recommendation;
     final detectionDate = widget.history.detectionDate ?? DateTime.now();
     final gambarScan = widget.history.gambarScan;
+    final gambarScanPredicted = widget
+        .history.gambarScanPredicted; // Ambil gambarScanPredicted dari History
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header Section
             HeaderSection(
               history: widget.history,
               detectionDate: detectionDate,
             ),
-            ImageSection(gambarScan: gambarScan),
+            // Gambar Scan dan Predicted
+            ImageSection(
+              gambarScan: gambarScan,
+              gambarScanPredicted:
+                  gambarScanPredicted, // Mengirim gambarScanPredicted
+            ),
+            // Kondisi kulit dan treatment
             SkinConditionSection(
               recommendation: recommendation,
               treatments: recommendation.skinCondition.treatments,
             ),
+            // Rekomendasi produk
             ProductRecommendationSection(
               recommendation: recommendation,
               onProductChanged: (index) {

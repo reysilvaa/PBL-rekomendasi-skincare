@@ -1,32 +1,55 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:deteksi_jerawat/model/history.dart'; // Import History model
 
 class ImageSection extends StatelessWidget {
-  final String gambarScan; // Accept image URL as a parameter
+  final String gambarScan; // URL gambar pertama
+  final String gambarScanPredicted; // URL gambar kedua
 
-  const ImageSection({super.key, required this.gambarScan});
+  const ImageSection({
+    super.key,
+    required this.gambarScan,
+    required this.gambarScanPredicted,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: CachedNetworkImage(
-            imageUrl:
-                gambarScan, // Use CachedNetworkImage to load and cache the image
-            width: 149,
-            height: 155,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => const Center(
-              child:
-                  CircularProgressIndicator(), // Placeholder while image loads
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Gambar pertama (gambarScan)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: CachedNetworkImage(
+                imageUrl: gambarScan,
+                width: 149,
+                height: 155,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(), // Placeholder saat gambar dimuat
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error), // Jika gagal memuat gambar
+              ),
             ),
-            errorWidget: (context, url, error) =>
-                const Icon(Icons.error), // Error widget in case of failure
-          ),
+            const SizedBox(height: 16), // Spasi antara gambar pertama dan kedua
+
+            // Gambar kedua (gambarScanPredicted)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: CachedNetworkImage(
+                imageUrl: gambarScanPredicted,
+                width: 149,
+                height: 155,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(), // Placeholder saat gambar dimuat
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error), // Jika gagal memuat gambar
+              ),
+            ),
+          ],
         ),
       ),
     );
