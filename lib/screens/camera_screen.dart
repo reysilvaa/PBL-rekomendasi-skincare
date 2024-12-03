@@ -16,9 +16,9 @@ class CameraScreen extends StatefulWidget {
   final String token;
 
   const CameraScreen({
-    Key? key,
+    super.key,
     required this.token,
-  }) : super(key: key);
+  });
 
   @override
   _CameraScreenState createState() => _CameraScreenState();

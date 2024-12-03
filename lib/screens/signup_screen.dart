@@ -6,7 +6,7 @@ import 'package:deteksi_jerawat/model/user.dart'; // Import the User model
 import 'package:deteksi_jerawat/widgets/signup/logo.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();

@@ -5,7 +5,7 @@ import 'package:deteksi_jerawat/screens/login_screen.dart';
 import 'services/auth.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
         if (isLoggedIn) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => MainScreen()),
+            MaterialPageRoute(builder: (context) => const MainScreen()),
           );
         } else {
           Navigator.pushReplacement(

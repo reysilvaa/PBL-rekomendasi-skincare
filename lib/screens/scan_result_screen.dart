@@ -6,7 +6,7 @@ import 'package:deteksi_jerawat/model/scan.dart';
 class ScanResultScreen extends StatelessWidget {
   final Scan scan;
 
-  const ScanResultScreen({Key? key, required this.scan}) : super(key: key);
+  const ScanResultScreen({super.key, required this.scan});
 
   // Fungsi untuk mengecek ketersediaan gambar
   Future<bool> _checkImageAvailable(String url) async {
@@ -264,9 +264,9 @@ class _ProductCard extends StatelessWidget {
   final Product product;
 
   const _ProductCard({
-    Key? key,
+    super.key,
     required this.product,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

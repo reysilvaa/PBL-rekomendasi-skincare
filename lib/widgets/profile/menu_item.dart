@@ -21,8 +21,9 @@ class MenuItem extends StatelessWidget {
     if (lowercaseTitle.contains('saved')) return Icons.save_alt_rounded;
     if (lowercaseTitle.contains('profile')) return Icons.person_outline_rounded;
     if (lowercaseTitle.contains('setting')) return Icons.settings_outlined;
-    if (lowercaseTitle.contains('notification'))
+    if (lowercaseTitle.contains('notification')) {
       return Icons.notifications_outlined;
+    }
     if (lowercaseTitle.contains('logout')) return Icons.logout_rounded;
     if (lowercaseTitle.contains('about us')) return Icons.group_outlined;
     if (lowercaseTitle.contains('help')) return Icons.help_outline_rounded;
@@ -36,7 +37,7 @@ class MenuItem extends StatelessWidget {
     return Animate(
       effects: [
         FadeEffect(duration: 300.ms),
-        ScaleEffect(begin: Offset(0.9, 0.9), end: Offset(1, 1)),
+        const ScaleEffect(begin: Offset(0.9, 0.9), end: Offset(1, 1)),
       ],
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -49,7 +50,7 @@ class MenuItem extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 12,
@@ -72,14 +73,14 @@ class MenuItem extends StatelessWidget {
                           isLogout ? Colors.red.shade50 : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: Icon(
                       dynamicIcon,
                       color: isLogout ? Colors.red : Colors.black87,
                       size: 24,
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Text(
                       title,

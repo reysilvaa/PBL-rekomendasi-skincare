@@ -6,7 +6,7 @@ import '../../model/product.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProductList extends StatefulWidget {
-  const ProductList({Key? key}) : super(key: key);
+  const ProductList({super.key});
 
   @override
   _ProductListState createState() => _ProductListState();
@@ -164,7 +164,7 @@ Widget _buildProductCard(Product product, int index) {
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              '\Rp.${product.price.toStringAsFixed(2)}',
+                              'Rp.${product.price.toStringAsFixed(2)}',
                               style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -237,9 +237,9 @@ Widget _buildProductCard(Product product, int index) {
                 Expanded(
                   flex: 3,
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: const BorderRadius.vertical(
+                      borderRadius: BorderRadius.vertical(
                         top: Radius.circular(16),
                       ),
                     ),

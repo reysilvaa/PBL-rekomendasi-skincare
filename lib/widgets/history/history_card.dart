@@ -7,10 +7,10 @@ class HistoryCard extends StatefulWidget {
   final Recommendation recommendation;
 
   const HistoryCard({
-    Key? key,
+    super.key,
     required this.historyItem,
     required this.recommendation,
-  }) : super(key: key);
+  });
 
   @override
   _EnhancedHistoryCardState createState() => _EnhancedHistoryCardState();
@@ -66,8 +66,8 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        widget.historyItem.recommendation?.skinCondition
-                                ?.conditionName ??
+                        widget.historyItem.recommendation.skinCondition
+                                .conditionName ??
                             'Kondisi Kulit Tidak Diketahui',
                         style: TextStyle(
                           fontSize: 20,
@@ -80,8 +80,8 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        widget.historyItem.recommendation?.skinCondition
-                                ?.description ??
+                        widget.historyItem.recommendation.skinCondition
+                                .description ??
                             'Deskripsi Tidak Tersedia',
                         style: TextStyle(
                           fontSize: 14,
@@ -127,10 +127,9 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
   }
 
   Widget _buildScanImage() {
-    return widget.historyItem.gambarScan != null &&
-            widget.historyItem.gambarScan!.isNotEmpty
+    return widget.historyItem.gambarScan.isNotEmpty
         ? Image.network(
-            widget.historyItem.gambarScan!,
+            widget.historyItem.gambarScan,
             width: 100,
             height: 100,
             fit: BoxFit.cover,

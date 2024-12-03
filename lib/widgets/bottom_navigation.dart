@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:deteksi_jerawat/services/auth.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomeScreen(),
     const HistoryScreen(),
     const SizedBox(), // Placeholder for camera
-    SkinpediaScreen(),
+    const SkinpediaScreen(),
     const ProfileScreen(),
   ];
 

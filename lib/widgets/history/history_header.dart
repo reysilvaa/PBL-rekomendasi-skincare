@@ -119,7 +119,7 @@ class HistoryHeader extends StatelessWidget {
                         ),
                       )
                           .animate()
-                          .scale(duration: 500.ms, begin: Offset(0.7, 0.7))
+                          .scale(duration: 500.ms, begin: const Offset(0.7, 0.7))
                           .shake(duration: 500.ms, hz: 3, rotation: 0.05),
                       const SizedBox(width: 16),
                       Expanded(

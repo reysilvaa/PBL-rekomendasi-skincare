@@ -6,11 +6,11 @@ class ProfileField extends StatelessWidget {
   final Function(String) onChanged; // Add onChanged parameter
 
   const ProfileField({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
     required this.onChanged, // Include onChanged as a required parameter
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

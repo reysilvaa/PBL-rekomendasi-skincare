@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TopBar extends StatelessWidget {
   final VoidCallback onClose;
 
-  const TopBar({Key? key, required this.onClose}) : super(key: key);
+  const TopBar({super.key, required this.onClose});
 
   @override
   Widget build(BuildContext context) {

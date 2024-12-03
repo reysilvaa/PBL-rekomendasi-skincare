@@ -7,7 +7,7 @@ import 'package:deteksi_jerawat/widgets/skinpedia/skinpedia_detail_card.dart';
 import 'package:deteksi_jerawat/widgets/skinpedia/skinpedia_header.dart'; // Impor widget header
 
 class SkinpediaScreen extends StatefulWidget {
-  const SkinpediaScreen({Key? key}) : super(key: key);
+  const SkinpediaScreen({super.key});
 
   @override
   _SkinpediaScreenState createState() => _SkinpediaScreenState();

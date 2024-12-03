@@ -8,17 +8,17 @@ class AddressSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
       ),
-      child: Row(
+      child: const Row(
         children: [
-          const Icon(Icons.location_on, color: Colors.grey),
-          const SizedBox(width: 8),
+          Icon(Icons.location_on, color: Colors.grey),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Alamat Pengiriman',
                   style: TextStyle(fontWeight: FontWeight.bold),

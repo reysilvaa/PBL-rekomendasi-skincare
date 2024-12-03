@@ -40,7 +40,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final currentUser = (state is UserLoaded)
           ? (state as UserLoaded).user
-          : User(username: ''); // Fallback user if state is not loaded
+          : const User(username: ''); // Fallback user if state is not loaded
 
       // Update the specific field
       final updatedUser = await _userInfoService.updateUserProfile(

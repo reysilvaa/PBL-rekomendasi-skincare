@@ -8,9 +8,9 @@ class FirstNameField extends StatefulWidget {
   final User user; // Change to User model
 
   const FirstNameField({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
 
   @override
   _FirstNameFieldState createState() => _FirstNameFieldState();

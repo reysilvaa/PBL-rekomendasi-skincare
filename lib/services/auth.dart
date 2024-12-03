@@ -61,7 +61,7 @@ class Auth {
     }
 
     final currentTime = DateTime.now().millisecondsSinceEpoch;
-    final sessionDurationMillis = sessionDuration * 1000; // Konversi ke milliseconds
+    const sessionDurationMillis = sessionDuration * 1000; // Konversi ke milliseconds
     final isSessionValid = (currentTime - loginTime) < sessionDurationMillis;
 
     if (!isSessionValid) {

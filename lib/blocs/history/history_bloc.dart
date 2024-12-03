@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:deteksi_jerawat/services/history-info.dart';
-import 'package:deteksi_jerawat/model/history.dart';
 import 'history_event.dart';
 import 'history_state.dart';
 

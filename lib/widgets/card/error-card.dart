@@ -29,7 +29,7 @@ class ErrorCard extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    const Text(
                       'Oops!',
                       style: TextStyle(
                         color: Colors.white,
@@ -56,7 +56,7 @@ class ErrorCard extends StatelessWidget {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MainScreen()),
+                                builder: (context) => const MainScreen()),
                           );
                         },
                         style: ElevatedButton.styleFrom(
@@ -65,7 +65,7 @@ class ErrorCard extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 24, vertical: 12),
                           elevation: 4,
                         ),

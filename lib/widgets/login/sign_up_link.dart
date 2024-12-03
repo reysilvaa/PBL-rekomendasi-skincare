@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../screens/signup_screen.dart'; // Pastikan untuk mengimpor SignUpScreen
 
 class SignUpLink extends StatelessWidget {
-  const SignUpLink({Key? key}) : super(key: key);
+  const SignUpLink({super.key});
 
   @override
   Widget build(BuildContext context) {

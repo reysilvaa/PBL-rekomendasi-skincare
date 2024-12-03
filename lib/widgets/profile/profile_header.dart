@@ -11,7 +11,7 @@ import '../../services/user-info.dart';
 class ProfileHeader extends StatefulWidget {
   final User user;
 
-  const ProfileHeader({Key? key, required this.user}) : super(key: key);
+  const ProfileHeader({super.key, required this.user});
 
   @override
   State<ProfileHeader> createState() => _ProfileHeaderState();
@@ -251,9 +251,9 @@ class _ProfileHeaderState extends State<ProfileHeader>
                                             ),
                                           ],
                                         ),
-                                        child: Row(
+                                        child: const Row(
                                           mainAxisSize: MainAxisSize.min,
-                                          children: const [
+                                          children: [
                                             Icon(
                                               Icons.edit_rounded,
                                               color: Color(0xFF2563EB),

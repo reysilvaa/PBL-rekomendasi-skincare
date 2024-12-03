@@ -1,6 +1,5 @@
 import 'package:deteksi_jerawat/model/scan.dart';
 import 'package:equatable/equatable.dart';
-import 'package:deteksi_jerawat/model/history.dart';
 
 abstract class ScanState extends Equatable {
   const ScanState();

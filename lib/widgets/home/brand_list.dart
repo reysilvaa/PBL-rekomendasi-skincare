@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BrandList extends StatefulWidget {
-  const BrandList({Key? key}) : super(key: key);
+  const BrandList({super.key});
 
   @override
   _BrandListState createState() => _BrandListState();
@@ -186,10 +186,10 @@ class BrandCard extends StatefulWidget {
   final int index;
 
   const BrandCard({
-    Key? key,
+    super.key,
     required this.brand,
     required this.index,
-  }) : super(key: key);
+  });
 
   @override
   State<BrandCard> createState() => _BrandCardState();

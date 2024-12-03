@@ -8,7 +8,7 @@ import 'package:deteksi_jerawat/widgets/login/login_button.dart'; // Import Logi
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => MainScreen()), // Replace with your MainScreen
+            builder: (context) => const MainScreen()), // Replace with your MainScreen
       );
     }
   }
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     _login, // Pass the _login function as onPressed callback
               ),
               const SizedBox(height: 20),
-              SignUpLink(),
+              const SignUpLink(),
             ],
           ),
         ),

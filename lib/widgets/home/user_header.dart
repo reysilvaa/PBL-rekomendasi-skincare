@@ -11,9 +11,9 @@ class UserHeader extends StatefulWidget {
   final User user;
 
   const UserHeader({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
 
   @override
   _UserHeaderState createState() => _UserHeaderState();

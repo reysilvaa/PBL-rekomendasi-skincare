@@ -5,9 +5,9 @@ class SkinpediaDetailModal extends StatelessWidget {
   final Skinpedia skinpedia;
 
   const SkinpediaDetailModal({
-    Key? key,
+    super.key,
     required this.skinpedia,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

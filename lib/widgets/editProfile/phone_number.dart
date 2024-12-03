@@ -7,7 +7,7 @@ import '../../blocs/user/user_event.dart';
 class PhoneNumberField extends StatefulWidget {
   final User user;
 
-  const PhoneNumberField({Key? key, required this.user}) : super(key: key);
+  const PhoneNumberField({super.key, required this.user});
 
   @override
   _PhoneNumberFieldState createState() => _PhoneNumberFieldState();

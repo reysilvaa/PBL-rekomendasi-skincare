@@ -7,12 +7,12 @@ class RegisterForm extends StatefulWidget {
   final TextEditingController confirmPasswordController;
 
   const RegisterForm({
-    Key? key,
+    super.key,
     required this.emailController,
     required this.usernameController,
     required this.passwordController,
     required this.confirmPasswordController,
-  }) : super(key: key);
+  });
 
   @override
   State<RegisterForm> createState() => _RegisterFormState();

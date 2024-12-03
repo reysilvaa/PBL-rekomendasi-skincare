@@ -4,9 +4,9 @@ class ProgressButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const ProgressButton({
-    Key? key,
+    super.key,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class ProgressButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
               horizontal: 20,
               vertical: 15), // Tambah padding horizontal di dalam tombol
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment
                 .spaceBetween, // Mengatur jarak antara teks dan ikon
             children: [
@@ -38,15 +38,15 @@ class ProgressButton extends StatelessWidget {
                 // Menggunakan Expanded agar teks mengambil ruang yang tersisa
                 child: Text(
                   'Check your progress',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 24, // Ukuran font diperbesar
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const SizedBox(width: 20), // Jarak antara teks dan ikon
-              const Icon(Icons.timer,
+              SizedBox(width: 20), // Jarak antara teks dan ikon
+              Icon(Icons.timer,
                   color: Colors.white, size: 24), // Ikon di sebelah kanan
             ],
           ),

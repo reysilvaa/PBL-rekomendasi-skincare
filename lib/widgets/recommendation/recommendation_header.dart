@@ -7,8 +7,7 @@ class HeaderSection extends StatelessWidget {
   final History history;
 
   const HeaderSection(
-      {Key? key, required this.history, required DateTime detectionDate})
-      : super(key: key);
+      {super.key, required this.history, required DateTime detectionDate});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,7 @@ class HeaderSection extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
@@ -30,19 +29,19 @@ class HeaderSection extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
             blurRadius: 8,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: SafeArea(
         child: Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
-                  Hero(
+                  const Hero(
                     tag: 'backButton',
                     child: BackButtonWidget(),
                   ),
@@ -58,10 +57,10 @@ class HeaderSection extends StatelessWidget {
                               letterSpacing: 1.2,
                             ),
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
                             formattedDate,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -72,7 +71,7 @@ class HeaderSection extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 40), // Balance for back button
+                  const SizedBox(width: 40), // Balance for back button
                 ],
               ),
             ],

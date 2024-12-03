@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class InstructionText extends StatelessWidget {
-  const InstructionText({Key? key}) : super(key: key);
+  const InstructionText({super.key});
 
   @override
   Widget build(BuildContext context) {

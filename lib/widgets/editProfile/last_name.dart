@@ -8,9 +8,9 @@ class LastNameField extends StatefulWidget {
   final User user; // Expect the entire User object
 
   const LastNameField({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
 
   @override
   _LastNameFieldState createState() => _LastNameFieldState();

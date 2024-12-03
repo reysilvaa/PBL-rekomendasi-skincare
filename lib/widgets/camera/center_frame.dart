@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CenterFrame extends StatelessWidget {
-  const CenterFrame({Key? key}) : super(key: key);
+  const CenterFrame({super.key});
 
   @override
   Widget build(BuildContext context) {

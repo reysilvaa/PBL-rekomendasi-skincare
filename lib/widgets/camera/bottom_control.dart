@@ -7,11 +7,11 @@ class BottomControl extends StatelessWidget {
   final Function(String) onImageSelected; // Callback to handle selected image
 
   const BottomControl({
-    Key? key,
+    super.key,
     required this.onFlipCamera,
     required this.onCapture,
     required this.onImageSelected, // Accept the callback for image selection
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class BottomControl extends StatelessWidget {
               child: Container(
                 width: 70,
                 height: 70,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
                   boxShadow: [

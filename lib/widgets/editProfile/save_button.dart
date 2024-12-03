@@ -13,7 +13,7 @@ class SaveButton extends StatelessWidget {
   final TextEditingController lastNameController;
 
   const SaveButton({
-    Key? key,
+    super.key,
     required this.user,
     required this.usernameController,
     required this.phoneNumberController,
@@ -21,7 +21,7 @@ class SaveButton extends StatelessWidget {
     required this.emailController,
     required this.firstNameController,
     required this.lastNameController,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

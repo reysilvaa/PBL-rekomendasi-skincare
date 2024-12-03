@@ -6,7 +6,7 @@ import '../../blocs/user/user_event.dart';
 class EmailField extends StatefulWidget {
   final String? email;
 
-  const EmailField({Key? key, required this.email}) : super(key: key);
+  const EmailField({super.key, required this.email});
 
   @override
   _EmailFieldState createState() => _EmailFieldState();

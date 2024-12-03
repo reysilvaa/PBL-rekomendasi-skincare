@@ -85,8 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SliverPadding(padding: EdgeInsets.only(top: 20)),
-                    SliverToBoxAdapter(
-                      child: const SectionTitle(title: 'Brands'),
+                    const SliverToBoxAdapter(
+                      child: SectionTitle(title: 'Brands'),
                     ),
                     const SliverPadding(padding: EdgeInsets.only(top: 10)),
                     SliverToBoxAdapter(
@@ -96,8 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SliverPadding(padding: EdgeInsets.only(top: 20)),
-                    SliverToBoxAdapter(
-                      child: const SectionTitle(title: 'Products'),
+                    const SliverToBoxAdapter(
+                      child: SectionTitle(title: 'Products'),
                     ),
                     const SliverPadding(padding: EdgeInsets.only(top: 10)),
                     SliverToBoxAdapter(

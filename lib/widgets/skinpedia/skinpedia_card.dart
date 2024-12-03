@@ -6,10 +6,10 @@ class SkinpediaCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const SkinpediaCard({
-    Key? key,
+    super.key,
     required this.skinpedia,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

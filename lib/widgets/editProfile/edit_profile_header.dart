@@ -13,9 +13,9 @@ class EditProfileHeader extends StatefulWidget {
   final Function(String) onImagePicked;
 
   const EditProfileHeader({
-    Key? key,
+    super.key,
     required this.onImagePicked,
-  }) : super(key: key);
+  });
 
   @override
   State<EditProfileHeader> createState() => _EditProfileHeaderState();

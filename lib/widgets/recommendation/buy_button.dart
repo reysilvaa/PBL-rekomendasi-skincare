@@ -32,8 +32,8 @@ class BuyButton extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
           onTap: onPressed,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
+          child: const Padding(
+            padding: EdgeInsets.symmetric(
                 vertical: 12, horizontal: 20), // Reduced vertical padding
             child: Center(
               child: Text(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LoadingState extends StatelessWidget {
-  const LoadingState({Key? key}) : super(key: key);
+  const LoadingState({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +36,9 @@ class ErrorState extends StatelessWidget {
   final String error;
 
   const ErrorState({
-    Key? key,
+    super.key,
     required this.error,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +54,9 @@ class ErrorState extends StatelessWidget {
               color: Colors.red[400],
             ),
             const SizedBox(height: 32),
-            Text(
+            const Text(
               'Oops! Something went wrong',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),

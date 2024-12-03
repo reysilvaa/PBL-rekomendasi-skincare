@@ -9,11 +9,11 @@ class CameraPreviewWidget extends StatelessWidget {
   final VoidCallback onCapture; // Callback to capture an image
 
   const CameraPreviewWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onFlipCamera,
     required this.onCapture,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class CameraPreviewWidget extends StatelessWidget {
           Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.black, // Background color while loading
             ),
             child: AspectRatio(
@@ -47,7 +47,7 @@ class CameraPreviewWidget extends StatelessWidget {
             ),
           ),
           // Instructions or overlays
-          Positioned(
+          const Positioned(
             top: 50,
             left: 16,
             right: 16,

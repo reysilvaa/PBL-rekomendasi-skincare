@@ -5,10 +5,10 @@ class LoginForm extends StatefulWidget {
   final Function(String) onPasswordChanged;
 
   const LoginForm({
-    Key? key,
+    super.key,
     required this.onEmailChanged,
     required this.onPasswordChanged,
-  }) : super(key: key);
+  });
 
   @override
   _LoginFormState createState() => _LoginFormState();

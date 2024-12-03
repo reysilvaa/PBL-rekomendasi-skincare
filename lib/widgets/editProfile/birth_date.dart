@@ -9,7 +9,7 @@ import '../../blocs/user/user_event.dart';
 class BirthDateField extends StatefulWidget {
   final String? birthDate;
 
-  const BirthDateField({Key? key, required this.birthDate}) : super(key: key);
+  const BirthDateField({super.key, required this.birthDate});
 
   @override
   _BirthDateFieldState createState() => _BirthDateFieldState();
@@ -58,12 +58,12 @@ class _BirthDateFieldState extends State<BirthDateField> {
       maxTime: DateTime.now(),
       currentTime: _selectedDate ?? DateTime.now(),
       locale: dt_picker.LocaleType.en,
-      theme: dt_picker.DatePickerTheme(
+      theme: const dt_picker.DatePickerTheme(
         // Use the alias here
         backgroundColor: Colors.white,
-        itemStyle: const TextStyle(color: Colors.black, fontSize: 18),
-        doneStyle: const TextStyle(color: Color(0xFF0D47A1), fontSize: 16),
-        cancelStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+        itemStyle: TextStyle(color: Colors.black, fontSize: 18),
+        doneStyle: TextStyle(color: Color(0xFF0D47A1), fontSize: 16),
+        cancelStyle: TextStyle(color: Colors.grey, fontSize: 16),
       ),
       onConfirm: (date) {
         _updateBirthDate(date);
