@@ -1,5 +1,3 @@
-import 'dart:io';
-
 // class Config {
 //   static const String rawUrl = 'http://127.0.0.1:8001/api';
 //   static String baseUrl = Platform.isAndroid ? rawUrl : rawUrl; // Base URL API
@@ -7,5 +5,5 @@ import 'dart:io';
 
 class Config {
   static const String baseUrl =
-      'https://rndej-114-6-25-184.a.free.pinggy.link/api'; // Base URL API
+      'https://rnukj-2001-448a-50a0-6462-4437-dba9-a4c7-d57a.a.free.pinggy.link/api'; // Base URL API
 }

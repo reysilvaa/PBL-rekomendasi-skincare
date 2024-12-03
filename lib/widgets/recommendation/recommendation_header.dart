@@ -1,40 +1,83 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Import for date formatting
+import 'package:intl/intl.dart';
 import 'back_button.dart';
-import 'package:deteksi_jerawat/model/history.dart'; // Import the History model
+import 'package:deteksi_jerawat/model/history.dart';
 
 class HeaderSection extends StatelessWidget {
-  final History history; // Receive the entire History object
+  final History history;
 
-  // Constructor with a required parameter of History
-  const HeaderSection({Key? key, required this.history, required DateTime detectionDate}) : super(key: key);
+  const HeaderSection(
+      {Key? key, required this.history, required DateTime detectionDate})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Format the date to display in the header
     final formattedDate =
         DateFormat('dd MMM yyyy').format(history.detectionDate);
+    final formattedDay = DateFormat('EEEE').format(history.detectionDate);
 
     return Container(
-      padding: const EdgeInsets.all(16.0),
-      color: const Color(0xFF0D47A1),
-      child: Row(
-        children: [
-          const BackButtonWidget(), // Adding a back button on the left
-          const SizedBox(width: 8), // Space between button and text
-          Expanded(
-            child: Center(
-              child: Text(
-                formattedDate, // Display the formatted date
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1565C0),
+            Color(0xFF0D47A1),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 8,
+            offset: Offset(0, 3),
           ),
         ],
+      ),
+      child: SafeArea(
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Hero(
+                    tag: 'backButton',
+                    child: BackButtonWidget(),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            formattedDay,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.9),
+                              fontSize: 16,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            formattedDate,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 40), // Balance for back button
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

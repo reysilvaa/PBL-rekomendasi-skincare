@@ -71,32 +71,67 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Profile header with image picker
-            EditProfileHeader(
-              onImagePicked: (newProfileImageUrl) {
-                context.read<UserBloc>().add(UpdateUserFieldEvent(
-                    'profileImage',
-                    newProfileImageUrl)); // Use the correct event for first name
-              },
+      body: Stack(
+        children: [
+          // Scrollable content
+          CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    // Profile header with image picker
+                    EditProfileHeader(
+                      onImagePicked: (newProfileImageUrl) {
+                        context.read<UserBloc>().add(UpdateUserFieldEvent(
+                            'profileImage', newProfileImageUrl));
+                      },
+                    ),
+                    _buildProfileForm(),
+                    // Add extra padding at the bottom for the fixed save button
+                    const SizedBox(height: 80),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Fixed Save Button at bottom
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
+              child: SaveButton(
+                user: widget.user,
+                usernameController: usernameController,
+                phoneNumberController: phoneNumberController,
+                birthDateController: birthDateController,
+                emailController: emailController,
+                firstNameController: firstNameController,
+                lastNameController: lastNameController,
+              ),
             ),
-            _buildProfileForm(),
-            const SizedBox(height: 30),
-            _buildSaveButton(),
-            const SizedBox(height: 20),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  // Profile form fields
   Widget _buildProfileForm() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
@@ -106,40 +141,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Username field
           UsernameField(user: widget.user),
           const SizedBox(height: 16),
-          // Phone number field
           PhoneNumberField(user: widget.user),
           const SizedBox(height: 16),
-          // Birthdate field
           BirthDateField(birthDate: widget.user.birthDate),
           const SizedBox(height: 16),
-          // Email field
           EmailField(email: widget.user.email),
           const SizedBox(height: 16),
-          // First name field
           FirstNameField(user: widget.user),
           const SizedBox(height: 16),
-          // Last name field
           LastNameField(user: widget.user),
         ],
-      ),
-    );
-  }
-
-  // Save button to save the user profile changes
-  Widget _buildSaveButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: SaveButton(
-        user: widget.user,
-        usernameController: usernameController,
-        phoneNumberController: phoneNumberController,
-        birthDateController: birthDateController,
-        emailController: emailController,
-        firstNameController: firstNameController,
-        lastNameController: lastNameController,
       ),
     );
   }
