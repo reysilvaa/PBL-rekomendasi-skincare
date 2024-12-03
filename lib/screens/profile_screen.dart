@@ -52,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _handleLogout(BuildContext context) async {
-    await _auth.logout(); // Hapus token saat logout
+    await _auth.logout(context); // Passing context ke method logout
 
     // Arahkan ke layar login
     Navigator.pushReplacement(
