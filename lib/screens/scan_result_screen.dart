@@ -1,341 +1,253 @@
+import 'package:deteksi_jerawat/widgets/scan-result/condition_details_section.dart';
+import 'package:deteksi_jerawat/widgets/scan-result/products_section.dart';
+import 'package:deteksi_jerawat/widgets/scan-result/scan_image_section.dart';
+import 'package:deteksi_jerawat/widgets/scan-result/treatment_section.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:deteksi_jerawat/model/product.dart';
 import 'package:deteksi_jerawat/model/scan.dart';
 
-class ScanResultScreen extends StatelessWidget {
+class ScanResultScreen extends StatefulWidget {
   final Scan scan;
+  static const Color primaryColor = Color(0xFF0046BE);
+  static const Color secondaryColor = Color(0xFF497CD4);
+  static const Color backgroundColor = Colors.white;
 
   const ScanResultScreen({super.key, required this.scan});
 
-  // Fungsi untuk mengecek ketersediaan gambar
-  Future<bool> _checkImageAvailable(String url) async {
-    try {
-      final response = await http.get(Uri.parse(url));
-      return response.statusCode == 200;
-    } catch (e) {
-      return false;
-    }
+  @override
+  State<ScanResultScreen> createState() => _ScanResultScreenState();
+}
+
+class _ScanResultScreenState extends State<ScanResultScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    ));
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Skin Condition Result"),
-        backgroundColor: const Color(0xFF0046BE),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Menampilkan gambar scan
-            FutureBuilder<bool>(
-              future: _checkImageAvailable(scan.data.history.gambarScan),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError || !snapshot.data!) {
-                  return const Icon(Icons.error, color: Colors.red, size: 100);
-                } else {
-                  return Image.network(
-                    scan.data.history.gambarScan,
-                    height: 250,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                      (loadingProgress.expectedTotalBytes ?? 1)
-                                  : null
-                              : null,
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            // Menampilkan gambar hasil prediksi
-            FutureBuilder<bool>(
-              future:
-                  _checkImageAvailable(scan.data.history.gambarScanPredicted),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError || !snapshot.data!) {
-                  return const Icon(Icons.error, color: Colors.red, size: 100);
-                } else {
-                  return Image.network(
-                    scan.data.history.gambarScanPredicted,
-                    height: 250,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                      (loadingProgress.expectedTotalBytes ?? 1)
-                                  : null
-                              : null,
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-
-            // Menampilkan nama kondisi
-            Text(
-              scan.data.condition.conditionName,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF0046BE),
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Menampilkan deskripsi kondisi
-            Text(
-              scan.data.condition.description,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Menampilkan pengobatan yang direkomendasikan
-            _buildSection(
-              'Recommended Treatment',
-              scan.data.treatment.deskripsiTreatment,
-              Icons.medical_services_outlined,
-            ),
-            const SizedBox(height: 16),
-
-            // Menampilkan prediksi kepercayaan
-            Text(
-              "Prediction Confidence: ${(scan.data.prediction.confidence * 100).toStringAsFixed(2)}%",
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black54,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Menampilkan produk yang direkomendasikan
-            _buildProductsSection(scan.data.products),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0046BE),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Back to Home',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Membuat section untuk pengobatan atau informasi lainnya
-  Widget _buildSection(String title, String content, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: const Color(0xFF0046BE)),
-              const SizedBox(width: 8),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            content,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-              height: 1.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Menampilkan produk yang direkomendasikan
-  Widget _buildProductsSection(List<Product> products) {
-    if (products.isEmpty) {
-      return const SizedBox(); // Jika tidak ada produk
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 16, bottom: 16),
-          child: Text(
-            'Recommended Products',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 280,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: products.length,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            itemBuilder: (context, index) {
-              final product = scan.data.products[index];
-              return _ProductCard(product: product);
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ProductCard extends StatelessWidget {
-  final Product product;
-
-  const _ProductCard({
-    super.key,
-    required this.product,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.network(
-              product.productImage, // Ganti dengan field gambar produk
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.productName, // Ganti dengan field nama produk
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  product.description, // Ganti dengan field deskripsi produk
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: ScanResultScreen.backgroundColor,
+      appBar: _buildAppBar(context),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Rp ${product.price.toStringAsFixed(0)}', // Ganti dengan field harga produk
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF0046BE),
+                    ScanImagesSection(scan: widget.scan),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildAnimatedSection(
+                            child: ConditionDetailsSection(scan: widget.scan),
+                            delay: 0.2,
+                          ),
+                          const SizedBox(height: 24),
+                          _buildAnimatedSection(
+                            child: TreatmentSection(
+                                treatment: widget.scan.data.treatment),
+                            delay: 0.4,
+                          ),
+                          const SizedBox(height: 24),
+                          _buildAnimatedSection(
+                            child: ProductsSection(
+                              products: widget.scan.data.products,
+                              title: 'Produk Rekomendasi',
+                            ),
+                            delay: 0.6,
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: _buildBottomBar(context),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return AppBar(
+      title: const Text(
+        "Skin Condition Result",
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 20,
+          letterSpacing: 0.5,
+          color: Colors.white,
+        ),
+      ),
+      centerTitle: true,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ScanResultScreen.primaryColor,
+              ScanResultScreen.secondaryColor,
+            ],
+          ),
+        ),
+      ),
+      elevation: 0,
+      leading: IconButton(
+        icon: const Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(
+            Icons.info_outline_rounded,
+            color: Colors.white,
+          ),
+          onPressed: () => _showInfo(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAnimatedSection({
+    required Widget child,
+    required double delay,
+  }) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOut,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, 20 * (1 - value)),
+            child: child,
+          ),
+        );
+      },
+      child: child,
+    );
+  }
+
+  Widget _buildBottomBar(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -3),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeOut,
+          builder: (context, value, child) {
+            return Transform.scale(
+              scale: 0.8 + (0.2 * value),
+              child: Opacity(
+                opacity: value,
+                child: child,
+              ),
+            );
+          },
+          child: ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ScanResultScreen.primaryColor,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.home_rounded, size: 20),
+                SizedBox(width: 8),
+                Text(
+                  'Back to Home',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showInfo(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('About This Result'),
+        content: const Text(
+          'This analysis provides an overview of your skin condition based on the uploaded image. For a more accurate diagnosis, please consult with a dermatologist.',
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Got it'),
           ),
         ],
       ),
