@@ -56,7 +56,7 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
                     children: [
                       Text(
                         _formatDate(
-                            widget.historyItem.detectionDate ?? DateTime.now()),
+                            widget.historyItem.detectionDate),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -67,8 +67,7 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
                       const SizedBox(height: 8),
                       Text(
                         widget.historyItem.recommendation.skinCondition
-                                .conditionName ??
-                            'Kondisi Kulit Tidak Diketahui',
+                                .conditionName,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
@@ -81,8 +80,7 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
                       const SizedBox(height: 6),
                       Text(
                         widget.historyItem.recommendation.skinCondition
-                                .description ??
-                            'Deskripsi Tidak Tersedia',
+                                .description,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.blueGrey.shade700,

@@ -1,11 +1,9 @@
 import 'package:deteksi_jerawat/screens/signup_screen.dart';
 import 'package:deteksi_jerawat/widgets/login/login_form.dart';
-import 'package:deteksi_jerawat/widgets/login/sign_up_link.dart';
 import 'package:flutter/material.dart';
 import 'package:deteksi_jerawat/widgets/bottom_navigation.dart'; // Import bottom navigation
 import 'package:deteksi_jerawat/services/login.dart'; // Import login service
 import 'package:deteksi_jerawat/widgets/login/logo.dart'; // Import Logo widget
-import 'package:deteksi_jerawat/widgets/login/login_button.dart'; // Import LoginButton widget
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {

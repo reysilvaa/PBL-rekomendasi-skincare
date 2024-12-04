@@ -37,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         throw Exception('No access token found');
       }
 
+      // ignore: unused_local_variable
       final user =
           await _userInfoService.fetchUserInfo(); // Ambil data pengguna
 

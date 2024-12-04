@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../services/user-info.dart';
 import '../../model/user.dart';
-import '../../blocs/user/user_bloc.dart';
-import '../../blocs/user/user_event.dart';
-import '../../blocs/user/user_state.dart';
 
 class UserHeader extends StatefulWidget {
   final User user;
@@ -21,7 +16,6 @@ class UserHeader extends StatefulWidget {
 
 class _UserHeaderState extends State<UserHeader>
     with SingleTickerProviderStateMixin {
-  late String _accessToken;
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -50,7 +44,6 @@ class _UserHeaderState extends State<UserHeader>
 
     _getAccessToken().then((token) {
       if (token != null) {
-        _accessToken = token;
       }
     });
 

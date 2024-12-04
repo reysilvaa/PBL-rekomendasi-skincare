@@ -15,6 +15,7 @@ class RecommendationScreen extends StatefulWidget {
 }
 
 class _RecommendationScreenState extends State<RecommendationScreen> {
+  // ignore: unused_field
   int _selectedProductIndex = 0;
 
   @override

@@ -4,11 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:deteksi_jerawat/services/config.dart';
-import 'auth.dart';
 
 class ProfileImagePOST {
   final ImagePicker _picker = ImagePicker(); // Instance of ImagePicker
-  final Auth _auth = Auth(); // Instance of Auth
 
   // Method to pick and upload image, now takes the token as a parameter
   Future<String> pickImageAndUpload(String token) async {

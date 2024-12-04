@@ -6,11 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:deteksi_jerawat/services/config.dart';
-import 'auth.dart';
 
 class ScanService {
   final ImagePicker _picker = ImagePicker();
-  final Auth _auth = Auth();
 
   Future<Scan> analyzeImage(File imageFile, String token) async {
     try {
