@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:deteksi_jerawat/services/config.dart';
 import 'package:deteksi_jerawat/services/edit-profile-image-post.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../model/user.dart';
 import 'auth.dart';
@@ -26,11 +27,6 @@ class UserInfoService {
           'Content-Type': 'application/json',
         },
       );
-
-      // Debugging the response
-      print('Response status code: ${response.statusCode}');
-      print('Response headers: ${response.headers}');
-      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -76,11 +72,6 @@ class UserInfoService {
         }),
       );
 
-      // Debugging the response
-      print('Response status code: ${response.statusCode}');
-      print('Response headers: ${response.headers}');
-      print('Response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         return User.fromJson(data['user']);
@@ -107,7 +98,6 @@ class UserInfoService {
       final profileImagePath =
           await _imageUploadService.pickImageAndUpload(token);
 
-      print('Profile image uploaded successfully: $profileImagePath');
       return profileImagePath;
     } catch (e) {
       print('Error: $e'); // Log the error for debugging
@@ -118,5 +108,65 @@ class UserInfoService {
   // Method to get full image URL from relative path
   String getFullImageUrl(String relativePath) {
     return relativePath;
+  }
+}
+
+class UserInfoScreen extends StatefulWidget {
+  @override
+  _UserInfoScreenState createState() => _UserInfoScreenState();
+}
+
+class _UserInfoScreenState extends State<UserInfoScreen> {
+  late Future<User> _userInfo;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _userInfo = UserInfoService().fetchUserInfo();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("User Info"),
+        backgroundColor: Colors.blue,
+      ),
+      body: FutureBuilder<User>(
+        future: _userInfo,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+
+          if (snapshot.hasData) {
+            final user = snapshot.data!;
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Username: ${user.username}'),
+                  Text('Full Name: ${user.firstName} ${user.lastName}'),
+                  // Add other user details here
+                ],
+              ),
+            );
+          }
+
+          return Center(
+            child: Text('No user data available'),
+          );
+        },
+      ),
+    );
   }
 }
