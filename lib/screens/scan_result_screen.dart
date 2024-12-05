@@ -82,7 +82,8 @@ class _ScanResultScreenState extends State<ScanResultScreen>
                           const SizedBox(height: 24),
                           _buildAnimatedSection(
                             child: TreatmentSection(
-                                treatment: widget.scan.data.treatment),
+                              treatment: widget.scan.data.treatment,
+                            ),
                             delay: 0.4,
                           ),
                           const SizedBox(height: 24),
@@ -137,9 +138,7 @@ class _ScanResultScreenState extends State<ScanResultScreen>
           Icons.arrow_back_ios_new_rounded,
           color: Colors.white,
         ),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
+        onPressed: () => Navigator.of(context).pop(),
       ),
       actions: [
         IconButton(

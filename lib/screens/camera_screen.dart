@@ -12,6 +12,51 @@ import '../widgets/camera/instruction_text.dart';
 import '../widgets/camera/top_bar.dart';
 import 'dart:io';
 
+class ConfirmationControls extends StatelessWidget {
+  final File imageFile;
+  final VoidCallback onConfirm;
+  final VoidCallback onRetake;
+
+  const ConfirmationControls({
+    Key? key,
+    required this.imageFile,
+    required this.onConfirm,
+    required this.onRetake,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black.withOpacity(0.7),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 400,
+            child: Image.file(imageFile, fit: BoxFit.contain),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.check_circle,
+                    color: Colors.green, size: 50),
+                onPressed: onConfirm,
+              ),
+              const SizedBox(width: 40),
+              IconButton(
+                icon: const Icon(Icons.cancel, color: Colors.red, size: 50),
+                onPressed: onRetake,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class CameraScreen extends StatefulWidget {
   final String token;
 
@@ -29,7 +74,8 @@ class _CameraScreenState extends State<CameraScreen> {
   List<CameraDescription> cameras = [];
   final ValueNotifier<bool> _isCameraInitialized = ValueNotifier(false);
   int _currentCameraIndex = 0;
-  bool _isLoading = false; // Flag untuk loading animation
+  bool _isLoading = false;
+  File? _capturedImage;
 
   @override
   void initState() {
@@ -52,7 +98,7 @@ class _CameraScreenState extends State<CameraScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error initializing camera: $e')),
+          SnackBar(content: Text('Error: $e')),
         );
       }
     }
@@ -63,19 +109,33 @@ class _CameraScreenState extends State<CameraScreen> {
 
     try {
       final image = await _controller!.takePicture();
-      final File imageFile = File(image.path);
-
-      if (!mounted) return;
-
-      // Dispatch the AnalyzeImageEvent to the ScanBloc
-      context.read<ScanBloc>().add(AnalyzeImageEvent(imageFile, widget.token));
+      setState(() {
+        _capturedImage = File(image.path);
+      });
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error capturing image: $e')),
+          SnackBar(content: Text('Error: $e')),
         );
       }
     }
+  }
+
+  void _onConfirm() {
+    if (_capturedImage != null) {
+      context
+          .read<ScanBloc>()
+          .add(AnalyzeImageEvent(_capturedImage!, widget.token));
+      setState(() {
+        _capturedImage = null;
+      });
+    }
+  }
+
+  void _onRetake() {
+    setState(() {
+      _capturedImage = null;
+    });
   }
 
   Future<void> _disposeCamera() async {
@@ -100,67 +160,73 @@ class _CameraScreenState extends State<CameraScreen> {
             valueListenable: _isCameraInitialized,
             builder: (context, isInitialized, child) {
               if (isInitialized && _controller != null) {
-                return CameraPreviewWidget(
-                  controller: _controller!,
-                  onFlipCamera: () async {
-                    await _disposeCamera();
-                    _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
-                    await _initializeCamera();
-                  },
-                  onCapture: _onCapture,
+                return SizedBox.expand(
+                  child: CameraPreviewWidget(
+                    controller: _controller!,
+                    onFlipCamera: () async {
+                      await _disposeCamera();
+                      _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
+                      await _initializeCamera();
+                    },
+                    onCapture: _onCapture,
+                  ),
                 );
               } else {
                 return const Center(child: CircularProgressIndicator());
               }
             },
           ),
-          Positioned(
-            top: 20,
-            left: 0,
-            right: 0,
-            child: TopBar(onClose: () => Navigator.pop(context)),
-          ),
-          const Positioned(
-            top: 150,
-            left: 0,
-            right: 0,
-            child: CenterFrame(),
-          ),
-          const Positioned(
-            top: 100,
-            left: 0,
-            right: 0,
-            child: InstructionText(),
-          ),
-          Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child: BottomControl(
-              onFlipCamera: () async {
-                await _disposeCamera();
-                _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
-                await _initializeCamera();
-              },
-              onCapture: _onCapture,
-              onImageSelected: (String path) {
-                final File imageFile = File(path);
-                context
-                    .read<ScanBloc>()
-                    .add(AnalyzeImageEvent(imageFile, widget.token));
-              },
+          SafeArea(
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 20,
+                  left: 0,
+                  right: 0,
+                  child: TopBar(onClose: () => Navigator.pop(context)),
+                ),
+                const Positioned(
+                  top: 150,
+                  left: 0,
+                  right: 0,
+                  height: 200,
+                  child: CenterFrame(),
+                ),
+                const Positioned(
+                  top: 100,
+                  left: 0,
+                  right: 0,
+                  height: 40,
+                  child: InstructionText(),
+                ),
+                Positioned(
+                  bottom: 20,
+                  left: 0,
+                  right: 0,
+                  child: BottomControl(
+                    onFlipCamera: () async {
+                      await _disposeCamera();
+                      _currentCameraIndex = _currentCameraIndex == 0 ? 1 : 0;
+                      await _initializeCamera();
+                    },
+                    onCapture: _onCapture,
+                    onImageSelected: (String path) {
+                      final File imageFile = File(path);
+                      context
+                          .read<ScanBloc>()
+                          .add(AnalyzeImageEvent(imageFile, widget.token));
+                    },
+                  ),
+                )
+              ],
             ),
           ),
           BlocListener<ScanBloc, ScanState>(
             listener: (context, state) {
               if (state is ScanLoading) {
-                setState(() {
-                  _isLoading = true;
-                });
+                setState(() => _isLoading = true);
               } else {
-                setState(() {
-                  _isLoading = false;
-                });
+                setState(() => _isLoading = false);
 
                 if (state is ScanSuccess) {
                   Navigator.push(
@@ -171,15 +237,23 @@ class _CameraScreenState extends State<CameraScreen> {
                   );
                 } else if (state is ScanError) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Scan Error: ${state.message}')),
+                    SnackBar(content: Text('Error: ${state.message}')),
                   );
                 }
               }
             },
-            child: Container(),
+            child: const SizedBox.shrink(),
           ),
+          if (_capturedImage != null)
+            Positioned.fill(
+              child: ConfirmationControls(
+                imageFile: _capturedImage!,
+                onConfirm: _onConfirm,
+                onRetake: _onRetake,
+              ),
+            ),
           if (_isLoading)
-            Center(
+            Positioned.fill(
               child: Container(
                 color: Colors.black.withOpacity(0.7),
                 child: Center(

@@ -5,5 +5,5 @@
 
 class Config {
   static const String baseUrl =
-      'https://rnprq-114-6-25-184.a.free.pinggy.link/api'; // Base URL API
+      'https://rnaby-2001-448a-50a0-725b-b9d1-a3ab-3ac1-f21f.a.free.pinggy.link/api'; // Base URL API
 }
