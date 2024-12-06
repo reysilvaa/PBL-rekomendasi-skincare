@@ -47,6 +47,7 @@ class _MyAppState extends State<MyApp> {
           BlocProvider(
             create: (context) => UserBloc(
               userInfoService: context.read<UserInfoService>(),
+              authService: Auth(),
             ),
           ),
         ],

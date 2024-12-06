@@ -21,211 +21,134 @@ class EditProfileHeader extends StatefulWidget {
   State<EditProfileHeader> createState() => _EditProfileHeaderState();
 }
 
-class _EditProfileHeaderState extends State<EditProfileHeader>
-    with SingleTickerProviderStateMixin {
+class _EditProfileHeaderState extends State<EditProfileHeader> {
   bool isUploading = false;
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _opacityAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _scaleAnimation = Tween<double>(begin: 0.7, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.elasticOut,
-      ),
-    );
-
-    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    // Start the animation when the widget is first built
-    _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
-        return FadeIn(
-          duration: const Duration(milliseconds: 600),
-          child: ScaleTransition(
-            scale: _scaleAnimation,
-            child: FadeTransition(
-              opacity: _opacityAnimation,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(40),
-                  bottomRight: Radius.circular(40),
-                ),
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        const Color(0xFF0D47A1).withOpacity(0.9),
-                        const Color(0xFF1565C0),
-                      ],
-                      stops: const [0.3, 1],
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      )
-                    ],
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 40),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Profile Image Container
-                          Container(
-                            height: 120,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.white.withOpacity(0.8),
-                                  Colors.white.withOpacity(0.6),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 15,
-                                  offset: const Offset(0, 5),
-                                ),
-                              ],
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.5),
-                                width: 3,
-                              ),
-                            ),
-                            child: _buildProfileImage(state),
-                          ),
+        if (state is UserLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is UserLoaded) {
+          // Data Profil sudah dimuat, tampilkan UI
+          return _buildProfileHeader(state);
+        } else if (state is UserError) {
+          return Center(child: Text(state.message));
+        }
 
-                          // Upload Progress Overlay
-                          if (isUploading)
-                            Positioned.fill(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.black.withOpacity(0.6),
-                                ),
-                                child: const Center(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                          // Camera Icon
-                          if (!isUploading)
-                            Positioned(
-                              bottom: -5,
-                              right: -5,
-                              child: GestureDetector(
-                                onTap: () => _handleImagePicker(context),
-                                child: Container(
-                                  height: 45,
-                                  width: 45,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color(0xFF0D47A1)
-                                            .withOpacity(0.3),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
-                                      )
-                                    ],
-                                  ),
-                                  child: const Icon(
-                                    Icons.camera_alt_rounded,
-                                    size: 24,
-                                    color: Color(0xFF0D47A1),
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 15),
-                      Text(
-                        isUploading ? 'Uploading...' : 'Edit Profile Picture',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
+        return const SizedBox.shrink(); // Fallback jika state tidak sesuai
       },
     );
   }
 
-  Widget _buildProfileImage(UserState state) {
-    if (state is UserLoaded) {
-      final profileImageUrl = state.user.profileImage != null
-          ? UserInfoService().getFullImageUrl(state.user.profileImage!)
-          : null;
+  Widget _buildProfileHeader(UserLoaded state) {
+    final profileImageUrl = state.user.profileImage != null
+        ? UserInfoService().getFullImageUrl(state.user.profileImage!)
+        : null;
 
-      if (profileImageUrl != null) {
-        return ClipOval(
-          child: CachedNetworkImage(
-            imageUrl: profileImageUrl,
-            fit: BoxFit.cover,
-            width: 100,
-            height: 100,
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            errorWidget: (context, url, error) => const Icon(
-              Icons.person,
-              size: 50,
-              color: Colors.grey,
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFF0D47A1).withOpacity(0.9),
+            const Color(0xFF1565C0),
+          ],
+          stops: const [0.3, 1],
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 40),
+      child: Column(
+        children: [
+          // Gambar Profil
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                height: 120,
+                width: 120,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.white.withOpacity(0.8),
+                      Colors.white.withOpacity(0.6),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 15,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.5),
+                    width: 3,
+                  ),
+                ),
+                child: _buildProfileImage(profileImageUrl),
+              ),
+              // Ikon Kamera jika tidak sedang upload
+              if (!isUploading)
+                Positioned(
+                  bottom: -5,
+                  right: -5,
+                  child: GestureDetector(
+                    onTap: () => _handleImagePicker(context),
+                    child: Container(
+                      height: 45,
+                      width: 45,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt_rounded,
+                        size: 24,
+                        color: Color(0xFF0D47A1),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          // Teks Edit Profile Picture atau sedang upload
+          Text(
+            isUploading ? 'Uploading...' : 'Edit Profile Picture',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        );
-      }
-    }
+        ],
+      ),
+    );
+  }
 
+  Widget _buildProfileImage(String? profileImageUrl) {
+    if (profileImageUrl != null) {
+      return ClipOval(
+        child: CachedNetworkImage(
+          imageUrl: profileImageUrl,
+          fit: BoxFit.cover,
+          width: 100,
+          height: 100,
+          placeholder: (context, url) => const CircularProgressIndicator(),
+          errorWidget: (context, url, error) => const Icon(
+            Icons.person,
+            size: 50,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    }
     return const Icon(
       Icons.person,
       size: 50,
@@ -249,15 +172,15 @@ class _EditProfileHeaderState extends State<EditProfileHeader>
 
       if (!mounted) return;
 
-      // Update the BLoC state with the new image URL
+      // Update the BLoC state dengan URL gambar baru
       context.read<UserBloc>().add(
             UpdateUserFieldEvent('profile_image', newProfileImageUrl),
           );
 
-      // Notify parent widget about the new image URL
+      // Notifikasi ke parent widget tentang gambar baru
       widget.onImagePicked(newProfileImageUrl);
 
-      // Show success message
+      // Menampilkan snackbar sukses
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Profile picture updated successfully'),
@@ -267,6 +190,7 @@ class _EditProfileHeaderState extends State<EditProfileHeader>
     } catch (e) {
       if (!mounted) return;
 
+      // Menampilkan error jika gagal
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to update profile image: ${e.toString()}'),

@@ -173,6 +173,7 @@ class EmailField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller ?? TextEditingController(text: email),
+      initialValue: email,
       decoration: InputDecoration(
         labelText: 'Email',
         prefixIcon: const Icon(Icons.email_outlined),

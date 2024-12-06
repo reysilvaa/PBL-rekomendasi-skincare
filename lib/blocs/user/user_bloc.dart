@@ -1,13 +1,15 @@
 import 'package:deteksi_jerawat/blocs/user/user_event.dart';
 import 'package:deteksi_jerawat/blocs/user/user_state.dart';
 import 'package:deteksi_jerawat/model/user.dart';
+import 'package:deteksi_jerawat/services/auth.dart';
 import 'package:deteksi_jerawat/services/user-info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final UserInfoService _userInfoService;
 
-  UserBloc({required UserInfoService userInfoService})
+  UserBloc(
+      {required UserInfoService userInfoService, required Auth authService})
       : _userInfoService = userInfoService,
         super(UserInitial()) {
     on<FetchUserEvent>(_onFetchUser);
@@ -34,9 +36,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       final updatedUser = await _userInfoService.updateUserProfile(event.user);
       emit(UserLoaded(updatedUser)); // Emit updated user if successful
     } catch (e) {
-      // Check if the error is a HTTP error, like 422 (Unprocessable Entity)
       if (e is Exception || e is Error) {
-        // You can also check the error message if it's an HTTP error
         emit(UserError('Failed to update profile: $e'));
       } else {
         emit(UserError('Unknown error occurred: $e'));
@@ -44,21 +44,22 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
-  // Update specific user field when event is triggered
   Future<void> _onUpdateUserField(
       UpdateUserFieldEvent event, Emitter<UserState> emit) async {
     try {
       final currentUser = (state is UserLoaded)
           ? (state as UserLoaded).user
-          : const User(username: ''); // Fallback if no user is loaded
+          : const User(
+              username: ''); // Fallback jika state sebelumnya bukan UserLoaded
 
-      // Create a new user with the updated field
+      // Update field tertentu pada user
       final updatedUser = await _userInfoService.updateUserProfile(
         _updateUserField(currentUser, event.field, event.value),
       );
-      emit(UserLoaded(updatedUser)); // Emit the new user after update
+      emit(UserLoaded(
+          updatedUser)); // Kirimkan state UserLoaded dengan data user yang sudah diperbarui
     } catch (error) {
-      emit(UserError(error.toString())); // Handle errors if any
+      emit(UserError(error.toString()));
     }
   }
 
@@ -79,6 +80,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         return user.copyWith(birthDate: value);
       case 'profile_image':
         return user.copyWith(profileImage: value);
+      case 'gender':
+        return user.copyWith(gender: value);
       default:
         throw ArgumentError('Unknown field: $field');
     }
