@@ -89,8 +89,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildLoadingScreen() {
-    return const Center(
-      child: CircularProgressIndicator(),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor:
+                AlwaysStoppedAnimation<Color>(Colors.blue), // Change color
+            strokeWidth: 6.0, // Make the spinner thicker
+          ),
+          SizedBox(height: 20),
+          Text(
+            'Please Wait...',
+            style: TextStyle(
+                fontSize: 18, color: Colors.blue, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
     );
   }
 

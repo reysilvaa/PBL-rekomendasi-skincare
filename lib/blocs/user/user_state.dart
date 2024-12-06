@@ -42,4 +42,4 @@ class UserUpdated extends UserState {
 
   @override
   List<Object?> get props => [updatedUser];
-  }
+}

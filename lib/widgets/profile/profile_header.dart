@@ -227,7 +227,7 @@ class _ProfileHeaderState extends State<ProfileHeader>
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                EditProfileScreen(user: user),
+                                                EditProfileScreen(),
                                           ),
                                         );
                                       },

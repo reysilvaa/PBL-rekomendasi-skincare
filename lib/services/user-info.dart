@@ -20,6 +20,8 @@ class UserInfoService {
         throw Exception('No access token found in SharedPreferences');
       }
 
+      print('Fetching user info with token: $token');
+
       final response = await http.get(
         Uri.parse('${Config.baseUrl}/user/profile-info'),
         headers: {
@@ -28,9 +30,13 @@ class UserInfoService {
         },
       );
 
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['user'] != null) {
+          print('User data received: ${data['user']}');
           return User.fromJson(data['user']);
         } else {
           throw Exception('User data not found in the response.');
@@ -48,33 +54,49 @@ class UserInfoService {
   Future<User> updateUserProfile(User user) async {
     try {
       final token = await _auth.getAccessToken();
-
       if (token == null) {
         throw Exception('No access token found in SharedPreferences');
       }
+
+      print('Updating user profile with token: $token');
+      print('User data: ${user.toJson()}'); // Debugging: print the user data
+
+      // Membuat body dalam format x-www-form-urlencoded
+      final body = {
+        'username': user.username ?? 'Null',
+        'first_name': user.firstName ?? 'Null',
+        'last_name': user.lastName ?? 'Null',
+        'birth_date': user.birthDate ?? 'DatetIME kosong',
+        'phone_number': user.phoneNumber ?? 'Null',
+        'email': user.email ?? 'Null',
+        'gender': user.gender ?? 'Null',
+        'age': user.age?.toString() ?? '0',
+        'level': 'user', // Convert level to string
+      };
+
+      print('Request body: $body'); // Debugging: print the request body
 
       final response = await http.put(
         Uri.parse('${Config.baseUrl}/user/update'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
+          'Content-Type':
+              'application/x-www-form-urlencoded', // Ensure the correct content type
         },
-        body: json.encode({
-          'username': user.username,
-          'first_name': user.firstName,
-          'last_name': user.lastName,
-          'birth_date': user.birthDate,
-          'phone_number': user.phoneNumber,
-          'email': user.email,
-          'gender': user.gender,
-          'age': user.age,
-          'level': user.level,
-        }),
+        body: body, // Send the data in URL-encoded format
       );
+
+      print('Response status: ${response.statusCode}');
+      print(
+          'Response body: ${response.body}'); // Print the full response body for debugging
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-        return User.fromJson(data['user']);
+        if (data['user'] != null) {
+          return User.fromJson(data['user']);
+        } else {
+          throw Exception('User data not found in the response.');
+        }
       } else {
         throw Exception(
             'Failed to update user profile: ${response.statusCode}');
@@ -94,9 +116,13 @@ class UserInfoService {
         throw Exception('No access token found in SharedPreferences');
       }
 
+      print('Updating profile image with token: $token');
+
       // Call ImageUploadService to pick and upload image
       final profileImagePath =
           await _imageUploadService.pickImageAndUpload(token);
+
+      print('Profile image uploaded: $profileImagePath');
 
       return profileImagePath;
     } catch (e) {
@@ -107,6 +133,7 @@ class UserInfoService {
 
   // Method to get full image URL from relative path
   String getFullImageUrl(String relativePath) {
+    print('Generating full image URL for: $relativePath');
     return relativePath;
   }
 }
@@ -150,6 +177,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
           if (snapshot.hasData) {
             final user = snapshot.data!;
+            print('User data: ${user.toJson()}'); // Debugging the user data
             return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

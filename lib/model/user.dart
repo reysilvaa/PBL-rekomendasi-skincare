@@ -1,4 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
+
+enum Level {
+  admin,
+  user,
+}
 
 class User extends Equatable {
   final String username;
@@ -6,13 +12,13 @@ class User extends Equatable {
   final String? profileImage;
   final String? gender;
   final int? age;
-  final String? level;
+  final Level? level; // enum Level
   final String? password;
   final String? confirmPassword;
-  final String? phoneNumber; // Added
-  final String? firstName; // Added
-  final String? lastName; // Added
-  final String? birthDate; // Added
+  final String? phoneNumber;
+  final String? firstName;
+  final String? lastName;
+  final String? birthDate;
 
   const User({
     required this.username,
@@ -23,49 +29,67 @@ class User extends Equatable {
     this.level,
     this.password,
     this.confirmPassword,
-    this.phoneNumber, // Added
-    this.firstName, // Added
-    this.lastName, // Added
-    this.birthDate, // Added
+    this.phoneNumber,
+    this.firstName,
+    this.lastName,
+    this.birthDate,
   });
+
+  // Parsing enum Level from String or int value (from database or API)
+  static Level? _parseLevel(dynamic level) {
+    if (level == null) return null;
+
+    if (level is String) {
+      return Level.values.firstWhere(
+        (e) => e.toString().split('.').last == level,
+        orElse: () => Level.user, // Default to 'user' if no match
+      );
+    } else if (level is int) {
+      if (level >= 0 && level < Level.values.length) {
+        return Level.values[level];
+      }
+    }
+
+    return Level.user; // Default if type is unexpected
+  }
+
+  // Converting enum Level to String for storing in the database
+  String? _levelToString() {
+    return level?.toString().split('.').last;
+  }
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      username: json['username'] as String,
-      email: json['email'] as String?,
+      username: json['username'],
+      email: json['email'],
       profileImage: json['profile_image'],
-      gender: json['gender'] as String?,
-      age: json['age'] as int?,
-      level: json['level'] as String?,
-      phoneNumber: json['phone_number'] as String?, // Added
-      firstName: json['first_name'] as String?, // Added
-      lastName: json['last_name'] as String?, // Added
-      birthDate: json['birth_date'] as String?, // Added
+      gender: json['gender'],
+      age: json['age'] is int
+          ? json['age']
+          : int.tryParse(json['age']?.toString() ?? ''),
+      level: _parseLevel(json['level']),
+      phoneNumber: json['phone_number'],
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      birthDate: json['birth_date'],
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        'username': username,
-        'email': email,
-        'profile_image': profileImage,
-        'gender': gender,
-        'age': age,
-        'level': level,
-        'phone_number': phoneNumber, // Added
-        'first_name': firstName, // Added
-        'last_name': lastName, // Added
-        'birth_date': birthDate, // Added
-      };
+  Map<String, dynamic> toJson() {
+    final jsonMap = {
+      'username': username,
+      'email': email,
+      'profile_image': profileImage,
+      'gender': gender,
+      'age': age, // Ensure age is sent as int
+      'level': _levelToString(),
+      'phone_number': phoneNumber,
+      'first_name': firstName,
+      'last_name': lastName,
+      'birth_date': birthDate,
+    };
 
-  bool isValid() {
-    // Check for valid username and password (if they exist), and if passwords match
-    if (password != null && confirmPassword != null) {
-      return username.isNotEmpty &&
-          password!.isNotEmpty &&
-          confirmPassword!.isNotEmpty &&
-          password == confirmPassword;
-    }
-    return username.isNotEmpty;
+    return jsonMap;
   }
 
   @override
@@ -78,10 +102,10 @@ class User extends Equatable {
         level,
         password,
         confirmPassword,
-        phoneNumber, // Added
-        firstName, // Added
-        lastName, // Added
-        birthDate, // Added
+        phoneNumber,
+        firstName,
+        lastName,
+        birthDate,
       ];
 
   User copyWith({
@@ -90,7 +114,7 @@ class User extends Equatable {
     String? profileImage,
     String? gender,
     int? age,
-    String? level,
+    Level? level,
     String? password,
     String? confirmPassword,
     String? phoneNumber,
@@ -111,6 +135,58 @@ class User extends Equatable {
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       birthDate: birthDate ?? this.birthDate,
+    );
+  }
+
+  static int? calculateAge(String birthDate) {
+    try {
+      final DateTime? birthDateTime =
+          DateFormat('yyyy-MM-dd').tryParse(birthDate);
+      final DateTime currentDate = DateTime.now();
+
+      if (birthDateTime == null) return null;
+
+      int age = currentDate.year - birthDateTime.year;
+
+      if (currentDate.month < birthDateTime.month ||
+          (currentDate.month == birthDateTime.month &&
+              currentDate.day < birthDateTime.day)) {
+        age--;
+      }
+
+      return age;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  factory User.withCalculatedAge({
+    required String username,
+    String? email,
+    String? profileImage,
+    String? gender,
+    required String birthDate,
+    Level? level,
+    String? password,
+    String? confirmPassword,
+    String? phoneNumber,
+    String? firstName,
+    String? lastName,
+  }) {
+    final age = calculateAge(birthDate);
+    return User(
+      username: username,
+      email: email,
+      profileImage: profileImage,
+      gender: gender,
+      age: age,
+      level: level,
+      password: password,
+      confirmPassword: confirmPassword,
+      phoneNumber: phoneNumber,
+      firstName: firstName,
+      lastName: lastName,
+      birthDate: birthDate,
     );
   }
 }

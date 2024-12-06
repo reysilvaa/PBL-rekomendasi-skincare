@@ -29,7 +29,8 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
   }
 
   void _onPhoneNumberChanged(String newPhoneNumber) {
-      context.read<UserBloc>().add(UpdateUserFieldEvent('phone_number', newPhoneNumber)); // Use the correct event for first name
+    context.read<UserBloc>().add(UpdateUserFieldEvent('phone_number',
+        newPhoneNumber)); // Use the correct event for first name
   }
 
   @override

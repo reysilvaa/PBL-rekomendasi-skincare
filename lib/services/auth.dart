@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:deteksi_jerawat/services/config.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {
@@ -7,7 +10,7 @@ class Auth {
   // Menyimpan access token dan waktu login
   Future<void> storeAccessToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    final loginTime = DateTime.now().millisecondsSinceEpoch; 
+    final loginTime = DateTime.now().millisecondsSinceEpoch;
 
     await prefs.setString('access_token', token);
     await prefs.setInt('login_time', loginTime);
@@ -44,7 +47,7 @@ class Auth {
     await _clearSession();
     // Navigasi ke halaman login dan hapus semua route sebelumnya
     Navigator.pushNamedAndRemoveUntil(
-      context, 
+      context,
       '/login',
       (route) => false, // Ini akan menghapus semua route dari stack
     );
@@ -61,7 +64,8 @@ class Auth {
     }
 
     final currentTime = DateTime.now().millisecondsSinceEpoch;
-    const sessionDurationMillis = sessionDuration * 1000; // Konversi ke milliseconds
+    const sessionDurationMillis =
+        sessionDuration * 1000; // Konversi ke milliseconds
     final isSessionValid = (currentTime - loginTime) < sessionDurationMillis;
 
     if (!isSessionValid) {
@@ -100,20 +104,35 @@ class Auth {
     }
   }
 
-  // Method untuk refresh token (jika diperlukan)
-  Future<bool> refreshToken() async {
+  // Method untuk refresh token
+  Future<String?> refreshToken() async {
     try {
-      // Implementasi refresh token di sini
-      // Contoh:
-      // final response = await apiService.refreshToken();
-      // if (response.success) {
-      //   await storeAccessToken(response.newToken);
-      //   return true;
-      // }
-      return false;
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('access_token');
+      if (token == null) {
+        throw Exception('No access token found');
+      }
+
+      final response = await http.post(
+        Uri.parse(
+            '${Config.baseUrl}/refresh'), // Pastikan baseUrl sudah didefinisikan
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        final String newToken = data['token']; // Token baru
+        await storeAccessToken(newToken); // Simpan token baru
+        return newToken;
+      } else {
+        throw Exception('Failed to refresh token: ${response.statusCode}');
+      }
     } catch (e) {
       print('Error refreshing token: $e');
-      return false;
+      return null;
     }
   }
 
