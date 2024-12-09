@@ -34,7 +34,10 @@ dependencies:
   flutter_datetime_picker_plus: ^2.1.0
   glassmorphism: ^3.0.0 
   animate_do: ^3.1.2
-  
+  flutter_map: ^4.0.0
+  latlong2: ^0.8.1
+  geolocator: ^13.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

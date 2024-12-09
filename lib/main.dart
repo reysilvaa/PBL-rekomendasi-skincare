@@ -13,7 +13,12 @@ import 'splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  // Memastikan plugin telah diinisialisasi sebelum aplikasi dijalankan
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
