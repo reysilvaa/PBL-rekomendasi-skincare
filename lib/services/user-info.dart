@@ -131,6 +131,47 @@ class UserInfoService {
     }
   }
 
+  // Update address
+  Future<User> updateAddress(String address) async {
+    try {
+      final token = await _auth.getAccessToken();
+      if (token == null) {
+        throw Exception('No access token found in SharedPreferences');
+      }
+
+      print('Updating address with token: $token');
+      print('New address: $address'); // Debugging: print the new address
+
+      final response = await http.post(
+        Uri.parse('${Config.baseUrl}/user/update-address'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json', // Ensure the correct content type
+        },
+        body: json.encode({
+          'address': address,
+        }), // Send the data in JSON format
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data['user'] != null) {
+          return User.fromJson(data['user']);
+        } else {
+          throw Exception('User data not found in the response.');
+        }
+      } else {
+        throw Exception('Failed to update address: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e'); // Log the error for debugging
+      throw Exception('Network error: $e');
+    }
+  }
+
   // Method to get full image URL from relative path
   String getFullImageUrl(String relativePath) {
     print('Generating full image URL for: $relativePath');
@@ -184,6 +225,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 children: [
                   Text('Username: ${user.username}'),
                   Text('Full Name: ${user.firstName} ${user.lastName}'),
+                  Text('Address: ${user.address ?? "Not set"}'),
                   // Add other user details here
                 ],
               ),

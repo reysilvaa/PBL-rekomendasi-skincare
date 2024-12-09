@@ -5,5 +5,5 @@
 
 class Config {
   static const String baseUrl =
-      'https://alphabetical-heated-chosen-represent.trycloudflare.com/api'; // Base URL API
+      'https://some-temporary-arizona-offerings.trycloudflare.com/api'; // Base URL API
 }

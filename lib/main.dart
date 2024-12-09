@@ -1,3 +1,4 @@
+import 'package:deteksi_jerawat/blocs/address/address_bloc.dart';
 import 'package:deteksi_jerawat/blocs/scan/scan_bloc.dart';
 import 'package:deteksi_jerawat/services/scan-post.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,11 @@ class _MyAppState extends State<MyApp> {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
+            create: (context) => AddressBloc(
+              userInfoService: context.read<UserInfoService>(),
+            ),
+          ),
+          BlocProvider(
             create: (context) => ScanBloc(
               scanService: context.read<ScanService>(),
             ),
@@ -64,12 +70,6 @@ class _MyAppState extends State<MyApp> {
             scaffoldBackgroundColor: Colors.white,
           ),
           home: const SplashScreen(),
-          routes: {
-            '/home': (context) => const HomeScreen(),
-            '/login': (context) => const LoginScreen(),
-            '/profile': (context) => const ProfileScreen(),
-            '/history': (context) => const HistoryScreen(),
-          },
         ),
       ),
     );

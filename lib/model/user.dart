@@ -19,6 +19,7 @@ class User extends Equatable {
   final String? firstName;
   final String? lastName;
   final String? birthDate;
+  final String? address;
 
   const User({
     required this.username,
@@ -33,6 +34,7 @@ class User extends Equatable {
     this.firstName,
     this.lastName,
     this.birthDate,
+    this.address,
   });
 
   // Parsing enum Level from String or int value (from database or API)
@@ -72,6 +74,7 @@ class User extends Equatable {
       firstName: json['first_name'],
       lastName: json['last_name'],
       birthDate: json['birth_date'],
+      address: json['address'],
     );
   }
 
@@ -87,6 +90,7 @@ class User extends Equatable {
       'first_name': firstName,
       'last_name': lastName,
       'birth_date': birthDate,
+      'address': address,
     };
 
     return jsonMap;
@@ -106,6 +110,7 @@ class User extends Equatable {
         firstName,
         lastName,
         birthDate,
+        address,
       ];
 
   User copyWith({
@@ -121,6 +126,7 @@ class User extends Equatable {
     String? firstName,
     String? lastName,
     String? birthDate,
+    String? address,
   }) {
     return User(
       username: username ?? this.username,
@@ -135,6 +141,7 @@ class User extends Equatable {
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       birthDate: birthDate ?? this.birthDate,
+      address: address ?? this.address,
     );
   }
 
@@ -172,6 +179,7 @@ class User extends Equatable {
     String? phoneNumber,
     String? firstName,
     String? lastName,
+    String? address,
   }) {
     final age = calculateAge(birthDate);
     return User(
@@ -187,6 +195,7 @@ class User extends Equatable {
       firstName: firstName,
       lastName: lastName,
       birthDate: birthDate,
+      address: address,
     );
   }
 }
