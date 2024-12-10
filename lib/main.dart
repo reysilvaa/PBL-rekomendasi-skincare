@@ -3,10 +3,7 @@ import 'package:deteksi_jerawat/blocs/scan/scan_bloc.dart';
 import 'package:deteksi_jerawat/services/scan-post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:deteksi_jerawat/screens/home_screen.dart';
-import 'package:deteksi_jerawat/screens/login_screen.dart';
-import 'package:deteksi_jerawat/screens/history_screen.dart';
-import 'package:deteksi_jerawat/screens/profile_screen.dart';
+
 import 'package:deteksi_jerawat/blocs/user/user_bloc.dart';
 import '/services/user-info.dart';
 import '/services/auth.dart';

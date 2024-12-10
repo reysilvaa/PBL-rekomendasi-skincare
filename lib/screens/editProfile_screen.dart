@@ -27,7 +27,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     'birthDate': TextEditingController(),
     'gender': TextEditingController(),
   };
-  String? _selectedGender;
   bool _isLoading = false;
 
   @override
@@ -60,10 +59,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _controllers['phoneNumber']?.text = user.phoneNumber ?? '';
       _controllers['email']?.text = user.email ?? '';
       _controllers['birthDate']?.text = user.birthDate ?? '';
-      _selectedGender =
-          user.gender; // Automatically set gender based on user data
       _controllers['gender']?.text =
-          _selectedGender ?? ''; // Update the gender controller
+          user.gender ?? ''; // Update the gender controller
     });
   }
 
@@ -81,7 +78,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         phoneNumber: _controllers['phoneNumber']?.text,
         email: _controllers['email']?.text,
         birthDate: _controllers['birthDate']?.text,
-        gender: _selectedGender,
+        gender: _controllers['gender']?.text,
         age: _calculateAge(_controllers['birthDate']?.text ?? ''),
       );
 
@@ -161,7 +158,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           state.user.phoneNumber ?? '';
                       _controllers['birthDate']?.text =
                           state.user.birthDate ?? '';
-                      _controllers['gender']?.text = _selectedGender ?? '';
+                      _controllers['gender']?.text = state.user.gender ?? '';
                       return SliverToBoxAdapter(
                         child: Form(
                           key: _formKey,
@@ -185,11 +182,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   controller: _controllers['birthDate']!),
                               const SizedBox(height: 16),
                               GenderField(
-                                initialValue:
-                                    _selectedGender, // Bind gender to selected gender
+                                initialValue: _controllers['gender']?.text ??
+                                    '', // Set initial value of gender
                                 onChanged: (value) {
                                   setState(() {
-                                    _selectedGender = value;
+                                    // Update the controller's text value when gender changes
                                     _controllers['gender']?.text =
                                         value ?? 'GenderLaki';
                                   });
@@ -199,9 +196,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ElevatedButton(
                                 onPressed:
                                     _isLoading ? null : _handleProfileUpdate,
-                                child: _isLoading
-                                    ? const CircularProgressIndicator()
-                                    : const Text('Update Profile'),
+                                child: const Text('Update Profile'),
                               ),
                             ],
                           ),
