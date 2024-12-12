@@ -10,6 +10,7 @@ import '../blocs/user/user_bloc.dart';
 import '../blocs/user/user_event.dart';
 import '../blocs/user/user_state.dart';
 import 'login_screen.dart';
+import 'historyCheckout.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -129,6 +130,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 MenuItem(title: 'Setting', onTap: () {}),
                 MenuItem(title: 'Support', onTap: () {}),
                 MenuItem(title: 'About us', onTap: () {}),
+                MenuItem(
+                title: 'History Checkout',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HistoryCheckoutScreen()),
+                ),
+              ),
                 MenuItem(
                   title: 'Logout',
                   isLogout: true,
