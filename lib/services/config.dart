@@ -5,5 +5,5 @@
 
 class Config {
   static const String baseUrl =
-      'https://lobby-allied-girlfriend-studies.trycloudflare.com/api'; // Base URL API
+      'https://galaxy-capitol-tel-ve.trycloudflare.com/api'; // Base URL API
 }
