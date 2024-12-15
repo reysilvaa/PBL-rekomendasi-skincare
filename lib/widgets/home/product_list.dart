@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../services/products-info.dart';
 import '../../model/product.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({super.key});
@@ -164,7 +165,7 @@ Widget _buildProductCard(Product product, int index) {
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Rp.${product.price.toStringAsFixed(2)}',
+                              'Rp.${NumberFormat("#,##0.00", "id_ID").format(product.price)}',  // Format rupiah
                               style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
