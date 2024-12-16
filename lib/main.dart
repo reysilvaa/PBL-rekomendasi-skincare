@@ -1,5 +1,6 @@
 import 'package:deteksi_jerawat/blocs/address/address_bloc.dart';
 import 'package:deteksi_jerawat/blocs/scan/scan_bloc.dart';
+import 'package:deteksi_jerawat/screens/login_screen.dart';
 import 'package:deteksi_jerawat/services/scan-post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,6 +68,9 @@ class _MyAppState extends State<MyApp> {
             scaffoldBackgroundColor: Colors.white,
           ),
           home: const SplashScreen(),
+          routes: {
+            '/login': (context) => LoginScreen(),
+          },
         ),
       ),
     );

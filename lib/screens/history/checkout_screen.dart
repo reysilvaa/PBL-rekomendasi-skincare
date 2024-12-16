@@ -6,6 +6,7 @@ import '../../widgets/checkout/order_section.dart';
 import '../../widgets/checkout/product_detail_section.dart';
 import '../../widgets/checkout/total_payment_section.dart';
 
+// CheckoutScreen.dart
 class CheckoutScreen extends StatefulWidget {
   final Product product;
 
@@ -19,6 +20,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   String? initialAddress;
   final UserInfoService _userInfoService = UserInfoService();
   bool _isLoading = true;
+
+  // Fixed fees
+  final int shippingFee = 10000;
+  final int serviceFee = 1000;
+  final int handlingFee = 1000;
+
+  // Product quantity
+  int quantity = 1;
 
   @override
   void initState() {
@@ -39,6 +48,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  void _handleQuantityChanged(int newQuantity) {
+    setState(() {
+      quantity = newQuantity;
+    });
   }
 
   @override
@@ -65,14 +80,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   AddressSection(
                     initialAddress: initialAddress,
                     onAddressChanged: () {
-                      // Perform any action after address is changed
                       print('Address updated');
-                      // Could be navigation, showing a dialog, etc.
                     },
                   ),
                   ProductDetailSection(product: widget.product),
-                  const OrderSummarySection(),
-                  TotalPaymentSection(totalPrice: widget.product.price),
+                  OrderSummarySection(
+                    productPrice: widget.product.price,
+                    quantity: quantity,
+                    onQuantityChanged: _handleQuantityChanged,
+                    shippingFee: shippingFee,
+                    serviceFee: serviceFee,
+                    handlingFee: handlingFee,
+                  ),
+                  TotalPaymentSection(
+                    productPrice: widget.product.price,
+                    shippingFee: shippingFee,
+                    serviceFee: serviceFee,
+                    handlingFee: handlingFee,
+                    quantity: quantity,
+                    onQuantityChanged: _handleQuantityChanged,
+                  ),
                 ],
               ),
             ),

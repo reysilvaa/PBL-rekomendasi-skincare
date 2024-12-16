@@ -1,12 +1,31 @@
+// TotalPaymentSection.dart
 import 'package:flutter/material.dart';
 
 class TotalPaymentSection extends StatelessWidget {
-  final double totalPrice; // Total harga dari API
+  final double productPrice;
+  final int shippingFee;
+  final int serviceFee;
+  final int handlingFee;
+  final int quantity;
+  final Function(int) onQuantityChanged;
 
-  const TotalPaymentSection({super.key, required this.totalPrice});
+  const TotalPaymentSection({
+    super.key,
+    required this.productPrice,
+    required this.shippingFee,
+    required this.serviceFee,
+    required this.handlingFee,
+    required this.quantity,
+    required this.onQuantityChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Calculate subtotal and total payment
+    double productSubtotal = productPrice * quantity;
+    double totalPayment =
+        productSubtotal + shippingFee + serviceFee + handlingFee;
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -18,7 +37,6 @@ class TotalPaymentSection extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Informasi total pembayaran
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -27,7 +45,7 @@ class TotalPaymentSection extends StatelessWidget {
                 style: TextStyle(color: Colors.grey, fontSize: 14),
               ),
               Text(
-                'Rp${totalPrice.toStringAsFixed(0)}', // Menampilkan total harga
+                'Rp${totalPayment.toStringAsFixed(0)}',
                 style: const TextStyle(
                   color: Colors.blue,
                   fontSize: 16,
@@ -36,21 +54,19 @@ class TotalPaymentSection extends StatelessWidget {
               ),
             ],
           ),
-
-          // Tombol untuk membuat pesanan
           ElevatedButton(
             onPressed: () {
-              // Implementasikan logika pemesanan
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: const Text('Pesanan Berhasil'),
-                    content: const Text('Pesanan Anda telah dibuat.'),
+                    content: Text(
+                        'Pesanan Anda telah dibuat. Total: Rp${totalPayment.toStringAsFixed(0)}'),
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context); // Menutup dialog
+                          Navigator.pop(context);
                         },
                         child: const Text('Tutup'),
                       ),
