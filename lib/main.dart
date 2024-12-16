@@ -71,6 +71,7 @@ class _MyAppState extends State<MyApp> {
           routes: {
             '/login': (context) => LoginScreen(),
           },
+          debugShowCheckedModeBanner: false, // Disable the debug banner
         ),
       ),
     );

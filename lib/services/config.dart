@@ -4,5 +4,5 @@
 
 class Config {
   static const String baseUrl =
-      'https://filing-mechanics-grounds-specifically.trycloudflare.com/api'; // Base URL API
+      'https://trademark-hip-shame-mouse.trycloudflare.com/api'; // Base URL API
 }
