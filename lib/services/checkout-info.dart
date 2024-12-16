@@ -46,7 +46,7 @@ class CheckoutService {
 
   // Method to create a new checkout
   Future<bool> createCheckout(
-      String historyId, String productId, int quantity) async {
+      int historyId, int productId, int quantity) async {
     try {
       final token = await _auth.getAccessToken();
       if (token == null) {

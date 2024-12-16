@@ -50,6 +50,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
             // Rekomendasi produk
             ProductRecommendationSection(
               recommendation: recommendation,
+              historyId: widget
+                  .history.historyId, // Pass historyId from the History object
               onProductChanged: (index) {
                 setState(() {
                   _selectedProductIndex = index;

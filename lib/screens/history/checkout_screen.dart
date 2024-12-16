@@ -9,8 +9,10 @@ import '../../widgets/checkout/total_payment_section.dart';
 // CheckoutScreen.dart
 class CheckoutScreen extends StatefulWidget {
   final Product product;
+  final int historyId; // Changed to int to match the model
 
-  const CheckoutScreen({super.key, required this.product});
+  const CheckoutScreen(
+      {super.key, required this.product, required this.historyId});
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
@@ -98,6 +100,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     serviceFee: serviceFee,
                     handlingFee: handlingFee,
                     quantity: quantity,
+                    historyId: widget.historyId, // Pass the historyId
+                    productId: widget.product.productId, // Pass the productId
                     onQuantityChanged: _handleQuantityChanged,
                   ),
                 ],

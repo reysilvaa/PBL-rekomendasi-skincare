@@ -6,11 +6,13 @@ import '../../model/recommendation.dart';
 
 class ProductRecommendationSection extends StatefulWidget {
   final Recommendation recommendation;
+  final int historyId; // Add historyId as a parameter
   final ValueChanged<int>? onProductChanged;
 
   const ProductRecommendationSection({
     super.key,
     required this.recommendation,
+    required this.historyId, // Make this required
     this.onProductChanged,
   });
 
@@ -223,7 +225,11 @@ class ProductRecommendationSectionState
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CheckoutScreen(product: product),
+                  builder: (context) => CheckoutScreen(
+                    product: product,
+                    historyId: widget
+                        .historyId, // Use the historyId passed to the widget
+                  ),
                 ),
               );
             },
