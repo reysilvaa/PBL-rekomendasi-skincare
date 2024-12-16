@@ -91,27 +91,51 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     }
   }
 
-Future<void> _onFetchCurrentLocation(
-    FetchCurrentLocationEvent event, Emitter<AddressState> emit) async {
-  await _getCurrentLocation(emit);
+  Future<void> _onFetchCurrentLocation(
+      FetchCurrentLocationEvent event, Emitter<AddressState> emit) async {
+    await _getCurrentLocation(emit);
 
-  // Save the address after fetching the current location
-  try {
-    final address = state.address;
-    if (address != null) {
-      await _userInfoService.updateAddress(address); // Save the address to the database
-      emit(state.copyWith(status: AddressStatus.success)); // Update the state
+    // Save the address after fetching the current location
+    try {
+      final address = state.address;
+      if (address != null) {
+        await _userInfoService.updateAddress(address);
+        emit(state.copyWith(status: AddressStatus.success));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+          status: AddressStatus.error,
+          errorMessage: 'Failed to save address: $e'));
     }
-  } catch (e) {
-    emit(state.copyWith(
-        status: AddressStatus.error, errorMessage: 'Failed to save address: $e'));
   }
-}
 
   Future<void> _getCurrentLocation(Emitter<AddressState> emit) async {
     emit(state.copyWith(status: AddressStatus.loading));
 
     try {
+      // Add these explicit permission checks
+      await Geolocator.checkPermission();
+      await Geolocator.requestPermission();
+
+      // Check location permissions
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          emit(state.copyWith(
+              status: AddressStatus.error,
+              errorMessage: 'Location permissions are denied'));
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        emit(state.copyWith(
+            status: AddressStatus.error,
+            errorMessage: 'Location permissions are permanently denied'));
+        return;
+      }
+
       // Use Geolocator to get current location
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
