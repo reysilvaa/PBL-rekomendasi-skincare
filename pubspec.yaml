@@ -36,7 +36,24 @@ dependencies:
   animate_do: ^3.1.2
   flutter_map: ^4.0.0
   latlong2: ^0.8.1
-  geolocator: any  # Use the latest version
+  geolocator: any
+  flutter_launcher_icons: ^0.14.2
+  flutter_native_splash: ^2.3.3
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
+  adaptive_icon_background: "#FFFFFF"  # Untuk Android (opsional)
+  # adaptive_icon_foreground: "assets/icon/foreground.png"  # Untuk Android (opsional)
+
+flutter_native_splash:
+  color: "#FFFFFF"  # Warna background
+  image: assets/icon.png  # Path gambar splash
+  android: true
+  ios: true
+  android_gravity: center  # Posisi gambar di Android
+  ios_content_mode: center  # Posisi gambar di iOS
 
 dev_dependencies:
   flutter_test:

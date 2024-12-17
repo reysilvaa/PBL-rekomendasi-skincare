@@ -12,7 +12,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
         <application
         android:enableOnBackInvokedCallback="true"
-        android:label="deteksi_jerawat"
+        android:label="SCIN"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
