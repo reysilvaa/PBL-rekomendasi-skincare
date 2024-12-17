@@ -40,7 +40,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _initializeUserData() async {
     final token = await Auth().getAccessToken();
     if (token != null) {
-      // Fetch the user data independently
       context.read<UserBloc>().add(FetchUserEvent(token));
     }
   }
@@ -59,8 +58,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _controllers['phoneNumber']?.text = user.phoneNumber ?? '';
       _controllers['email']?.text = user.email ?? '';
       _controllers['birthDate']?.text = user.birthDate ?? '';
-      _controllers['gender']?.text =
-          user.gender ?? ''; // Update the gender controller
+      _controllers['gender']?.text = user.gender ?? '';
     });
   }
 
@@ -109,25 +107,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.message)));
           } else if (state is UserLoaded) {
-            // Set gender berdasarkan data user
             setState(() {
-              _updateFields(state.user); // Update form fields with fetched data
+              _updateFields(state.user);
             });
           } else if (state is UserUpdated) {
             setState(() {
-              _isLoading =
-                  false; // Stop the loading spinner when user profile is updated
+              _isLoading = false;
             });
             ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Profile updated successfully')));
           }
         },
         builder: (context, state) {
-          // if (state is UserLoading) {
-          //   return const Center(
-          //       child: CircularProgressIndicator()); // Show spinner if loading
-          // }
-
           return CustomScrollView(
             slivers: [
               SliverAppBar(
@@ -146,7 +137,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 sliver: BlocBuilder<UserBloc, UserState>(
                   builder: (context, state) {
                     if (state is UserLoaded) {
-                      // Update the controllers with the user data
                       _controllers['username']?.text =
                           state.user.username ?? '';
                       _controllers['email']?.text = state.user.email ?? '';
@@ -182,22 +172,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   controller: _controllers['birthDate']!),
                               const SizedBox(height: 16),
                               GenderField(
-                                initialValue: _controllers['gender']?.text ??
-                                    '', // Set initial value of gender
+                                initialValue:
+                                    _controllers['gender']?.text ?? '',
                                 onChanged: (value) {
                                   setState(() {
-                                    // Update the controller's text value when gender changes
                                     _controllers['gender']?.text =
                                         value ?? 'GenderLaki';
                                   });
                                 },
                               ),
-                              const SizedBox(height: 24),
-                              ElevatedButton(
-                                onPressed:
-                                    _isLoading ? null : _handleProfileUpdate,
-                                child: const Text('Update Profile'),
-                              ),
+                              // const SizedBox(
+                              //     height: 100), // Tambahkan padding bawah
                             ],
                           ),
                         ),
@@ -212,6 +197,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ],
           );
         },
+      ),
+
+      // Tambahkan tombol di bawah layar
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton(
+          onPressed: _handleProfileUpdate,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF0D47A1).withOpacity(0.9),
+            foregroundColor: Colors.white,
+            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            elevation: 5,
+            animationDuration: Duration(milliseconds: 300),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.update),
+              SizedBox(width: 10),
+              Text(
+                'Update Profile',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
