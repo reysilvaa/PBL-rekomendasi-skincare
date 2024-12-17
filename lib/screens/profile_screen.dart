@@ -111,43 +111,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildLoadedScreen(User user) {
-    return Container(
-      color: Colors.grey[50],
-      child: Column(
-        children: [
-          ProfileHeader(user: user),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: ProgressButton(onPressed: () => _checkProgress(context)),
-          ),
-          const SizedBox(height: 50),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              children: [
-                MenuItem(title: 'Saved', onTap: () {}),
-                MenuItem(title: 'Setting', onTap: () {}),
-                MenuItem(title: 'Support', onTap: () {}),
-                MenuItem(title: 'About us', onTap: () {}),
-                MenuItem(
-                title: 'History Checkout',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HistoryCheckoutScreen()),
+  return Container(
+    color: Colors.grey[50],
+    child: Column(
+      children: [
+        ProfileHeader(user: user),
+        const SizedBox(height: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: SizedBox(
+            width: double.infinity, // Lebar penuh
+            child: ElevatedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HistoryCheckoutScreen(),
                 ),
               ),
-                MenuItem(
-                  title: 'Logout',
-                  isLogout: true,
-                  onTap: () =>
-                      _handleLogout(context), // Logout melalui _handleLogout
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.yellow, // Warna tombol kuning
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ],
+              ),
+              child: const Text(
+                'History Checkout',
+                style: TextStyle(
+                  color: Colors.white, // Warna teks hitam agar kontras dengan kuning
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+        const SizedBox(height: 50),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            children: [
+              MenuItem(title: 'Saved', onTap: () {}),
+              MenuItem(title: 'Setting', onTap: () {}),
+              MenuItem(title: 'Support', onTap: () {}),
+              MenuItem(title: 'About us', onTap: () {}),
+              MenuItem(
+                title: 'Logout',
+                isLogout: true,
+                onTap: () => _handleLogout(context),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
 }
