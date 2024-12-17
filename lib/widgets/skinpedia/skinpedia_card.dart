@@ -17,6 +17,10 @@ class SkinpediaCard extends StatelessWidget {
       onTap: onTap,
       child: LayoutBuilder(
         builder: (context, constraints) {
+          // Define responsive font sizes
+          double titleFontSize = constraints.maxWidth * 0.05;
+          double descriptionFontSize = constraints.maxWidth * 0.035;
+
           return Card(
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
@@ -49,8 +53,8 @@ class SkinpediaCard extends StatelessWidget {
                       // Title
                       Text(
                         skinpedia.title,
-                        style: const TextStyle(
-                          fontSize: 16, // Adjusted for smaller screens
+                        style: TextStyle(
+                          fontSize: titleFontSize, // Responsive font size
                           fontWeight: FontWeight.bold,
                         ),
                         maxLines: 2,
@@ -61,7 +65,7 @@ class SkinpediaCard extends StatelessWidget {
                       Text(
                         skinpedia.description,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: descriptionFontSize,
                           color: Colors.grey[700],
                         ),
                         maxLines: 3,
