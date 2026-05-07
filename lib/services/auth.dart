@@ -45,6 +45,7 @@ class Auth {
   // Method logout untuk UI dengan navigasi
   Future<void> logout(BuildContext context) async {
     await _clearSession();
+    if (!context.mounted) return;
     // Navigasi ke halaman login dan hapus semua route sebelumnya
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -79,6 +80,7 @@ class Auth {
   // Method untuk auto logout jika sesi habis
   Future<void> checkAndHandleSessionExpiration(BuildContext context) async {
     if (!await isLoggedIn()) {
+      if (!context.mounted) return;
       // Tampilkan dialog sesi berakhir
       showDialog(
         context: context,
@@ -131,7 +133,7 @@ class Auth {
         throw Exception('Failed to refresh token: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error refreshing token: $e');
+      debugPrint('Error refreshing token: $e');
       return null;
     }
   }

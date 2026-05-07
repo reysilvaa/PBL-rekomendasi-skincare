@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:deteksi_jerawat/services/config.dart';
-import 'package:deteksi_jerawat/services/edit-profile-image-post.dart';
+import 'config.dart';
+import 'edit_profile_image_post.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../model/user.dart';
@@ -20,8 +20,6 @@ class UserInfoService {
         throw Exception('No access token found in SharedPreferences');
       }
 
-      print('Fetching user info with token: $token');
-
       final response = await http.get(
         Uri.parse('${Config.baseUrl}/user/profile-info'),
         headers: {
@@ -30,13 +28,9 @@ class UserInfoService {
         },
       );
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['user'] != null) {
-          print('User data received: ${data['user']}');
           return User.fromJson(data['user']);
         } else {
           throw Exception('User data not found in the response.');
@@ -45,7 +39,7 @@ class UserInfoService {
         throw Exception('Failed to fetch user info: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e'); // Log the error for debugging
+      // Log the error for debugging
       throw Exception('Network error: $e');
     }
   }
@@ -58,23 +52,22 @@ class UserInfoService {
         throw Exception('No access token found in SharedPreferences');
       }
 
-      print('Updating user profile with token: $token');
-      print('User data: ${user.toJson()}'); // Debugging: print the user data
+      // Debugging: print the user data
 
       // Membuat body dalam format x-www-form-urlencoded
       final body = {
-        'username': user.username ?? 'Null',
-        'first_name': user.firstName ?? 'Null',
-        'last_name': user.lastName ?? 'Null',
-        'birth_date': user.birthDate ?? 'DatetIME kosong',
-        'phone_number': user.phoneNumber ?? 'Null',
-        'email': user.email ?? 'Null',
+        'username': user.username,
+        'first_name': user.firstName,
+        'last_name': user.lastName,
+        'birth_date': user.birthDate,
+        'phone_number': user.phoneNumber,
+        'email': user.email,
         'gender': user.gender ?? 'Null',
         'age': user.age?.toString() ?? '0',
         'level': 'user', // Convert level to string
       };
 
-      print('Request body: $body'); // Debugging: print the request body
+      // Debugging: print the request body
 
       final response = await http.put(
         Uri.parse('${Config.baseUrl}/user/update'),
@@ -86,9 +79,7 @@ class UserInfoService {
         body: body, // Send the data in URL-encoded format
       );
 
-      print('Response status: ${response.statusCode}');
-      print(
-          'Response body: ${response.body}'); // Print the full response body for debugging
+      // Print the full response body for debugging
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -102,7 +93,7 @@ class UserInfoService {
             'Failed to update user profile: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e'); // Log the error for debugging
+      // Log the error for debugging
       throw Exception('Network error: $e');
     }
   }
@@ -116,17 +107,13 @@ class UserInfoService {
         throw Exception('No access token found in SharedPreferences');
       }
 
-      print('Updating profile image with token: $token');
-
       // Call ImageUploadService to pick and upload image
       final profileImagePath =
           await _imageUploadService.pickImageAndUpload(token);
 
-      print('Profile image uploaded: $profileImagePath');
-
       return profileImagePath;
     } catch (e) {
-      print('Error: $e'); // Log the error for debugging
+      // Log the error for debugging
       throw Exception('Failed to update profile image: $e');
     }
   }
@@ -139,8 +126,7 @@ class UserInfoService {
         throw Exception('No access token found in SharedPreferences');
       }
 
-      print('Updating address with token: $token');
-      print('New address: $address'); // Debugging: print the new address
+      // Debugging: print the new address
 
       final response = await http.post(
         Uri.parse('${Config.baseUrl}/user/update-address'),
@@ -153,9 +139,6 @@ class UserInfoService {
         }), // Send the data in JSON format
       );
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['user'] != null) {
@@ -167,26 +150,26 @@ class UserInfoService {
         throw Exception('Failed to update address: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e'); // Log the error for debugging
+      // Log the error for debugging
       throw Exception('Network error: $e');
     }
   }
 
   // Method to get full image URL from relative path
   String getFullImageUrl(String relativePath) {
-    print('Generating full image URL for: $relativePath');
     return relativePath;
   }
 }
 
 class UserInfoScreen extends StatefulWidget {
+  const UserInfoScreen({super.key});
+
   @override
-  _UserInfoScreenState createState() => _UserInfoScreenState();
+  State<UserInfoScreen> createState() => _UserInfoScreenState();
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   late Future<User> _userInfo;
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -218,7 +201,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
           if (snapshot.hasData) {
             final user = snapshot.data!;
-            print('User data: ${user.toJson()}'); // Debugging the user data
+            // Debugging the user data
             return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

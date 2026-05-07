@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:deteksi_jerawat/model/scan.dart';
@@ -7,7 +8,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:deteksi_jerawat/services/config.dart';
 import 'package:image/image.dart' as img; // Import package image
-import 'dart:typed_data';
 
 class ScanService {
   final ImagePicker _picker = ImagePicker();
@@ -35,7 +35,7 @@ class ScanService {
 
       return compressedFile;
     } catch (e) {
-      print('Error during compression: $e');
+      debugPrint('Error during compression: $e');
       throw Exception('Compression failed: $e');
     }
   }
@@ -60,7 +60,7 @@ class ScanService {
       request.headers['Authorization'] = 'Bearer $token';
 
       // Menambahkan file gambar terkompresi ke dalam request
-      print('Image file added to request: ${compressedImage.path}');
+      debugPrint('Image file added to request: ${compressedImage.path}');
       request.files.add(await http.MultipartFile.fromPath(
         'image',
         compressedImage.path,
@@ -68,25 +68,25 @@ class ScanService {
       ));
 
       // Mengirim request dan menunggu respons dari server
-      print('Request sent, waiting for response...');
+      debugPrint('Request sent, waiting for response...');
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
       // Menangani respons dari server
-      print('Response received with status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      debugPrint('Response received with status code: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
       if (response.statusCode == 200) {
         // Mengonversi data respons JSON ke model Scan
         final responseData = json.decode(response.body) as Map<String, dynamic>;
         final scanResult = Scan.fromJson(responseData);
-        print('Image analysis successful, scan result: $scanResult');
+        debugPrint('Image analysis successful, scan result: $scanResult');
         return scanResult;
       } else {
         throw Exception(
             'Failed to analyze image. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error during image analysis: $e');
+      debugPrint('Error during image analysis: $e');
       throw Exception('Image analysis failed: $e');
     }
   }

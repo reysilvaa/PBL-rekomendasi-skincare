@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 // lib/services/checkout_info.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -39,7 +40,7 @@ class CheckoutService {
         throw Exception('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      print('Fetch checkouts error: $e');
+      debugPrint('Fetch checkouts error: $e');
       return [];
     }
   }
@@ -79,7 +80,7 @@ class CheckoutService {
         throw Exception('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      print('Create checkout error: $e');
+      debugPrint('Create checkout error: $e');
       return false; // Indicate failure
     }
   }

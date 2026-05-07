@@ -35,7 +35,7 @@ class _RegisterFormState extends State<RegisterForm> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue[900]!.withOpacity(0.3),
+            color: Colors.blue[900]!.withValues(alpha: 0.3),
             spreadRadius: 1,
             blurRadius: 15,
             offset: const Offset(0, 5),

@@ -25,7 +25,7 @@ class SkinConditionSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.blueGrey.withOpacity(0.2),
+            color: Colors.blueGrey.withValues(alpha: 0.2),
             spreadRadius: 2,
             blurRadius: 15,
             offset: const Offset(0, 5),
@@ -57,8 +57,8 @@ class SkinConditionSection extends StatelessWidget {
             const SizedBox(height: 10),
             _buildInfoCard(
               recommendation
-                      .skinCondition.treatments.deskripsi_treatment.isNotEmpty
-                  ? recommendation.skinCondition.treatments.deskripsi_treatment
+                      .skinCondition.treatments.deskripsiTreatment.isNotEmpty
+                  ? recommendation.skinCondition.treatments.deskripsiTreatment
                   : 'Treatment Tidak Tersedia',
               Icons.healing_outlined,
               Colors.green.shade200,
@@ -99,7 +99,7 @@ class SkinConditionSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.blueGrey.withOpacity(0.1),
+            color: Colors.blueGrey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 8,
             offset: const Offset(0, 3),
@@ -112,7 +112,7 @@ class SkinConditionSection extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.2),
+              color: iconColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(

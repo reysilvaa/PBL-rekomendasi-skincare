@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:deteksi_jerawat/services/config.dart';
 import 'package:http/http.dart' as http;
@@ -19,8 +20,8 @@ class RegisterService {
       );
 
       // Log the response body for debugging purposes
-      print("Response Status: ${response.statusCode}");
-      print("Response Body: ${response.body}");
+      debugPrint("Response Status: ${response.statusCode}");
+      debugPrint("Response Body: ${response.body}");
 
       // Check if the response status is 201 (Created)
       if (response.statusCode == 201) {

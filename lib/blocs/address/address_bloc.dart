@@ -1,10 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:deteksi_jerawat/blocs/address/address_event.dart';
 import 'package:deteksi_jerawat/blocs/address/address_state.dart';
-import 'package:deteksi_jerawat/services/config.dart';
-import 'package:deteksi_jerawat/services/user-info.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import 'package:deteksi_jerawat/services/user_info.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
@@ -98,11 +95,9 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     // Save the address after fetching the current location
     try {
       final address = state.address;
-      if (address != null) {
-        await _userInfoService.updateAddress(address);
-        emit(state.copyWith(status: AddressStatus.success));
-      }
-    } catch (e) {
+      await _userInfoService.updateAddress(address);
+      emit(state.copyWith(status: AddressStatus.success));
+        } catch (e) {
       emit(state.copyWith(
           status: AddressStatus.error,
           errorMessage: 'Failed to save address: $e'));
@@ -138,8 +133,10 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
 
       // Use Geolocator to get current location
       final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        timeLimit: const Duration(seconds: 10),
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 10),
+        ),
       );
 
       final currentLocation = LatLng(position.latitude, position.longitude);

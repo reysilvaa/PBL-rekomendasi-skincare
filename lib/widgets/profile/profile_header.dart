@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import '../../screens/editProfile_screen.dart';
+import '../../screens/edit_profile_screen.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_state.dart';
 import '../../model/user.dart';
-import '../../services/user-info.dart';
+import '../../services/user_info.dart';
 
 class ProfileHeader extends StatefulWidget {
   final User user;
@@ -89,7 +89,7 @@ class _ProfileHeaderState extends State<ProfileHeader>
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   spreadRadius: 0,
                   blurRadius: 20,
                   offset: const Offset(0, 4),
@@ -190,7 +190,7 @@ class _ProfileHeaderState extends State<ProfileHeader>
                                         boxShadow: [
                                           BoxShadow(
                                             color:
-                                                Colors.black.withOpacity(0.2),
+                                                Colors.black.withValues(alpha: 0.2),
                                             spreadRadius: 0,
                                             blurRadius: 10,
                                             offset: const Offset(0, 4),
@@ -244,7 +244,7 @@ class _ProfileHeaderState extends State<ProfileHeader>
                                           boxShadow: [
                                             BoxShadow(
                                               color:
-                                                  Colors.black.withOpacity(0.1),
+                                                  Colors.black.withValues(alpha: 0.1),
                                               spreadRadius: 0,
                                               blurRadius: 8,
                                               offset: const Offset(0, 2),

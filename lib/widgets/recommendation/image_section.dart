@@ -96,7 +96,7 @@ class _ImageSectionState extends State<ImageSection>
                     right: 12,
                     top: 12,
                     child: Material(
-                      color: primaryColor.withOpacity(0.9),
+                      color: primaryColor.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(20),
                       child: IconButton(
                         onPressed: () => Navigator.pop(context),

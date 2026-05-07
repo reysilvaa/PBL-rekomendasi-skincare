@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:animate_do/animate_do.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_event.dart';
 import '../../blocs/user/user_state.dart';
 import '../../services/auth.dart';
-import '../../services/edit-profile-image-post.dart';
-import '../../services/user-info.dart';
+import '../../services/edit_profile_image_post.dart';
+import '../../services/user_info.dart';
 
 class EditProfileHeader extends StatefulWidget {
   final Function(String) onImagePicked;
@@ -52,7 +51,7 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF0D47A1).withOpacity(0.9),
+            const Color(0xFF0D47A1).withValues(alpha: 0.9),
             const Color(0xFF1565C0),
           ],
           stops: const [0.3, 1],
@@ -72,22 +71,22 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
                     colors: [
-                      Colors.white.withOpacity(0.8),
-                      Colors.white.withOpacity(0.6),
+                      Colors.white.withValues(alpha: 0.8),
+                      Colors.white.withValues(alpha: 0.6),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       spreadRadius: 2,
                       blurRadius: 15,
                       offset: const Offset(0, 5),
                     ),
                   ],
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     width: 3,
                   ),
                 ),
@@ -99,7 +98,7 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
                   bottom: -5,
                   right: -5,
                   child: GestureDetector(
-                    onTap: () => _handleImagePicker(context),
+                    onTap: _handleImagePicker,
                     child: Container(
                       height: 45,
                       width: 45,
@@ -156,7 +155,7 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
     );
   }
 
-  Future<void> _handleImagePicker(BuildContext context) async {
+  Future<void> _handleImagePicker() async {
     try {
       setState(() {
         isUploading = true;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deteksi_jerawat/model/skinpedia.dart';
-import 'package:deteksi_jerawat/services/skinpedia-info.dart';
+import 'package:deteksi_jerawat/services/skinpedia_info.dart';
 import 'package:deteksi_jerawat/widgets/skinpedia/loading_state.dart';
 import 'package:deteksi_jerawat/widgets/skinpedia/skinpedia_card.dart';
 import 'package:deteksi_jerawat/widgets/skinpedia/skinpedia_detail_card.dart';
@@ -10,7 +10,7 @@ class SkinpediaScreen extends StatefulWidget {
   const SkinpediaScreen({super.key});
 
   @override
-  _SkinpediaScreenState createState() => _SkinpediaScreenState();
+  State<SkinpediaScreen> createState() => _SkinpediaScreenState();
 }
 
 class _SkinpediaScreenState extends State<SkinpediaScreen> {

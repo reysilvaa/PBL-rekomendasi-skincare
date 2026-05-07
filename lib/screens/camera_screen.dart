@@ -18,16 +18,16 @@ class ConfirmationControls extends StatelessWidget {
   final VoidCallback onRetake;
 
   const ConfirmationControls({
-    Key? key,
+    super.key,
     required this.imageFile,
     required this.onConfirm,
     required this.onRetake,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black.withOpacity(0.7),
+      color: Colors.black.withValues(alpha: 0.7),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -66,7 +66,7 @@ class CameraScreen extends StatefulWidget {
   });
 
   @override
-  _CameraScreenState createState() => _CameraScreenState();
+  State<CameraScreen> createState() => _CameraScreenState();
 }
 
 class _CameraScreenState extends State<CameraScreen> {
@@ -255,7 +255,7 @@ class _CameraScreenState extends State<CameraScreen> {
           if (_isLoading)
             Positioned.fill(
               child: Container(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withValues(alpha: 0.7),
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

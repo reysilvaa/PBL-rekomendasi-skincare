@@ -2,7 +2,7 @@ import 'package:deteksi_jerawat/blocs/user/user_event.dart';
 import 'package:deteksi_jerawat/blocs/user/user_state.dart';
 import 'package:deteksi_jerawat/model/user.dart';
 import 'package:deteksi_jerawat/services/auth.dart';
-import 'package:deteksi_jerawat/services/user-info.dart';
+import 'package:deteksi_jerawat/services/user_info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {

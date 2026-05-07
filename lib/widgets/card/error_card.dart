@@ -41,7 +41,7 @@ class ErrorCard extends StatelessWidget {
                     Text(
                       message,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                       ),

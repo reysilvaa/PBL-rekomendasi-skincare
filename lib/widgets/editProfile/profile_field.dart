@@ -8,7 +8,7 @@ class UsernameField extends StatelessWidget {
   final TextEditingController? controller;
   final User? user;
 
-  const UsernameField({Key? key, this.controller, this.user}) : super(key: key);
+  const UsernameField({super.key, this.controller, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +36,7 @@ class PhoneNumberField extends StatelessWidget {
   final TextEditingController? controller;
   final User? user;
 
-  const PhoneNumberField({Key? key, this.controller, this.user})
-      : super(key: key);
+  const PhoneNumberField({super.key, this.controller, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +70,10 @@ class BirthDateField extends StatefulWidget {
   final String? birthDate;
   final TextEditingController? controller;
 
-  const BirthDateField({Key? key, this.birthDate, this.controller})
-      : super(key: key);
+  const BirthDateField({super.key, this.birthDate, this.controller});
 
   @override
-  _BirthDateFieldState createState() => _BirthDateFieldState();
+  State<BirthDateField> createState() => _BirthDateFieldState();
 }
 
 class _BirthDateFieldState extends State<BirthDateField> {
@@ -167,7 +165,7 @@ class EmailField extends StatelessWidget {
   final String? email;
   final TextEditingController? controller;
 
-  const EmailField({Key? key, this.email, this.controller}) : super(key: key);
+  const EmailField({super.key, this.email, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -201,8 +199,7 @@ class FirstNameField extends StatelessWidget {
   final TextEditingController? controller;
   final User? user;
 
-  const FirstNameField({Key? key, this.controller, this.user})
-      : super(key: key);
+  const FirstNameField({super.key, this.controller, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +227,7 @@ class LastNameField extends StatelessWidget {
   final TextEditingController? controller;
   final User? user;
 
-  const LastNameField({Key? key, this.controller, this.user}) : super(key: key);
+  const LastNameField({super.key, this.controller, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -257,11 +254,10 @@ class GenderField extends StatefulWidget {
   final String? initialValue;
   final ValueChanged<String?>? onChanged;
 
-  const GenderField({Key? key, this.initialValue, this.onChanged})
-      : super(key: key);
+  const GenderField({super.key, this.initialValue, this.onChanged});
 
   @override
-  _GenderFieldState createState() => _GenderFieldState();
+  State<GenderField> createState() => _GenderFieldState();
 }
 
 class _GenderFieldState extends State<GenderField> {
@@ -276,7 +272,7 @@ class _GenderFieldState extends State<GenderField> {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      value: selectedGender,
+      initialValue: selectedGender,
       decoration: InputDecoration(
         labelText: 'Gender',
         prefixIcon: const Icon(Icons.transgender_outlined),
@@ -310,12 +306,12 @@ class UserLevelField extends StatelessWidget {
   final User? user;
   final ValueChanged<Level?>? onChanged;
 
-  const UserLevelField({Key? key, this.user, this.onChanged}) : super(key: key);
+  const UserLevelField({super.key, this.user, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<Level>(
-      value: user?.level ?? Level.user,
+      initialValue: user?.level ?? Level.user,
       decoration: InputDecoration(
         labelText: 'User Level',
         prefixIcon: const Icon(Icons.admin_panel_settings_outlined),

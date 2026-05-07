@@ -71,7 +71,7 @@ class _GreetingCardState extends State<GreetingCard>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: _startColor.withOpacity(0.3),
+                  color: _startColor.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -106,7 +106,7 @@ class _GreetingCardState extends State<GreetingCard>
                           Text(
                             _message,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 15,
                               height: 1.5,
                               letterSpacing: 0.2,
@@ -183,8 +183,8 @@ class _GreetingCardState extends State<GreetingCard>
                                 decoration: BoxDecoration(
                                   gradient: RadialGradient(
                                     colors: [
-                                      Colors.white.withOpacity(0.2),
-                                      Colors.white.withOpacity(0),
+                                      Colors.white.withValues(alpha: 0.2),
+                                      Colors.white.withValues(alpha: 0),
                                     ],
                                     center: Alignment.center,
                                     radius: 0.8,

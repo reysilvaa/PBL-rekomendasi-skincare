@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:deteksi_jerawat/services/scan-post.dart';
+import 'package:deteksi_jerawat/services/scan_post.dart';
 import 'package:deteksi_jerawat/blocs/scan/scan_event.dart';
 import 'package:deteksi_jerawat/blocs/scan/scan_state.dart';
 

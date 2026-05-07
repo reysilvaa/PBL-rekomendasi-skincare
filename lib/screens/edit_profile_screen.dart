@@ -10,7 +10,7 @@ import 'package:deteksi_jerawat/widgets/editProfile/edit_profile_header.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final User? user;
-  const EditProfileScreen({Key? key, this.user}) : super(key: key);
+  const EditProfileScreen({super.key, this.user});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -27,7 +27,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     'birthDate': TextEditingController(),
     'gender': TextEditingController(),
   };
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -39,6 +38,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _initializeUserData() async {
     final token = await Auth().getAccessToken();
+    if (!mounted) return;
     if (token != null) {
       context.read<UserBloc>().add(FetchUserEvent(token));
     }
@@ -46,7 +46,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void dispose() {
-    _controllers.values.forEach((controller) => controller.dispose());
+    for (var controller in _controllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -65,7 +67,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _handleProfileUpdate() {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
 
     final currentState = context.read<UserBloc>().state;
     if (currentState is UserLoaded) {
@@ -91,7 +92,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final now = DateTime.now();
       var age = now.year - birth.year;
       if (now.month < birth.month ||
-          (now.month == birth.month && now.day < birth.day)) age--;
+          (now.month == birth.month && now.day < birth.day)) {
+        age--;
+      }
       return age;
     } catch (_) {
       return 0;
@@ -112,7 +115,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             });
           } else if (state is UserUpdated) {
             setState(() {
-              _isLoading = false;
             });
             ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Profile updated successfully')));
@@ -138,7 +140,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   builder: (context, state) {
                     if (state is UserLoaded) {
                       _controllers['username']?.text =
-                          state.user.username ?? '';
+                          state.user.username;
                       _controllers['email']?.text = state.user.email ?? '';
                       _controllers['firstName']?.text =
                           state.user.firstName ?? '';
@@ -205,7 +207,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: ElevatedButton(
           onPressed: _handleProfileUpdate,
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFF0D47A1).withOpacity(0.9),
+            backgroundColor: Color(0xFF0D47A1).withValues(alpha: 0.9),
             foregroundColor: Colors.white,
             padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
             shape: RoundedRectangleBorder(

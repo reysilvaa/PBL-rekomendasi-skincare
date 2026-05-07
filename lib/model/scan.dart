@@ -96,7 +96,7 @@ class Treatment {
   // Factory method to create Treatment from JSON
   factory Treatment.fromJson(Map<String, dynamic> json) {
     return Treatment(
-      deskripsiTreatment: json['deskripsi_treatment'] ?? '',
+      deskripsiTreatment: json['deskripsiTreatment'] ?? '',
     );
   }
 }

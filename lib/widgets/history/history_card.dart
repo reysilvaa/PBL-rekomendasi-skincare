@@ -13,7 +13,7 @@ class HistoryCard extends StatefulWidget {
   });
 
   @override
-  _EnhancedHistoryCardState createState() => _EnhancedHistoryCardState();
+  State<HistoryCard> createState() => _EnhancedHistoryCardState();
 }
 
 class _EnhancedHistoryCardState extends State<HistoryCard> {
@@ -35,7 +35,7 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.blueGrey.withOpacity(0.3),
+            color: Colors.blueGrey.withValues(alpha: 0.3),
             spreadRadius: 2,
             blurRadius: 15,
             offset: const Offset(0, 5),
@@ -100,7 +100,7 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
+                        color: Colors.grey.withValues(alpha: 0.3),
                         spreadRadius: 1,
                         blurRadius: 8,
                         offset: const Offset(0, 3),
@@ -115,7 +115,7 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
               ],
             ),
           ),
-          if (widget.recommendation.skinCondition.treatments.deskripsi_treatment
+          if (widget.recommendation.skinCondition.treatments.deskripsiTreatment
               .isNotEmpty)
             _buildTreatmentSection(),
           _buildReadMoreButton(),
@@ -193,7 +193,7 @@ class _EnhancedHistoryCardState extends State<HistoryCard> {
             ),
             const SizedBox(height: 6),
             Text(
-              widget.recommendation.skinCondition.treatments.deskripsi_treatment,
+              widget.recommendation.skinCondition.treatments.deskripsiTreatment,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.blueGrey.shade600,

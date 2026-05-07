@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
-import 'package:deteksi_jerawat/services/config.dart';
+import 'config.dart';
 
 class ProfileImagePOST {
   final ImagePicker _picker = ImagePicker(); // Instance of ImagePicker

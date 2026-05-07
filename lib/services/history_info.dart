@@ -23,7 +23,7 @@ class HistoryService {
       );
 
       // Print the response body for debugging purposes
-      print('Response body: ${response.body}');
+      debugPrint('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final decodedResponse = json.decode(response.body);
@@ -61,10 +61,7 @@ class HistoryService {
     }
   }
 
-  void _showErrorMessage(BuildContext context, String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
+
 
   // Menambahkan riwayat baru menggunakan token
   Future<History> addHistory(History history) async {

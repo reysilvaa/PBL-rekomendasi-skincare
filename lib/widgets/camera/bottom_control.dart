@@ -66,10 +66,10 @@ class BottomControl extends StatelessWidget {
                     // Call the callback and pass the selected image path
                     onImageSelected(image.path);
                   } else {
-                    print("No image selected");
+                    debugPrint("No image selected");
                   }
                 } catch (e) {
-                  print("Error picking image: $e");
+                  debugPrint("Error picking image: $e");
                 }
               },
             ),

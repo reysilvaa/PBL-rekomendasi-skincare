@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../services/products-info.dart';
+import '../../services/products_info.dart';
 import '../../model/product.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +10,7 @@ class ProductList extends StatefulWidget {
   const ProductList({super.key});
 
   @override
-  _ProductListState createState() => _ProductListState();
+  State<ProductList> createState() => _ProductListState();
 }
 
 class _ProductListState extends State<ProductList> {
@@ -81,7 +81,7 @@ Widget _buildProductCard(Product product, int index) {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),

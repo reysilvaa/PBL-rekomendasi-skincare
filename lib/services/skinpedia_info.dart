@@ -1,14 +1,15 @@
-// lib/services/product_service.dart
+import 'package:flutter/foundation.dart';
+// lib/services/skinpedia_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/product.dart'; // Import model Product
+import '../model/skinpedia.dart'; // Import the Skinpedia model
 import 'auth.dart'; // Import Auth for token
 import 'config.dart'; // Import config for the base URL
 
-class ProductService {
+class SkinpediaService {
   final Auth _auth = Auth(); // Instance from Auth to get token
 
-  Future<List<Product>> fetchProducts() async {
+  Future<List<Skinpedia>> fetchSkinpedia() async {
     try {
       final token = await _auth.getAccessToken();
       if (token == null) {
@@ -16,7 +17,7 @@ class ProductService {
       }
 
       final response = await http.get(
-        Uri.parse('${Config.baseUrl}/products'), // No page parameter here
+        Uri.parse('${Config.baseUrl}/skinpedia'), // Endpoint for skinpedia
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -27,19 +28,19 @@ class ProductService {
         final Map<String, dynamic> data = json.decode(response.body);
 
         if (data['status'] == 'success' && data['data'] is List) {
-          List<dynamic> productList = data['data'];
+          List<dynamic> skinpediaList = data['data'];
 
-          return productList
-              .map((productJson) => Product.fromJson(productJson))
+          return skinpediaList
+              .map((skinpediaJson) => Skinpedia.fromJson(skinpediaJson))
               .toList();
         } else {
-          throw Exception('Invalid product data format or empty data');
+          throw Exception('Invalid skinpedia data format or empty data');
         }
       } else {
         throw Exception('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      print('Fetch products error: $e');
+      debugPrint('Fetch skinpedia error: $e');
       return []; // Return an empty list to avoid null reference errors
     }
   }

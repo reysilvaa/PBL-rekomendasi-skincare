@@ -1,14 +1,15 @@
-// lib/services/skinpedia_service.dart
+import 'package:flutter/foundation.dart';
+// lib/services/product_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/skinpedia.dart'; // Import the Skinpedia model
+import '../model/product.dart'; // Import model Product
 import 'auth.dart'; // Import Auth for token
 import 'config.dart'; // Import config for the base URL
 
-class SkinpediaService {
+class ProductService {
   final Auth _auth = Auth(); // Instance from Auth to get token
 
-  Future<List<Skinpedia>> fetchSkinpedia() async {
+  Future<List<Product>> fetchProducts() async {
     try {
       final token = await _auth.getAccessToken();
       if (token == null) {
@@ -16,7 +17,7 @@ class SkinpediaService {
       }
 
       final response = await http.get(
-        Uri.parse('${Config.baseUrl}/skinpedia'), // Endpoint for skinpedia
+        Uri.parse('${Config.baseUrl}/products'), // No page parameter here
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -27,19 +28,19 @@ class SkinpediaService {
         final Map<String, dynamic> data = json.decode(response.body);
 
         if (data['status'] == 'success' && data['data'] is List) {
-          List<dynamic> skinpediaList = data['data'];
+          List<dynamic> productList = data['data'];
 
-          return skinpediaList
-              .map((skinpediaJson) => Skinpedia.fromJson(skinpediaJson))
+          return productList
+              .map((productJson) => Product.fromJson(productJson))
               .toList();
         } else {
-          throw Exception('Invalid skinpedia data format or empty data');
+          throw Exception('Invalid product data format or empty data');
         }
       } else {
         throw Exception('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      print('Fetch skinpedia error: $e');
+      debugPrint('Fetch products error: $e');
       return []; // Return an empty list to avoid null reference errors
     }
   }

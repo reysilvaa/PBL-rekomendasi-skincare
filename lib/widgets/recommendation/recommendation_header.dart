@@ -27,7 +27,7 @@ class HeaderSection extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -52,7 +52,7 @@ class HeaderSection extends StatelessWidget {
                           Text(
                             formattedDay,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 16,
                               letterSpacing: 1.2,
                             ),

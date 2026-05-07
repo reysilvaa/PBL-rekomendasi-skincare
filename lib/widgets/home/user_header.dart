@@ -11,7 +11,7 @@ class UserHeader extends StatefulWidget {
   });
 
   @override
-  _UserHeaderState createState() => _UserHeaderState();
+  State<UserHeader> createState() => _UserHeaderState();
 }
 
 class _UserHeaderState extends State<UserHeader>
@@ -72,7 +72,7 @@ class _UserHeaderState extends State<UserHeader>
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -86,7 +86,7 @@ class _UserHeaderState extends State<UserHeader>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.1),
                 Colors.transparent,
               ],
             ),
@@ -112,7 +112,7 @@ class _UserHeaderState extends State<UserHeader>
                               Text(
                                 'Welcome back,',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha: 0.9),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -132,7 +132,7 @@ class _UserHeaderState extends State<UserHeader>
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
+                              color: Colors.white.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
@@ -151,7 +151,7 @@ class _UserHeaderState extends State<UserHeader>
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.08),
+                              color: Colors.black.withValues(alpha: 0.08),
                               blurRadius: 20,
                               offset: const Offset(0, 5),
                             ),

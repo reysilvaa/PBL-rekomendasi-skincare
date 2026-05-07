@@ -11,13 +11,13 @@ class AddressSection extends StatefulWidget {
   final VoidCallback? onAddressChanged;
 
   const AddressSection({
-    Key? key,
+    super.key,
     this.initialAddress,
     this.onAddressChanged,
-  }) : super(key: key);
+  });
 
   @override
-  _AddressSectionState createState() => _AddressSectionState();
+  State<AddressSection> createState() => _AddressSectionState();
 }
 
 class _AddressSectionState extends State<AddressSection> {
@@ -46,9 +46,7 @@ class _AddressSectionState extends State<AddressSection> {
 
   void _updateAddress(LatLng point) {
     context.read<AddressBloc>().add(UpdateAddressEvent(
-        address: '' ??
-            widget
-                .initialAddress!, // We will get the address from the reverse geocode
+        address: '', // We will get the address from the reverse geocode
         location: point,
         onChanged: widget.onAddressChanged));
   }
@@ -76,7 +74,7 @@ class _AddressSectionState extends State<AddressSection> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
+                    color: Colors.grey.withValues(alpha: 0.3),
                     spreadRadius: 2,
                     blurRadius: 5,
                     offset: const Offset(0, 2),
@@ -133,8 +131,7 @@ class _AddressSectionState extends State<AddressSection> {
                       }
 
                       // Optional: You can also directly trigger saving the address in the database here
-                      final address = context.read<AddressBloc>().state.address;
-                      if (address != null && widget.onAddressChanged != null) {
+                      if (widget.onAddressChanged != null) {
                         // Assuming you have the correct LatLng `location` from somewhere (e.g., the current location or tap on map)
                         LatLng location = state
                             .location; // Get the current location from state
@@ -161,7 +158,7 @@ class _AddressSectionState extends State<AddressSection> {
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
+                        color: Colors.grey.withValues(alpha: 0.3),
                         spreadRadius: 2,
                         blurRadius: 5,
                         offset: const Offset(0, 2),
@@ -173,8 +170,8 @@ class _AddressSectionState extends State<AddressSection> {
                     child: FlutterMap(
                       mapController: _mapController,
                       options: MapOptions(
-                        center: state.location,
-                        zoom: _currentZoom,
+                        initialCenter: state.location,
+                        initialZoom: _currentZoom,
                         minZoom: 3.0,
                         maxZoom: 18.0,
                         onTap: (tapPosition, point) => _updateAddress(point),
@@ -185,7 +182,6 @@ class _AddressSectionState extends State<AddressSection> {
                               "https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
                           subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
                           maxZoom: 18.0,
-                          keepBuffer: 5,
                         ),
                         MarkerLayer(
                           markers: [
@@ -193,10 +189,10 @@ class _AddressSectionState extends State<AddressSection> {
                               width: 60.0,
                               height: 60.0,
                               point: state.location,
-                              builder: (ctx) => Container(
+                              child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Colors.blue.withOpacity(0.3),
+                                  color: Colors.blue.withValues(alpha: 0.3),
                                   border:
                                       Border.all(color: Colors.blue, width: 3),
                                 ),

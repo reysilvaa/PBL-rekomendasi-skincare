@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:deteksi_jerawat/services/checkout-info.dart'; // Import CheckoutService
+import 'package:deteksi_jerawat/services/checkout_info.dart'; // Import CheckoutService
 
 class TotalPaymentSection extends StatelessWidget {
   final double productPrice;
@@ -71,6 +71,7 @@ class TotalPaymentSection extends StatelessWidget {
               );
 
               // Show a dialog based on whether the checkout was successful or not
+              if (!context.mounted) return;
               showDialog(
                 context: context,
                 builder: (BuildContext context) {

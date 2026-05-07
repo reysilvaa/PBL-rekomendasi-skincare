@@ -11,7 +11,7 @@ class RecommendationScreen extends StatefulWidget {
   const RecommendationScreen({super.key, required this.history});
 
   @override
-  _RecommendationScreenState createState() => _RecommendationScreenState();
+  State<RecommendationScreen> createState() => _RecommendationScreenState();
 }
 
 class _RecommendationScreenState extends State<RecommendationScreen> {

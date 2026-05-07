@@ -73,8 +73,9 @@ class LoginService {
     try {
       await _auth.logout(context); // Passing context ke method logout
     } catch (e) {
-      print('Error during logout: $e');
+      debugPrint('Error during logout: $e');
       // Opsional: Tambahkan feedback ke user
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Gagal melakukan logout: $e'),

@@ -1,22 +1,14 @@
-import 'package:deteksi_jerawat/blocs/user/user_event.dart';
-import 'package:deteksi_jerawat/blocs/user/user_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:deteksi_jerawat/blocs/user/user_bloc.dart';
-import 'package:deteksi_jerawat/services/auth.dart';
-import 'package:deteksi_jerawat/model/user.dart';
-import 'package:deteksi_jerawat/widgets/editProfile/profile_field.dart';
-import 'package:deteksi_jerawat/widgets/editProfile/edit_profile_header.dart';
 
 class SaveProfileButton extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onPressed;
 
   const SaveProfileButton({
-    Key? key,
+    super.key,
     required this.isLoading,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

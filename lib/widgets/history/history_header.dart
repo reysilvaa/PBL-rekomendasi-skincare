@@ -23,16 +23,16 @@ class HistoryHeader extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF1A4BBA).withOpacity(0.9),
+            const Color(0xFF1A4BBA).withValues(alpha: 0.9),
             const Color(0xFF1257AA),
-            const Color(0xFF0F4C9A).withOpacity(0.9),
+            const Color(0xFF0F4C9A).withValues(alpha: 0.9),
           ],
           stops: const [0.0, 0.5, 1.0],
         ),
         // Removed rounded corners to make the container a rectangle
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 15,
             offset: const Offset(0, 7),
             spreadRadius: 2,
@@ -83,14 +83,14 @@ class HistoryHeader extends StatelessWidget {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      Colors.white.withOpacity(0),
-                      Colors.white.withOpacity(0.3),
-                      Colors.white.withOpacity(0),
+                      Colors.white.withValues(alpha: 0),
+                      Colors.white.withValues(alpha: 0.3),
+                      Colors.white.withValues(alpha: 0),
                     ],
                   ),
                 ),
               ).animate().shimmer(
-                  duration: 2000.ms, color: Colors.white.withOpacity(0.5)),
+                  duration: 2000.ms, color: Colors.white.withValues(alpha: 0.5)),
             ),
 
             // Main Content with Animations
@@ -105,10 +105,10 @@ class HistoryHeader extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           // Removed border radius for square shape
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.white.withValues(alpha: 0.3),
                             width: 1.5,
                           ),
                         ),
@@ -142,7 +142,7 @@ class HistoryHeader extends StatelessWidget {
                             Text(
                               'View your past activities',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 15,
                                 fontWeight: FontWeight.w300,
                                 letterSpacing: 0.3,

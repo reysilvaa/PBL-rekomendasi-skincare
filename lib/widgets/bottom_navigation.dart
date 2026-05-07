@@ -4,7 +4,7 @@ import 'package:deteksi_jerawat/screens/history_screen.dart';
 import 'package:deteksi_jerawat/screens/home_screen.dart';
 import 'package:deteksi_jerawat/screens/profile_screen.dart';
 import 'package:deteksi_jerawat/screens/skinpedia_screen.dart';
-import 'package:deteksi_jerawat/services/scan-post.dart';
+import 'package:deteksi_jerawat/services/scan_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:deteksi_jerawat/services/auth.dart';
@@ -13,7 +13,7 @@ class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
@@ -89,7 +89,7 @@ class _MainScreenState extends State<MainScreen> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),

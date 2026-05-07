@@ -1,6 +1,6 @@
 import 'package:deteksi_jerawat/model/user.dart';
 import 'package:deteksi_jerawat/services/auth.dart'; // Gunakan auth_service.dart
-import 'package:deteksi_jerawat/services/user-info.dart'; // Gunakan user-info.dart
+import 'package:deteksi_jerawat/services/user_info.dart'; // Gunakan user_info.dart
 import 'package:deteksi_jerawat/widgets/profile/menu_item.dart';
 import 'package:deteksi_jerawat/widgets/profile/profile_header.dart';
 import 'package:deteksi_jerawat/widgets/profile/progress_button.dart';
@@ -46,6 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         context.read<UserBloc>().add(FetchUserEvent(token));
       }
     } catch (e) {
+      if (!mounted) return;
       context
           .read<UserBloc>()
           .add(UserErrorEvent('Failed to load user profile: $e'));
@@ -55,6 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _handleLogout(BuildContext context) async {
     await _auth.logout(context); // Passing context ke method logout
 
+    if (!context.mounted) return;
     // Arahkan ke layar login
     Navigator.pushReplacement(
       context,
@@ -63,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _checkProgress(BuildContext context) {
-    print('Checking progress...');
+    debugPrint('Checking progress...');
   }
 
   @override

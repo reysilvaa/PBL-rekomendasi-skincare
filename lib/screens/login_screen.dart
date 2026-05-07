@@ -10,7 +10,7 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -47,6 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = false; // Selesai loading
     });
 
+    if (!mounted) return;
+
     if (result['status'] == 'error') {
       // Tampilkan pesan error
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -57,6 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
       // Simpan token di SharedPreferences
       String token = result['access_token'];
       await _storeAccessToken(token);
+
+      if (!mounted) return;
 
       // Navigasi ke layar berikutnya (MainScreen)
       Navigator.pushReplacement(

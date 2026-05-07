@@ -1,6 +1,6 @@
 import 'package:deteksi_jerawat/model/product.dart';
 import 'package:flutter/material.dart';
-import '../../services/user-info.dart';
+import '../../services/user_info.dart';
 import '../../widgets/checkout/address_section.dart';
 import '../../widgets/checkout/order_section.dart';
 import '../../widgets/checkout/product_detail_section.dart';
@@ -45,7 +45,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading user address: $e');
+      debugPrint('Error loading user address: $e');
       setState(() {
         _isLoading = false;
       });
@@ -82,7 +82,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   AddressSection(
                     initialAddress: initialAddress,
                     onAddressChanged: () {
-                      print('Address updated');
+                      debugPrint('Address updated');
                     },
                   ),
                   ProductDetailSection(product: widget.product),

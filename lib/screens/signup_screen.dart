@@ -9,7 +9,7 @@ class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
@@ -32,6 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     final result = await registerService.registerUser(user);
 
+    if (!mounted) return;
     if (result['status'] == 'success') {
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
@@ -40,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // Optionally navigate to another screen
     } else {
       // Show error message
-      print('Error Response: ${result['message']}');
+      debugPrint('Error Response: ${result['message']}');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result['message'])),

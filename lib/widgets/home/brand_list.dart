@@ -1,5 +1,5 @@
 import 'package:deteksi_jerawat/model/brands.dart';
-import 'package:deteksi_jerawat/services/brands-info.dart';
+import 'package:deteksi_jerawat/services/brands_info.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -7,7 +7,7 @@ class BrandList extends StatefulWidget {
   const BrandList({super.key});
 
   @override
-  _BrandListState createState() => _BrandListState();
+  State<BrandList> createState() => _BrandListState();
 }
 
 class _BrandListState extends State<BrandList> {
@@ -77,7 +77,7 @@ class _BrandListState extends State<BrandList> {
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withValues(alpha: 0.1),
                     spreadRadius: 1,
                     blurRadius: 10,
                     offset: const Offset(0, 2),
@@ -268,7 +268,7 @@ class _BrandCardState extends State<BrandCard>
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 child: Card(
                   elevation: 4,
-                  shadowColor: Colors.black.withOpacity(0.1),
+                  shadowColor: Colors.black.withValues(alpha: 0.1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -300,7 +300,7 @@ class _BrandCardState extends State<BrandCard>
                               decoration: BoxDecoration(
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(

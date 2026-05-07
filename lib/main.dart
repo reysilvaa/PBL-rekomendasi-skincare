@@ -1,12 +1,12 @@
 import 'package:deteksi_jerawat/blocs/address/address_bloc.dart';
 import 'package:deteksi_jerawat/blocs/scan/scan_bloc.dart';
 import 'package:deteksi_jerawat/screens/login_screen.dart';
-import 'package:deteksi_jerawat/services/scan-post.dart';
+import 'package:deteksi_jerawat/services/scan_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:deteksi_jerawat/blocs/user/user_bloc.dart';
-import '/services/user-info.dart';
+import '/services/user_info.dart';
 import '/services/auth.dart';
 import 'splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +23,7 @@ class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {

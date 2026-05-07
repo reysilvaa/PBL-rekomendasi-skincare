@@ -38,7 +38,7 @@ class CameraPreviewWidget extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.black.withOpacity(0.5),
+                  Colors.black.withValues(alpha: 0.5),
                   Colors.transparent,
                 ],
                 begin: Alignment.topCenter,
@@ -76,7 +76,7 @@ class CameraPreviewWidget extends StatelessWidget {
             child: BottomControl(
               onFlipCamera: onFlipCamera,
               onCapture: onCapture,
-              onImageSelected: (String) {},
+              onImageSelected: (String value) {},
             ),
           ),
         ],

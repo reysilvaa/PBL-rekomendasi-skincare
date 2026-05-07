@@ -1,5 +1,5 @@
 // history_screen.dart
-import 'package:deteksi_jerawat/widgets/card/error-card.dart';
+import 'package:deteksi_jerawat/widgets/card/error_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:deteksi_jerawat/blocs/history/history_bloc.dart';
@@ -7,7 +7,7 @@ import 'package:deteksi_jerawat/blocs/history/history_event.dart';
 import 'package:deteksi_jerawat/blocs/history/history_state.dart';
 import 'package:deteksi_jerawat/widgets/history/history_card.dart';
 import 'package:deteksi_jerawat/widgets/history/history_header.dart';
-import 'package:deteksi_jerawat/services/history-info.dart';
+import 'package:deteksi_jerawat/services/history_info.dart';
 import 'package:deteksi_jerawat/screens/history/recommendation_screen.dart';
 
 class HistoryScreen extends StatelessWidget {
